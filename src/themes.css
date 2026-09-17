@@ -1,0 +1,112 @@
+/* ============================================================================
+ * themes.css — pilihan tema MiniGrid.
+ * Tailwind v4 menulis utilitas warna sebagai var(--color-*), jadi setiap tema
+ * cukup me-remap variabel di bawah [data-theme=…] pada <html>.
+ * ============================================================================ */
+
+/* ---- Gelap ---- */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-white: #0b1220;
+  --color-slate-50: #101a2e;
+  --color-slate-100: #16233c;
+  --color-slate-200: #24344f;
+  --color-slate-300: #33455f;
+  --color-slate-400: #64748b;
+  --color-slate-500: #8fa3bd;
+  --color-slate-600: #b7c5da;
+  --color-slate-700: #d8e1ee;
+  --color-slate-800: #e9eff8;
+  --color-slate-900: #f5f8fc;
+  --color-indigo-50: #1d2a4d;
+  --color-indigo-100: #253560;
+  --color-indigo-500: #7d95ff;
+  --color-indigo-600: #6d87fb;
+  --color-indigo-700: #a5b4ff;
+  --color-emerald-100: #062e21;
+  --color-emerald-600: #34d399;
+  --color-emerald-700: #6ee7b7;
+  --color-amber-100: #33230b;
+  --color-amber-700: #fcd34d;
+  --color-rose-100: #3d1420;
+  --color-rose-700: #fda4af;
+  --color-sky-100: #0b2a3d;
+  --color-sky-700: #7dd3fc;
+}
+[data-theme="dark"] pre { background: #0d1526; color: #dbe6f5; }
+
+/* ---- Samudra (terang, aksen sian) ---- */
+[data-theme="ocean"] {
+  --color-slate-50: #f2f8fc;
+  --color-slate-100: #e4eef6;
+  --color-slate-200: #cddfeb;
+  --color-slate-300: #aac6d9;
+  --color-slate-400: #7fa2ba;
+  --color-slate-500: #587d97;
+  --color-slate-600: #44647c;
+  --color-slate-700: #375267;
+  --color-slate-800: #2b4152;
+  --color-slate-900: #223442;
+  --color-indigo-50: #ecfeff;
+  --color-indigo-100: #cffafe;
+  --color-indigo-500: #06b6d4;
+  --color-indigo-600: #0e7490;
+  --color-indigo-700: #155e75;
+}
+
+/* ---- Hutan (terang, aksen hijau) ---- */
+[data-theme="forest"] {
+  --color-slate-50: #f3f8f4;
+  --color-slate-100: #e5efe7;
+  --color-slate-200: #cfe0d3;
+  --color-slate-300: #aec9b6;
+  --color-slate-400: #83a88f;
+  --color-slate-500: #5d866c;
+  --color-slate-600: #486b56;
+  --color-slate-700: #3b5747;
+  --color-slate-800: #2f463a;
+  --color-slate-900: #263a30;
+  --color-indigo-50: #ecfdf5;
+  --color-indigo-100: #d1fae5;
+  --color-indigo-500: #10b981;
+  --color-indigo-600: #047857;
+  --color-indigo-700: #065f46;
+}
+
+/* ---- Senja (terang hangat, aksen mawar) ---- */
+[data-theme="sunset"] {
+  --color-slate-50: #fdf6f3;
+  --color-slate-100: #faece7;
+  --color-slate-200: #f3d8cd;
+  --color-slate-300: #e5b8a8;
+  --color-slate-400: #d1907c;
+  --color-slate-500: #b76a56;
+  --color-slate-600: #96543f;
+  --color-slate-700: #7a4534;
+  --color-slate-800: #61382b;
+  --color-slate-900: #4f2f26;
+  --color-indigo-50: #fff1f2;
+  --color-indigo-100: #ffe4e6;
+  --color-indigo-500: #f43f5e;
+  --color-indigo-600: #be123c;
+  --color-indigo-700: #9f1239;
+}
+
+/* ---- Monokrom (netral tegas) ---- */
+[data-theme="mono"] {
+  --color-slate-50: #fafafa;
+  --color-slate-100: #f4f4f5;
+  --color-slate-200: #e4e4e7;
+  --color-slate-300: #d4d4d8;
+  --color-slate-400: #a1a1aa;
+  --color-slate-500: #71717a;
+  --color-slate-600: #52525b;
+  --color-slate-700: #3f3f46;
+  --color-slate-800: #27272a;
+  --color-slate-900: #18181b;
+  --color-indigo-50: #f4f4f5;
+  --color-indigo-100: #e4e4e7;
+  --color-indigo-500: #3f3f46;
+  --color-indigo-600: #18181b;
+  --color-indigo-700: #09090b;
+}

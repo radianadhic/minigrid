@@ -1,0 +1,22 @@
+/* CSS kecil di luar utilitas Tailwind: warna kolom beku, zebra, hover, transisi.
+ * Semua warna lewat var(--color-*) agar ikut berganti saat tema berubah. */
+
+.mg-head th { background: var(--color-slate-100); }
+.mg-head th.frz0 { box-shadow: 2px 0 0 0 var(--color-slate-200); }
+
+.mg-body td.frz,
+.mg-body td.frz0 { background: var(--color-white); box-shadow: 2px 0 0 0 var(--color-slate-200); }
+.mg-body tr.alt td.frz,
+.mg-body tr.alt td.frz0 { background: var(--color-slate-50); }
+
+.mg-body tr:hover td { background: var(--color-indigo-50); }
+.mg-body tr.sel td { background: var(--color-indigo-100); }
+.mg-body tr.sel:hover td { background: var(--color-indigo-100); filter: brightness(.97); }
+
+.mg-spacer td { border: 0 !important; background: var(--color-white); }
+
+/* transisi halus saat ganti tema / hover */
+.mg-body td, .mg-head th, .mg-body tr,
+button, input, select, a {
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+}

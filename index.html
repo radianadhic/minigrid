@@ -1,0 +1,1617 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MiniGrid — data grid offline ala jqGrid</title>
+<!-- saat development pakai 2 file CSS; build.mjs meng-inline semuanya jadi 1 file offline -->
+<style>
+/*! tailwindcss v4.3.3 | MIT License | https://tailwindcss.com */
+@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-space-y-reverse:0;--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-tracking:initial;--tw-ordinal:initial;--tw-slashed-zero:initial;--tw-numeric-figure:initial;--tw-numeric-spacing:initial;--tw-numeric-fraction:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-blur:initial;--tw-brightness:initial;--tw-contrast:initial;--tw-grayscale:initial;--tw-hue-rotate:initial;--tw-invert:initial;--tw-opacity:initial;--tw-saturate:initial;--tw-sepia:initial;--tw-drop-shadow:initial;--tw-drop-shadow-color:initial;--tw-drop-shadow-alpha:100%;--tw-drop-shadow-size:initial;--tw-backdrop-blur:initial;--tw-backdrop-brightness:initial;--tw-backdrop-contrast:initial;--tw-backdrop-grayscale:initial;--tw-backdrop-hue-rotate:initial;--tw-backdrop-invert:initial;--tw-backdrop-opacity:initial;--tw-backdrop-saturate:initial;--tw-backdrop-sepia:initial}}}@layer theme{:root,:host{--font-sans:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";--font-mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;--color-amber-100:oklch(96.2% .059 95.617);--color-amber-700:oklch(55.5% .163 48.998);--color-emerald-100:oklch(95% .052 163.051);--color-emerald-600:oklch(59.6% .145 163.225);--color-emerald-700:oklch(50.8% .118 165.612);--color-sky-100:oklch(95.1% .026 236.824);--color-sky-700:oklch(50% .134 242.749);--color-indigo-50:oklch(96.2% .018 272.314);--color-indigo-100:oklch(93% .034 272.788);--color-indigo-400:oklch(67.3% .182 276.935);--color-indigo-500:oklch(58.5% .233 277.117);--color-indigo-600:oklch(51.1% .262 276.966);--color-indigo-700:oklch(45.7% .24 277.023);--color-fuchsia-100:oklch(95.2% .037 318.852);--color-fuchsia-700:oklch(51.8% .253 323.949);--color-rose-50:oklch(96.9% .015 12.422);--color-rose-100:oklch(94.1% .03 12.58);--color-rose-600:oklch(58.6% .253 17.585);--color-rose-700:oklch(51.4% .222 16.935);--color-slate-50:oklch(98.4% .003 247.858);--color-slate-100:oklch(96.8% .007 247.896);--color-slate-200:oklch(92.9% .013 255.508);--color-slate-300:oklch(86.9% .022 252.894);--color-slate-400:oklch(70.4% .04 256.788);--color-slate-500:oklch(55.4% .046 257.417);--color-slate-600:oklch(44.6% .043 257.281);--color-slate-700:oklch(37.2% .044 257.287);--color-slate-800:oklch(27.9% .041 260.031);--color-slate-900:oklch(20.8% .042 265.755);--color-white:#fff;--spacing:.25rem;--container-6xl:72rem;--text-xs:.75rem;--text-xs--line-height:calc(1 / .75);--text-sm:.875rem;--text-sm--line-height:calc(1.25 / .875);--text-xl:1.25rem;--text-xl--line-height:calc(1.75 / 1.25);--font-weight-medium:500;--font-weight-semibold:600;--font-weight-bold:700;--tracking-tight:-.025em;--tracking-wider:.05em;--leading-relaxed:1.625;--radius-md:.375rem;--radius-lg:.5rem;--radius-xl:.75rem;--default-transition-duration:.15s;--default-transition-timing-function:cubic-bezier(.4, 0, .2, 1);--default-font-family:var(--font-sans);--default-mono-font-family:var(--font-mono)}}@layer base{*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}::file-selector-button{box-sizing:border-box;border:0 solid;margin:0;padding:0}html,:host{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5;font-family:var(--default-font-family,-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");font-feature-settings:var(--default-font-feature-settings,normal);font-variation-settings:var(--default-font-variation-settings,normal);-webkit-tap-highlight-color:transparent}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:var(--default-mono-font-family,ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);font-feature-settings:var(--default-mono-font-feature-settings,normal);font-variation-settings:var(--default-mono-font-variation-settings,normal);font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}:-moz-focusring:where(:not(iframe)){outline:auto}progress{vertical-align:baseline}summary{display:list-item}ol,ul,menu{list-style:none}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}button,input,select,optgroup,textarea{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}::file-selector-button{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}:where(select:is([multiple],[size])) optgroup{font-weight:bolder}:where(select:is([multiple],[size])) optgroup option{padding-inline-start:20px}::file-selector-button{margin-inline-end:4px}::placeholder{opacity:1}@supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px){::placeholder{color:currentColor}@supports (color:color-mix(in lab, red, red)){::placeholder{color:color-mix(in oklab, currentcolor 50%, transparent)}}}textarea{resize:vertical}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-date-and-time-value{min-height:1lh;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-datetime-edit{padding-block:0}::-webkit-datetime-edit-year-field{padding-block:0}::-webkit-datetime-edit-month-field{padding-block:0}::-webkit-datetime-edit-day-field{padding-block:0}::-webkit-datetime-edit-hour-field{padding-block:0}::-webkit-datetime-edit-minute-field{padding-block:0}::-webkit-datetime-edit-second-field{padding-block:0}::-webkit-datetime-edit-millisecond-field{padding-block:0}::-webkit-datetime-edit-meridiem-field{padding-block:0}::-webkit-calendar-picker-indicator{line-height:1}:-moz-ui-invalid{box-shadow:none}button,input:where([type=button],[type=reset],[type=submit]){appearance:button}::file-selector-button{appearance:button}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[hidden]:where(:not([hidden=until-found])){display:none!important}}@layer components;@layer utilities{.collapse{visibility:collapse}.visible{visibility:visible}.absolute{position:absolute}.fixed{position:fixed}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0}.top-0{top:0}.top-7{top:calc(var(--spacing) * 7)}.left-0{left:0}.z-10{z-index:10}.z-30{z-index:30}.z-50{z-index:50}.mx-auto{margin-inline:auto}.mt-0{margin-top:0}.mt-0\.5{margin-top:calc(var(--spacing) * .5)}.mt-1{margin-top:var(--spacing)}.mt-2{margin-top:calc(var(--spacing) * 2)}.mt-3{margin-top:calc(var(--spacing) * 3)}.mt-4{margin-top:calc(var(--spacing) * 4)}.mt-6{margin-top:calc(var(--spacing) * 6)}.mt-8{margin-top:calc(var(--spacing) * 8)}.-mr-2{margin-right:calc(var(--spacing) * -2)}.mb-1{margin-bottom:var(--spacing)}.mb-2{margin-bottom:calc(var(--spacing) * 2)}.ml-1{margin-left:var(--spacing)}.ml-auto{margin-left:auto}.flex{display:flex}.grid{display:grid}.hidden{display:none}.inline{display:inline}.table{display:table}.size-3{width:calc(var(--spacing) * 3);height:calc(var(--spacing) * 3)}.size-3\.5{width:calc(var(--spacing) * 3.5);height:calc(var(--spacing) * 3.5)}.h-3{height:calc(var(--spacing) * 3)}.h-4{height:calc(var(--spacing) * 4)}.h-5{height:calc(var(--spacing) * 5)}.h-6{height:calc(var(--spacing) * 6)}.h-7{height:calc(var(--spacing) * 7)}.max-h-\[60vh\]{max-height:60vh}.max-h-\[62vh\]{max-height:62vh}.max-h-\[65vh\]{max-height:65vh}.max-h-\[70vh\]{max-height:70vh}.w-2{width:calc(var(--spacing) * 2)}.w-3{width:calc(var(--spacing) * 3)}.w-6{width:calc(var(--spacing) * 6)}.w-24{width:calc(var(--spacing) * 24)}.w-36{width:calc(var(--spacing) * 36)}.w-40{width:calc(var(--spacing) * 40)}.w-44{width:calc(var(--spacing) * 44)}.w-56{width:calc(var(--spacing) * 56)}.w-96{width:calc(var(--spacing) * 96)}.w-\[26rem\]{width:26rem}.w-\[30rem\]{width:30rem}.w-\[36rem\]{width:36rem}.w-full{width:100%}.max-w-6xl{max-width:var(--container-6xl)}.max-w-full{max-width:100%}.min-w-0{min-width:0}.min-w-6{min-width:calc(var(--spacing) * 6)}.flex-1{flex:1}.shrink-0{flex-shrink:0}.border-collapse{border-collapse:collapse}.transform{transform:var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,)}.cursor-col-resize{cursor:col-resize}.cursor-default{cursor:default}.cursor-pointer{cursor:pointer}.resize{resize:both}.list-disc{list-style-type:disc}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.flex-wrap{flex-wrap:wrap}.items-baseline{align-items:baseline}.items-center{align-items:center}.items-end{align-items:flex-end}.items-start{align-items:flex-start}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.justify-end{justify-content:flex-end}.gap-0{gap:0}.gap-0\.5{gap:calc(var(--spacing) * .5)}.gap-1{gap:var(--spacing)}.gap-1\.5{gap:calc(var(--spacing) * 1.5)}.gap-2{gap:calc(var(--spacing) * 2)}.gap-3{gap:calc(var(--spacing) * 3)}.gap-4{gap:calc(var(--spacing) * 4)}:where(.space-y-1>:not(:last-child)){--tw-space-y-reverse:0;margin-block-start:calc(var(--spacing) * var(--tw-space-y-reverse));margin-block-end:calc(var(--spacing) * calc(1 - var(--tw-space-y-reverse)))}:where(.space-y-2>:not(:last-child)){--tw-space-y-reverse:0;margin-block-start:calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));margin-block-end:calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)))}:where(.space-y-4>:not(:last-child)){--tw-space-y-reverse:0;margin-block-start:calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));margin-block-end:calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-y-reverse)))}:where(.space-y-5>:not(:last-child)){--tw-space-y-reverse:0;margin-block-start:calc(calc(var(--spacing) * 5) * var(--tw-space-y-reverse));margin-block-end:calc(calc(var(--spacing) * 5) * calc(1 - var(--tw-space-y-reverse)))}.gap-x-2{column-gap:calc(var(--spacing) * 2)}.gap-y-1{row-gap:var(--spacing)}.gap-y-1\.5{row-gap:calc(var(--spacing) * 1.5)}.truncate{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.rounded{border-radius:.25rem}.rounded-full{border-radius:3.40282e38px}.rounded-lg{border-radius:var(--radius-lg)}.rounded-md{border-radius:var(--radius-md)}.rounded-xl{border-radius:var(--radius-xl)}.border{border-style:var(--tw-border-style);border-width:1px}.border-t{border-top-style:var(--tw-border-style);border-top-width:1px}.border-r{border-right-style:var(--tw-border-style);border-right-width:1px}.border-b{border-bottom-style:var(--tw-border-style);border-bottom-width:1px}.border-dashed{--tw-border-style:dashed;border-style:dashed}.border-indigo-500{border-color:var(--color-indigo-500)}.border-slate-100{border-color:var(--color-slate-100)}.border-slate-200{border-color:var(--color-slate-200)}.border-slate-300{border-color:var(--color-slate-300)}.border-slate-400{border-color:var(--color-slate-400)}.bg-amber-100{background-color:var(--color-amber-100)}.bg-emerald-100{background-color:var(--color-emerald-100)}.bg-fuchsia-100{background-color:var(--color-fuchsia-100)}.bg-indigo-100{background-color:var(--color-indigo-100)}.bg-indigo-600{background-color:var(--color-indigo-600)}.bg-rose-100{background-color:var(--color-rose-100)}.bg-sky-100{background-color:var(--color-sky-100)}.bg-slate-50{background-color:var(--color-slate-50)}.bg-slate-100{background-color:var(--color-slate-100)}.bg-slate-200{background-color:var(--color-slate-200)}.bg-slate-900{background-color:var(--color-slate-900)}.bg-slate-900\/30{background-color:#0f172b4d}@supports (color:color-mix(in lab, red, red)){.bg-slate-900\/30{background-color:color-mix(in oklab, var(--color-slate-900) 30%, transparent)}}.bg-slate-900\/40{background-color:#0f172b66}@supports (color:color-mix(in lab, red, red)){.bg-slate-900\/40{background-color:color-mix(in oklab, var(--color-slate-900) 40%, transparent)}}.bg-white{background-color:var(--color-white)}.p-0{padding:0}.p-1{padding:var(--spacing)}.p-3{padding:calc(var(--spacing) * 3)}.p-4{padding:calc(var(--spacing) * 4)}.p-6{padding:calc(var(--spacing) * 6)}.p-10{padding:calc(var(--spacing) * 10)}.px-1{padding-inline:var(--spacing)}.px-1\.5{padding-inline:calc(var(--spacing) * 1.5)}.px-2{padding-inline:calc(var(--spacing) * 2)}.px-2\.5{padding-inline:calc(var(--spacing) * 2.5)}.px-3{padding-inline:calc(var(--spacing) * 3)}.px-4{padding-inline:calc(var(--spacing) * 4)}.py-0{padding-block:0}.py-0\.5{padding-block:calc(var(--spacing) * .5)}.py-1{padding-block:var(--spacing)}.py-1\.5{padding-block:calc(var(--spacing) * 1.5)}.py-2{padding-block:calc(var(--spacing) * 2)}.py-3{padding-block:calc(var(--spacing) * 3)}.py-6{padding-block:calc(var(--spacing) * 6)}.pt-0{padding-top:0}.pt-0\.5{padding-top:calc(var(--spacing) * .5)}.pr-2{padding-right:calc(var(--spacing) * 2)}.pb-4{padding-bottom:calc(var(--spacing) * 4)}.pl-4{padding-left:calc(var(--spacing) * 4)}.text-center{text-align:center}.text-left{text-align:left}.text-right{text-align:right}.align-middle{vertical-align:middle}.align-top{vertical-align:top}.font-mono{font-family:var(--font-mono)}.text-sm{font-size:var(--text-sm);line-height:var(--tw-leading,var(--text-sm--line-height))}.text-xl{font-size:var(--text-xl);line-height:var(--tw-leading,var(--text-xl--line-height))}.text-xs{font-size:var(--text-xs);line-height:var(--tw-leading,var(--text-xs--line-height))}.text-\[9px\]{font-size:9px}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.leading-4{--tw-leading:calc(var(--spacing) * 4);line-height:calc(var(--spacing) * 4)}.leading-relaxed{--tw-leading:var(--leading-relaxed);line-height:var(--leading-relaxed)}.font-bold{--tw-font-weight:var(--font-weight-bold);font-weight:var(--font-weight-bold)}.font-medium{--tw-font-weight:var(--font-weight-medium);font-weight:var(--font-weight-medium)}.font-semibold{--tw-font-weight:var(--font-weight-semibold);font-weight:var(--font-weight-semibold)}.tracking-tight{--tw-tracking:var(--tracking-tight);letter-spacing:var(--tracking-tight)}.tracking-wider{--tw-tracking:var(--tracking-wider);letter-spacing:var(--tracking-wider)}.break-words{overflow-wrap:break-word}.whitespace-nowrap{white-space:nowrap}.text-amber-700{color:var(--color-amber-700)}.text-emerald-600{color:var(--color-emerald-600)}.text-emerald-700{color:var(--color-emerald-700)}.text-fuchsia-700{color:var(--color-fuchsia-700)}.text-indigo-600{color:var(--color-indigo-600)}.text-indigo-700{color:var(--color-indigo-700)}.text-rose-600{color:var(--color-rose-600)}.text-rose-700{color:var(--color-rose-700)}.text-sky-700{color:var(--color-sky-700)}.text-slate-100{color:var(--color-slate-100)}.text-slate-300{color:var(--color-slate-300)}.text-slate-400{color:var(--color-slate-400)}.text-slate-500{color:var(--color-slate-500)}.text-slate-600{color:var(--color-slate-600)}.text-slate-700{color:var(--color-slate-700)}.text-slate-800{color:var(--color-slate-800)}.text-white{color:var(--color-white)}.uppercase{text-transform:uppercase}.tabular-nums{--tw-numeric-spacing:tabular-nums;font-variant-numeric:var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,)}.underline{text-decoration-line:underline}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.accent-indigo-600{accent-color:var(--color-indigo-600)}.shadow-lg{--tw-shadow:0 10px 15px -3px var(--tw-shadow-color,#0000001a), 0 4px 6px -4px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 3px 0 var(--tw-shadow-color,#0000001a), 0 1px 2px -1px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px var(--tw-shadow-color,#0000001a), 0 8px 10px -6px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-xs{--tw-shadow:0 1px 2px 0 var(--tw-shadow-color,#0000000d);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.ring-2{--tw-ring-shadow:var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color,currentcolor);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.ring-indigo-500{--tw-ring-color:var(--color-indigo-500)}.filter{filter:var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,)}.backdrop-blur-\[2px\]{--tw-backdrop-blur:blur(2px);-webkit-backdrop-filter:var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);backdrop-filter:var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,)}.transition{transition-property:color,background-color,border-color,outline-color,text-decoration-color,fill,stroke,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,opacity,box-shadow,transform,translate,scale,rotate,filter,-webkit-backdrop-filter,backdrop-filter,display,content-visibility,overlay,pointer-events;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.outline-none{--tw-outline-style:none;outline-style:none}.select-none{-webkit-user-select:none;user-select:none}@media (hover:hover){.hover\:bg-indigo-100\/70:hover{background-color:#e0e7ffb3}@supports (color:color-mix(in lab, red, red)){.hover\:bg-indigo-100\/70:hover{background-color:color-mix(in oklab, var(--color-indigo-100) 70%, transparent)}}.hover\:bg-indigo-400:hover{background-color:var(--color-indigo-400)}.hover\:bg-indigo-700:hover{background-color:var(--color-indigo-700)}.hover\:bg-rose-50:hover{background-color:var(--color-rose-50)}.hover\:bg-slate-100:hover{background-color:var(--color-slate-100)}.hover\:bg-slate-200:hover{background-color:var(--color-slate-200)}.hover\:text-indigo-600:hover{color:var(--color-indigo-600)}.hover\:text-rose-600:hover{color:var(--color-rose-600)}.hover\:text-slate-600:hover{color:var(--color-slate-600)}}.focus\:border-indigo-500:focus{border-color:var(--color-indigo-500)}.focus-visible\:ring-2:focus-visible{--tw-ring-shadow:var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color,currentcolor);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.focus-visible\:ring-indigo-500:focus-visible{--tw-ring-color:var(--color-indigo-500)}@media (hover:hover){.enabled\:hover\:bg-slate-100:enabled:hover{background-color:var(--color-slate-100)}}.disabled\:opacity-40:disabled{opacity:.4}@media (min-width:480px){.min-\[480px\]\:grid-cols-\[7rem_4\.5rem_1fr_1\.75rem\]{grid-template-columns:7rem 4.5rem 1fr 1.75rem}.min-\[480px\]\:grid-cols-\[8rem_4\.5rem_1fr\]{grid-template-columns:8rem 4.5rem 1fr}.min-\[480px\]\:items-center{align-items:center}.min-\[480px\]\:gap-2{gap:calc(var(--spacing) * 2)}}@media (min-width:520px){.min-\[520px\]\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (min-width:40rem){.sm\:ml-0{margin-left:0}.sm\:ml-auto{margin-left:auto}.sm\:inline{display:inline}.sm\:w-44{width:calc(var(--spacing) * 44)}.sm\:w-auto{width:auto}.sm\:flex-none{flex:none}}@media (min-width:48rem){.md\:inline{display:inline}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}.\[\&_code\]\:break-all code{word-break:break-all}}@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-space-y-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-leading{syntax:"*";inherits:false}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-tracking{syntax:"*";inherits:false}@property --tw-ordinal{syntax:"*";inherits:false}@property --tw-slashed-zero{syntax:"*";inherits:false}@property --tw-numeric-figure{syntax:"*";inherits:false}@property --tw-numeric-spacing{syntax:"*";inherits:false}@property --tw-numeric-fraction{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}@property --tw-backdrop-blur{syntax:"*";inherits:false}@property --tw-backdrop-brightness{syntax:"*";inherits:false}@property --tw-backdrop-contrast{syntax:"*";inherits:false}@property --tw-backdrop-grayscale{syntax:"*";inherits:false}@property --tw-backdrop-hue-rotate{syntax:"*";inherits:false}@property --tw-backdrop-invert{syntax:"*";inherits:false}@property --tw-backdrop-opacity{syntax:"*";inherits:false}@property --tw-backdrop-saturate{syntax:"*";inherits:false}@property --tw-backdrop-sepia{syntax:"*";inherits:false}
+/* CSS kecil di luar utilitas Tailwind: warna kolom beku, zebra, hover, transisi.
+ * Semua warna lewat var(--color-*) agar ikut berganti saat tema berubah. */
+
+.mg-head th { background: var(--color-slate-100); }
+.mg-head th.frz0 { box-shadow: 2px 0 0 0 var(--color-slate-200); }
+
+.mg-body td.frz,
+.mg-body td.frz0 { background: var(--color-white); box-shadow: 2px 0 0 0 var(--color-slate-200); }
+.mg-body tr.alt td.frz,
+.mg-body tr.alt td.frz0 { background: var(--color-slate-50); }
+
+.mg-body tr:hover td { background: var(--color-indigo-50); }
+.mg-body tr.sel td { background: var(--color-indigo-100); }
+.mg-body tr.sel:hover td { background: var(--color-indigo-100); filter: brightness(.97); }
+
+.mg-spacer td { border: 0 !important; background: var(--color-white); }
+
+/* transisi halus saat ganti tema / hover */
+.mg-body td, .mg-head th, .mg-body tr,
+button, input, select, a {
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+/* ============================================================================
+ * themes.css — pilihan tema MiniGrid.
+ * Tailwind v4 menulis utilitas warna sebagai var(--color-*), jadi setiap tema
+ * cukup me-remap variabel di bawah [data-theme=…] pada <html>.
+ * ============================================================================ */
+
+/* ---- Gelap ---- */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-white: #0b1220;
+  --color-slate-50: #101a2e;
+  --color-slate-100: #16233c;
+  --color-slate-200: #24344f;
+  --color-slate-300: #33455f;
+  --color-slate-400: #64748b;
+  --color-slate-500: #8fa3bd;
+  --color-slate-600: #b7c5da;
+  --color-slate-700: #d8e1ee;
+  --color-slate-800: #e9eff8;
+  --color-slate-900: #f5f8fc;
+  --color-indigo-50: #1d2a4d;
+  --color-indigo-100: #253560;
+  --color-indigo-500: #7d95ff;
+  --color-indigo-600: #6d87fb;
+  --color-indigo-700: #a5b4ff;
+  --color-emerald-100: #062e21;
+  --color-emerald-600: #34d399;
+  --color-emerald-700: #6ee7b7;
+  --color-amber-100: #33230b;
+  --color-amber-700: #fcd34d;
+  --color-rose-100: #3d1420;
+  --color-rose-700: #fda4af;
+  --color-sky-100: #0b2a3d;
+  --color-sky-700: #7dd3fc;
+}
+[data-theme="dark"] pre { background: #0d1526; color: #dbe6f5; }
+
+/* ---- Samudra (terang, aksen sian) ---- */
+[data-theme="ocean"] {
+  --color-slate-50: #f2f8fc;
+  --color-slate-100: #e4eef6;
+  --color-slate-200: #cddfeb;
+  --color-slate-300: #aac6d9;
+  --color-slate-400: #7fa2ba;
+  --color-slate-500: #587d97;
+  --color-slate-600: #44647c;
+  --color-slate-700: #375267;
+  --color-slate-800: #2b4152;
+  --color-slate-900: #223442;
+  --color-indigo-50: #ecfeff;
+  --color-indigo-100: #cffafe;
+  --color-indigo-500: #06b6d4;
+  --color-indigo-600: #0e7490;
+  --color-indigo-700: #155e75;
+}
+
+/* ---- Hutan (terang, aksen hijau) ---- */
+[data-theme="forest"] {
+  --color-slate-50: #f3f8f4;
+  --color-slate-100: #e5efe7;
+  --color-slate-200: #cfe0d3;
+  --color-slate-300: #aec9b6;
+  --color-slate-400: #83a88f;
+  --color-slate-500: #5d866c;
+  --color-slate-600: #486b56;
+  --color-slate-700: #3b5747;
+  --color-slate-800: #2f463a;
+  --color-slate-900: #263a30;
+  --color-indigo-50: #ecfdf5;
+  --color-indigo-100: #d1fae5;
+  --color-indigo-500: #10b981;
+  --color-indigo-600: #047857;
+  --color-indigo-700: #065f46;
+}
+
+/* ---- Senja (terang hangat, aksen mawar) ---- */
+[data-theme="sunset"] {
+  --color-slate-50: #fdf6f3;
+  --color-slate-100: #faece7;
+  --color-slate-200: #f3d8cd;
+  --color-slate-300: #e5b8a8;
+  --color-slate-400: #d1907c;
+  --color-slate-500: #b76a56;
+  --color-slate-600: #96543f;
+  --color-slate-700: #7a4534;
+  --color-slate-800: #61382b;
+  --color-slate-900: #4f2f26;
+  --color-indigo-50: #fff1f2;
+  --color-indigo-100: #ffe4e6;
+  --color-indigo-500: #f43f5e;
+  --color-indigo-600: #be123c;
+  --color-indigo-700: #9f1239;
+}
+
+/* ---- Monokrom (netral tegas) ---- */
+[data-theme="mono"] {
+  --color-slate-50: #fafafa;
+  --color-slate-100: #f4f4f5;
+  --color-slate-200: #e4e4e7;
+  --color-slate-300: #d4d4d8;
+  --color-slate-400: #a1a1aa;
+  --color-slate-500: #71717a;
+  --color-slate-600: #52525b;
+  --color-slate-700: #3f3f46;
+  --color-slate-800: #27272a;
+  --color-slate-900: #18181b;
+  --color-indigo-50: #f4f4f5;
+  --color-indigo-100: #e4e4e7;
+  --color-indigo-500: #3f3f46;
+  --color-indigo-600: #18181b;
+  --color-indigo-700: #09090b;
+}
+
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased">
+
+<div class="mx-auto max-w-6xl space-y-5 p-4">
+
+  <header class="flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h1 class="text-xl font-bold tracking-tight">MiniGrid</h1>
+      <p class="text-sm text-slate-500">Data grid ala jqGrid — Tailwind CSS v4 + vanilla JS, satu file HTML, jalan tanpa internet.</p>
+    </div>
+    <div class="flex flex-wrap gap-1.5 text-[11px]">
+      <span class="rounded-full bg-emerald-100 px-2 py-0.5 font-medium text-emerald-700">0 runtime</span>
+      <span class="rounded-full bg-indigo-100 px-2 py-0.5 font-medium text-indigo-700">Tailwind v4</span>
+      <span class="rounded-full bg-slate-200 px-2 py-0.5 font-medium text-slate-700">virtual scroll</span>
+      <span class="rounded-full bg-slate-200 px-2 py-0.5 font-medium text-slate-700">offline</span>
+      <span class="rounded-full bg-slate-200 px-2 py-0.5 font-medium text-slate-700">toolbar responsif</span>
+      <span class="rounded-full bg-fuchsia-100 px-2 py-0.5 font-medium text-fuchsia-700">6 tema</span>
+    </div>
+  </header>
+
+  <div class="flex flex-wrap items-center gap-2">
+    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tema</span>
+    <div id="themes" class="flex flex-wrap items-center gap-1.5"></div>
+  </div>
+
+  <section class="rounded-xl border border-slate-300 bg-white p-3 shadow-sm">
+    <div class="mb-2 flex items-baseline justify-between">
+      <h2 class="text-sm font-semibold">50.000 baris · kolom beku · multi-sort · filter per kolom</h2>
+      <span class="text-xs text-slate-400">klik header = urutkan · <kbd class="rounded border border-slate-300 px-1">Shift</kbd>+klik = multi-sort · geser tepi header = ubah lebar</span>
+    </div>
+    <div id="grid1"></div>
+  </section>
+
+  <section class="rounded-xl border border-slate-300 bg-white p-3 shadow-sm">
+    <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+      <div>
+        <h2 class="text-sm font-semibold">CRUD lengkap ala jqGrid</h2>
+        <p class="text-xs text-slate-500"><b>+ Tambah / Edit / Detail / Hapus</b> lewat formulir modal (dengan validasi) · klik ganda sel = edit inline · data tersimpan di <code>localStorage</code></p>
+      </div>
+      <button id="reset2" class="h-6 rounded border border-slate-300 bg-white px-2 text-xs text-slate-600 hover:bg-slate-100">reset data contoh</button>
+    </div>
+    <div id="grid2"></div>
+    <p class="mt-2 text-xs text-slate-500">Log event: <span id="log" class="font-mono text-indigo-600">—</span></p>
+  </section>
+
+  <section class="rounded-xl border border-slate-300 bg-white p-3 shadow-sm">
+    <div class="mb-2">
+      <h2 class="text-sm font-semibold">Alur persetujuan: Approve/Reject · Export XLSX/PDF · form Filter · Help · form 2 kolom</h2>
+      <p class="text-xs text-slate-500">Edit &amp; Detail aktif hanya saat <b>tepat 1</b> baris terpilih · Approve/Reject/Hapus aktif saat <b>≥1</b> terpilih · tanpa baris filter di bawah header (semua filter dituangkan ke tombol <b>Filter</b>)</p>
+    </div>
+    <div id="grid3"></div>
+  </section>
+
+  <section class="grid gap-4 md:grid-cols-2">
+    <div class="min-w-0 rounded-xl border border-slate-300 bg-white p-4 shadow-sm">
+      <h2 class="mb-2 text-sm font-semibold">Pakai</h2>
+<pre class="overflow-auto rounded bg-slate-900 p-3 text-[11px] leading-relaxed text-slate-100"><code>MiniGrid({
+  el: '#grid',
+  columns: [
+    { name:'id',    label:'ID',     width:70,  type:'num' },
+    { name:'nama',  label:'Nama',   width:180 },
+    { name:'gaji',  label:'Gaji',   type:'num',
+      format:'money', align:'right' },
+    { name:'tgl',   label:'Masuk',  type:'date' },
+    { name:'ok',    label:'Aktif',
+      render: v => v ? '✓' : '✗' },
+  ],
+  data: rows,          // array objek biasa
+  frozen: 2,           // 2 kolom kiri beku
+  edit: true, add: true, remove: true,
+  pageSize: 25, height: 420,
+  crud: true,          // tombol + Tambah/Edit/Detail/Hapus (form modal)
+  onSave: (row, isNew) => save(row),  // persist: localStorage/API
+});</code></pre>
+    </div>
+    <div class="min-w-0 rounded-xl border border-slate-300 bg-white p-4 shadow-sm">
+      <h2 class="mb-2 text-sm font-semibold">Opsi</h2>
+      <dl class="space-y-1 text-xs break-words [&_code]:break-all">
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">columns[]</dt><dd class="text-slate-600">name, label, width, type (str|num|date), format, align, render(), sortable, filter, editable, hidden, search</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">data</dt><dd class="text-slate-600">array objek — client-side. Ganti <code>grid.data</code> lalu <code>grid.render()</code>.</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">select</dt><dd class="text-slate-600">'multi' (checkbox) | 'single' | false · <code>selectAll</code>: 'page' (default, ala jqGrid) | 'view'</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">filter/search</dt><dd class="text-slate-600">baris filter beroperator (= ≠ ∋ ^ $ &gt; ≥ &lt; ≤ ada kosong) + pencarian global · tombol <b>Filter</b> = filter cepat + <b>builder kondisi lanjutan</b>: field dipilih, kondisi dapat ditambah (satu field boleh lebih dari satu, mis. <code>no &gt; 10</code> dan <code>no &le; 20</code>), digabung AND/OR, badge jumlah kondisi aktif</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">frozen</dt><dd class="text-slate-600">jumlah kolom beku di kiri (sticky)</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">crud</dt><dd class="text-slate-600">pintasan untuk tombol <b>+ Tambah · Edit · Detail · Hapus</b> berbasis formulir modal (navGrid ala jqGrid); atau satuan: <code>add / editForm / view / remove</code>, <code>edit</code> = edit inline via klik ganda</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">actions</dt><dd class="text-slate-600">tombol kustom berikon: <code>{id,label,icon,need:'one'|'some',fn(rows,grid)}</code> — mis. Approve/Reject</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">filterForm/help</dt><dd class="text-slate-600">tombol <b>Filter</b> = semua filter kolom dalam satu form · tombol <b>Help</b> = modal panduan (teks bisa diganti via <code>helpText</code>)</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">formCols</dt><dd class="text-slate-600">jumlah kolom layout formulir Tambah/Edit (1 atau 2)</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">tema</dt><dd class="text-slate-600">pemilih tema di kepala halaman (Terang, Gelap, Samudra, Hutan, Senja, Monokrom), tersimpan di <code>localStorage</code>; implementasi = remap variabel warna Tailwind v4 via <code>[data-theme]</code></dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">Export</dt><dd class="text-slate-600">menu CSV / XLSX / PDF — writer asli tanpa library, mengikuti hasil ter-filter &amp; ter-urut</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">kolom: form</dt><dd class="text-slate-600"><code>options:[…]</code> jadi select · <code>required</code> validasi wajib · <code>bool</code> jadi checkbox · <code>form:false</code> sembunyikan dari formulir · <code>editable:false</code> blok edit</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">tinggi</dt><dd class="text-slate-600">height, rowHeight, pageSize, pageSizes, zebra, resize, chooser, rowId()</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">metode</dt><dd class="text-slate-600">render() · refresh() · sortBy(n, tambah) · selected() · clearSel() · toCSV()</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">callback</dt><dd class="text-slate-600">onSave(row,isNew) · onEdit(row,col,val,old) · onAdd(blank) · onRemove(rows) · onSelect(ids) — tempat menyimpan ke localStorage/API</dd></div>
+      </dl>
+      <h3 class="mt-3 mb-1 text-xs font-semibold text-slate-700">Operator filter per tipe kolom</h3>
+      <p class="text-xs text-slate-500">Teks: = ≠ ∋(mengandung) ^(awalan) $(akhiran). Angka &amp; tanggal: = ≠ &gt; ≥ &lt; ≤. Semua kolom: <i>ada</i> / <i>kosong</i>. Nilai tanggal ditulis <code>2024-01-31</code> atau <code>2024</code>.</p>
+    </div>
+  </section>
+
+  <section class="rounded-xl border border-slate-300 bg-white p-4 shadow-sm">
+    <h2 class="mb-2 text-sm font-semibold">Perbandingan stack (semuanya offline, Tailwind v4 di-inline)</h2>
+    <table class="w-full text-xs">
+      <thead><tr class="border-b border-slate-200 text-left text-slate-500">
+        <th class="py-1 pr-2 font-medium">Stack</th><th class="py-1 pr-2 font-medium">Runtime tambahan</th><th class="py-1 pr-2 font-medium">Ukuran total halaman</th><th class="py-1 font-medium">Catatan</th>
+      </tr></thead>
+      <tbody class="text-slate-600">
+        <tr class="border-b border-slate-100"><td class="py-1.5 pr-2 font-semibold text-emerald-700">Tailwind v4 + vanilla JS (halaman ini)</td><td class="pr-2">0 KB</td><td class="pr-2">±54 KB</td><td>paling ringan; fitur grid lengkap (virtual scroll, kolom beku); tanpa toolchain runtime</td></tr>
+        <tr class="border-b border-slate-100"><td class="py-1.5 pr-2">Tailwind v4 + <a class="text-indigo-600 underline" href="./alpine.html">Alpine.js 3</a></td><td class="pr-2">45 KB</td><td class="pr-2">±78 KB</td><td>kode deklaratif lebih ringkas; cocok bila tim sudah terbiasa; tanpa virtual scroll</td></tr>
+        <tr><td class="py-1.5 pr-2">Svelte (compiled)</td><td class="pr-2">±2–4 KB</td><td class="pr-2">±70 KB</td><td>butuh langkah compile (vite/svelte-kit); pilih bila aplikasinya sudah berbasis Svelte</td></tr>
+      </tbody>
+    </table>
+    <p class="mt-2 text-xs text-slate-500">Rekomendasi: <b>vanilla JS + Tailwind v4</b> untuk satu file offline ala jqGrid — tidak ada runtime, tidak ada langkah build di sisi pengguna, dan seluruh logika grid ±31 KB. Alpine hanya unggul pada kenyamanan penulisan markup.</p>
+  </section>
+
+  <section class="rounded-xl border border-slate-300 bg-white p-4 text-xs text-slate-600 shadow-sm">
+    <h2 class="mb-1 text-sm font-semibold text-slate-800">Build ulang CSS (butuh internet sekali)</h2>
+<pre class="overflow-auto rounded bg-slate-900 p-3 text-[11px] leading-relaxed text-slate-100"><code>npm i -D @tailwindcss/cli
+npx tailwindcss -i ./src/input.css -o ./dist/tailwind.css --minify
+node build.mjs        # inline CSS + JS ke dalam index.html → hasil akhir 1 file</code></pre>
+    <p class="mt-2">Hasil <code>index.html</code> bisa dibuka dengan <code>file://</code> atau ditaruh di USB/intranet tanpa server dan tanpa koneksi.</p>
+  </section>
+
+  <footer class="pb-4 text-center text-xs text-slate-400">MiniGrid · ~9 KB JS + ~15 KB CSS · tanpa jQuery, tanpa framework</footer>
+</div>
+
+<script>
+/* ============================================================================
+ * minigrid.js — data grid ala jqGrid · vanilla JS · 0 dependency
+ * sort multi-kolom · filter per kolom beroperator · pencarian global · pager
+ * virtual scroll · kolom beku · pilih baris · resize kolom · edit inline
+ * tambah/hapus · pilih kolom · ekspor CSV
+ * ============================================================================ */
+(function (global) {
+  'use strict';
+
+  var OPS = { eq: '=', ne: '≠', cn: '∋', bw: '^', ew: '$', gt: '>', gte: '≥', lt: '<', lte: '≤', nn: 'ada', nl: 'kosong' };
+  var NUMOPS = { eq: 1, ne: 1, gt: 1, gte: 1, lt: 1, lte: 1, nn: 1, nl: 1 };
+
+  /* ikon SVG inline (stroke, 14px) — tanpa dependency */
+  var IC = function (p) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5 shrink-0">' + p + '</svg>';
+  };
+  var ICONS = {
+    add: IC('<path d="M12 5v14M5 12h14"/>'),
+    edit: IC('<path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>'),
+    view: IC('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>'),
+    del: IC('<path d="M3 6h18M8 6V4h8v2m1 0-1 14H8L7 6"/>'),
+    cols: IC('<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M9 4v16M15 4v16"/>'),
+    export: IC('<path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/>'),
+    filter: IC('<path d="M3 5h18l-7 8v6l-4 2v-8Z"/>'),
+    help: IC('<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 1-1 1.7"/><path d="M12 17h.01"/>'),
+    ok: IC('<path d="M20 6 9 17l-5-5"/>'),
+    no: IC('<path d="M18 6 6 18M6 6l12 12"/>')
+  };
+  var BTN = 'flex h-6 items-center gap-1 rounded-md border border-slate-300 bg-white px-2 text-xs font-medium text-slate-700 shadow-xs outline-none hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-40';
+
+  var esc = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  };
+  var fmt = function (v, c) {
+    if (v == null || v === '') return '';
+    if (c.format === 'num') return Number(v).toLocaleString('id-ID');
+    if (c.format === 'money') return Number(v).toLocaleString('id-ID');
+    return v;
+  };
+  function coerce(v, type) {
+    if (v == null || v === '') return '';
+    if (type === 'num') { var n = Number(v); return isFinite(n) ? n : ''; }
+    if (type === 'date') { var d = new Date(v); return isNaN(d) ? '' : d.getTime(); }
+    return String(v).toLowerCase();
+  }
+  function cmp(a, b) { return a < b ? -1 : a > b ? 1 : 0; }
+  function hit(op, v, q, type) {
+    if (op === 'nn') return v !== '';
+    if (op === 'nl') return v === '';
+    if (q === '') return true;
+    if (type === 'num' || type === 'date') {
+      var n = Number(q); if (!isFinite(n)) return true;
+      switch (op) {
+        case 'eq': return v === n; case 'ne': return v !== n;
+        case 'gt': return v > n; case 'gte': return v >= n;
+        case 'lt': return v < n; case 'lte': return v <= n;
+      }
+      return true;
+    }
+    var s = String(q).toLowerCase();
+    switch (op) {
+      case 'eq': return v === s; case 'ne': return v !== s;
+      case 'bw': return v.indexOf(s) === 0;
+      case 'ew': return v.slice(-s.length) === s;
+      default: return v.indexOf(s) > -1;
+    }
+  }
+
+  var SHELL =
+    '<div class="overflow-hidden rounded-lg border border-slate-300 bg-white shadow-sm">' +
+      '<div class="flex flex-wrap items-center gap-x-2 gap-y-1.5 border-b border-slate-200 bg-slate-50 px-2 py-1.5">' +
+        '<div class="relative flex flex-wrap items-center gap-1" data-role="tools"></div>' +
+        '<div class="flex w-full min-w-0 items-center gap-2 sm:ml-auto sm:w-auto">' +
+          '<input data-role="q" type="search" placeholder="Cari semua kolom… (Enter)" class="w-full min-w-0 flex-1 rounded border border-slate-300 bg-white px-2 py-1 text-xs outline-none focus:border-indigo-500 sm:w-44 sm:flex-none">' +
+          '<span data-role="info" class="ml-auto whitespace-nowrap text-xs tabular-nums text-slate-500 sm:ml-0"></span>' +
+        '</div>' +
+      '</div>' +
+      '<div data-role="scroller" class="overflow-auto bg-white">' +
+        '<table class="border-collapse text-xs" style="table-layout:fixed;width:100%">' +
+          '<colgroup data-role="cg"></colgroup>' +
+          '<thead data-role="head" class="mg-head sticky top-0 z-10"></thead>' +
+          '<tbody data-role="body" class="mg-body relative"></tbody>' +
+        '</table>' +
+      '</div>' +
+      '<div class="flex flex-wrap items-center gap-2 border-t border-slate-200 bg-slate-50 px-2 py-1.5" data-role="pager"></div>' +
+    '</div>';
+
+  function Grid(opts) {
+    if (!(this instanceof Grid)) return new Grid(opts);
+    var o = this.o = Object.assign({
+      columns: [], data: [], page: 1, pageSize: 25,
+      pageSizes: [10, 25, 50, 100, 500], height: 420, rowHeight: 32,
+      frozen: 0, select: 'multi', selectAll: 'page', filter: true, search: true, edit: false,
+      resize: true, add: false, remove: false, editForm: false, view: false, crud: false,
+      chooser: true, zebra: true, filterForm: false, help: false, formCols: 1, actions: [],
+      rowId: function (r, i) { return r.id != null ? r.id : i; },
+      onEdit: null, onAdd: null, onRemove: null, onSelect: null
+    }, opts);
+    if (o.crud) o.add = o.editForm = o.view = o.remove = true;   /* pintasan CRUD lengkap */
+
+    this.data = o.data;
+    this.s = { page: o.page, size: o.pageSize, sort: [], filter: {}, rules: [], join: 'AND', q: '', sel: new Set() };
+    this._in = {}; this._rev = 0; this.ms = 0;
+    this.view = []; this.pageRows = [];
+    this._f = -1; this._l = -1; this._pv = '';
+    this._sk = new WeakMap();            // cache nilai terurut per baris
+    this._skey = '';
+
+    this.el = typeof o.el === 'string' ? document.querySelector(o.el) : o.el;
+    this.el.innerHTML = SHELL;
+    var $ = function (n) { return this.el.querySelector('[data-role=' + n + ']'); }.bind(this);
+    this.r = { tools: $('tools'), q: $('q'), info: $('info'), sc: $('scroller'), cg: $('cg'), head: $('head'), body: $('body'), pager: $('pager') };
+    if (!o.search) this.r.q.remove();
+
+    this.cols = o.columns.map(function (c) {
+      return Object.assign({ width: 120, type: 'str', sortable: true, hidden: false }, c);
+    });
+    this.r.sc.style.height = o.height + 'px';
+    this._offsets();
+    this._wire();
+    this.render();
+  }
+  var P = Grid.prototype;
+
+  P.col = function (n) { for (var i = 0; i < this.cols.length; i++) if (this.cols[i].name === n) return this.cols[i]; return null; };
+  P.vis = function () { return this.cols.filter(function (c) { return !c.hidden; }); };
+  P._offsets = function () {
+    var left = this.o.select === 'multi' ? 36 : 0;
+    this.cols.forEach(function (c) { c._left = left; if (!c.hidden) left += c.width; });
+  };
+  P.idOf = function (r, i) { return String(this.o.rowId(r, i)); };
+
+  /* ------------------------------------------------------- pipeline data */
+  P._recompute = function () {
+    var s = this.s, self = this, t0 = performance.now();
+    var fs = [];
+    Object.keys(s.filter).forEach(function (k) {
+      var f = s.filter[k], c = self.col(k);
+      if (c && f && String(f.q).trim() !== '') fs.push([c, f]);
+    });
+    var rp = [];
+    (s.rules || []).forEach(function (r) {
+      var c = self.col(r.f);
+      if (c && (String(r.q).trim() !== '' || r.op === 'nn' || r.op === 'nl')) rp.push([c, r]);
+    });
+    var joinOr = s.join === 'OR';
+    var q = s.q.toLowerCase();
+    var gcols = q ? this.vis().filter(function (c) { return c.search !== false; }) : [];
+
+    var out = [];
+    for (var i = 0; i < this.data.length; i++) {
+      var r = this.data[i], ok = true;
+      for (var j = 0; j < fs.length; j++) {
+        if (!hit(fs[j][1].op, coerce(r[fs[j][0].name], fs[j][0].type), fs[j][1].q, fs[j][0].type)) { ok = false; break; }
+      }
+      if (ok && rp.length) {
+        var m = !joinOr;
+        for (var b = 0; b < rp.length; b++) {
+          var hh = hit(rp[b][1].op, coerce(r[rp[b][0].name], rp[b][0].type), rp[b][1].q, rp[b][0].type);
+          if (joinOr) { if (hh) { m = true; break; } }
+          else if (!hh) { m = false; break; }
+        }
+        ok = m;
+      }
+      if (ok && q) {
+        ok = false;
+        for (var g = 0; g < gcols.length; g++) {
+          if (String(r[gcols[g].name] == null ? '' : r[gcols[g].name]).toLowerCase().indexOf(q) > -1) { ok = true; break; }
+        }
+      }
+      if (ok) out.push(r);
+    }
+
+    var key = JSON.stringify(s.sort);
+    if (s.sort.length) {
+      if (key !== this._skey) { this._prepSort(s.sort); this._skey = key; }
+      var self2 = this;
+      out.sort(function (a, b) { return self2._sortCmp(a, b); });
+    }
+
+    this.view = out;
+    this.ms = Math.round((performance.now() - t0) * 10) / 10;
+    var pages = Math.max(1, Math.ceil(out.length / s.size));
+    if (s.page > pages) s.page = pages;
+    if (s.page < 1) s.page = 1;
+    this.pageRows = out.slice((s.page - 1) * s.size, s.page * s.size);
+  };
+
+  /* nilai ter- coerce dihitung sekali per (baris × kolom urut) lalu di-cache */
+  P._prepSort = function (sort) {
+    var cache = this._sk;
+    this._sf = sort.map(function (sd) {
+      var c = this.col(sd.n) || { type: 'str' }, name = sd.n, dir = sd.d;
+      return {
+        d: dir, get: function (r) {
+          var m = cache.get(r);
+          if (!m) { m = {}; cache.set(r, m); }
+          if (!(name in m)) m[name] = coerce(r[name], c.type);
+          return m[name];
+        }
+      };
+    }, this);
+  };
+  P._sortCmp = function (a, b) {
+    var f = this._sf;
+    for (var i = 0; i < f.length; i++) {
+      var r = cmp(f[i].get(a), f[i].get(b));
+      if (r) return r * f[i].d;
+    }
+    return 0;
+  };
+
+  P.render = function () {
+    this._recompute(); this._head(); this._cols(); this._paint(true); this._pager(); this._info();
+  };
+
+  /* ------------------------------------------------------------ struktur */
+  P._cols = function () {
+    var w = this.o.select === 'multi' ? '<col style="width:36px">' : '';
+    this.vis().forEach(function (c) { w += '<col style="width:' + c.width + 'px">'; });
+    this.r.cg.innerHTML = w;
+  };
+
+  P._head = function () {
+    var self = this, s = this.s, multi = this.o.select === 'multi';
+    var h = '<tr>';
+    if (multi) {
+      h += '<th class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 text-center align-middle" style="position:sticky;left:0;z-index:3">' +
+           '<input type="checkbox" data-role="all" class="size-3.5 accent-indigo-600"></th>';
+    }
+    this.vis().forEach(function (c, i) {
+      var sd = null;
+      for (var k = 0; k < s.sort.length; k++) if (s.sort[k].n === c.name) sd = s.sort[k];
+      var frz = i < self.o.frozen;
+      h += '<th class="bg-slate-100 p-0 align-top' + (frz ? ' frz' : '') + '"' +
+           (frz ? ' style="position:sticky;left:' + c._left + 'px;z-index:2"' : '') + '>' +
+           '<div class="flex items-center gap-1 border-b border-slate-300 px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-600' +
+             (c.sortable ? ' cursor-pointer select-none hover:bg-slate-200' : '') + '"' +
+             (c.sortable ? ' data-sort="' + c.name + '"' : '') + '>' +
+             '<span class="truncate">' + esc(c.label) + '</span>' +
+             '<span class="ml-auto shrink-0 text-[9px]">' +
+               (sd ? (sd.d > 0 ? '▲' : '▼') : '<span class="text-slate-300">↕</span>') +
+               (s.sort.length > 1 && sd ? '<sup class="text-indigo-600">' + (s.sort.indexOf(sd) + 1) + '</sup>' : '') +
+             '</span>' +
+             (self.o.resize ? '<span data-rz="' + i + '" class="-mr-2 ml-1 h-4 w-2 shrink-0 cursor-col-resize hover:bg-indigo-400"></span>' : '') +
+           '</div>' +
+           (self.o.filter && c.filter !== false
+             ? '<div class="flex items-center gap-1 bg-white px-1 py-1">' +
+                 '<select data-op="' + c.name + '" class="h-5 shrink-0 rounded border border-slate-200 bg-slate-50 text-[10px] text-slate-500 outline-none">' +
+                   Object.keys(OPS)
+                     .filter(function (k) { return c.type === 'num' || c.type === 'date' ? NUMOPS[k] : true; })
+                     .map(function (k) {
+                       return '<option value="' + k + '"' + ((s.filter[c.name] || {}).op === k ? ' selected' : '') + '>' + OPS[k] + '</option>';
+                     }).join('') +
+                 '</select>' +
+                 '<input data-f="' + c.name + '" class="h-5 w-full min-w-0 rounded border border-slate-200 px-1 text-[11px] outline-none focus:border-indigo-500" placeholder="…">' +
+               '</div>'
+             : '') +
+           '</th>';
+    });
+    h += '</tr>';
+    if (this.r.head.innerHTML !== h) this.r.head.innerHTML = h;
+    this._inputs();
+    this._headEvents();
+  };
+
+  /* input filter disimpan di cache agar fokus/kursor tidak hilang saat header
+   * dibangun ulang; atribut data-f ikut dipindah agar selector tetap jalan. */
+  P._inputs = function () {
+    var self = this, s = this.s;
+    this.vis().forEach(function (c) {
+      var slot = self.r.head.querySelector('[data-f="' + c.name + '"]');
+      if (!slot) return;
+      var inp = self._in[c.name] || (self._in[c.name] = document.createElement('input'));
+      inp.setAttribute('data-f', c.name);
+      inp.className = slot.className;
+      inp.placeholder = slot.placeholder;
+      inp.value = (s.filter[c.name] || {}).q || '';
+      slot.replaceWith(inp);
+      if (inp._w) return;
+      inp._w = 1;
+      var timer;
+      var apply = function () {
+        var f = s.filter[c.name] || (s.filter[c.name] = { op: 'cn', q: '' });
+        var v = inp.value.trim();
+        if (f.q === v) return;
+        f.q = v; s.page = 1; self.render();
+      };
+      inp.oninput = function () { clearTimeout(timer); timer = setTimeout(apply, 260); };
+      inp.onkeydown = function (e) {
+        e.stopPropagation();
+        if (e.key === 'Enter') { clearTimeout(timer); apply(); }
+        if (e.key === 'Escape') { clearTimeout(timer); inp.value = ''; apply(); }
+      };
+    });
+  };
+
+  /* handler header dipasang ulang setiap kali thead dibangun (node-nya baru) */
+  P._headEvents = function () {
+    var self = this, s = this.s;
+    var all = this.r.head.querySelector('[data-role=all]');
+    if (all) all.onchange = function () {
+      /* 'page' = baris di halaman aktif saja (ala jqGrid), 'view' = semua hasil filter */
+      var list = self.o.selectAll === 'view' ? self.view : self.pageRows;
+      if (all.checked) list.forEach(function (r, i) { s.sel.add(self.idOf(r, i)); });
+      else list.forEach(function (r, i) { s.sel.delete(self.idOf(r, i)); });
+      self._paint(true);
+      self._fire();
+    };
+  };
+
+  P._paint = function (force) {
+    var s = this.s, o = this.o, cols = this.vis(), self = this;
+    var rh = o.rowHeight, top = this.r.sc.scrollTop, n = this.pageRows.length;
+    var first = Math.max(0, Math.floor(top / rh) - 5);
+    var last = Math.min(n, Math.ceil((top + o.height) / rh) + 5);
+    var pv = [s.page, s.size, n, this._rev, s.sort.length, cols.length].join('|');
+    if (!force && first === this._f && last === this._l && pv === this._pv) return;
+    this._f = first; this._l = last; this._pv = pv;
+
+    /* virtual scroll dengan baris spacer (bukan position:absolute) agar lebar
+     * kolom dari <colgroup> tetap berlaku untuk semua baris. */
+    var frag = document.createDocumentFragment();
+    var span = cols.length + (o.select === 'multi' ? 1 : 0);
+    if (first > 0) frag.appendChild(spacer(first * rh, span));
+    for (var i = first; i < last; i++) {
+      var row = this.pageRows[i], id = this.idOf(row, i);
+      var tr = document.createElement('tr');
+      tr.dataset.id = id; tr.dataset.i = i;
+      tr.style.height = rh + 'px';
+      tr.className = (o.zebra && i % 2 ? 'alt ' : '') + (s.sel.has(id) ? 'sel ' : '');
+      var h = o.select === 'multi'
+        ? '<td class="frz0 border-b border-r border-slate-200 p-0 text-center align-middle" style="position:sticky;left:0;z-index:1">' +
+          '<input type="checkbox" data-ck="' + esc(id) + '"' + (s.sel.has(id) ? ' checked' : '') + ' class="size-3.5 accent-indigo-600"></td>'
+        : '';
+      for (var c = 0; c < cols.length; c++) {
+        var col = cols[c], frz = c < o.frozen;
+        h += '<td data-c="' + col.name + '" class="truncate border-b border-r border-slate-200 px-2 align-middle' +
+             (col.align === 'right' ? ' text-right tabular-nums' : col.align === 'center' ? ' text-center' : '') +
+             (frz ? ' frz' : '') + '"' +
+             (frz ? ' style="position:sticky;left:' + col._left + 'px;z-index:1"' : '') + '>' +
+             (col.render ? col.render(row[col.name], row) : esc(fmt(row[col.name], col))) + '</td>';
+      }
+      tr.innerHTML = h;
+      frag.appendChild(tr);
+    }
+    if (last < n) frag.appendChild(spacer((n - last) * rh, span));
+    this.r.body.replaceChildren(frag);
+    this._syncHead();
+
+    function spacer(px, colsSpan) {
+      var t = document.createElement('tr');
+      t.className = 'mg-spacer';
+      t.innerHTML = '<td colspan="' + colsSpan + '" style="height:' + px + 'px"></td>';
+      return t;
+    }
+  };
+
+  P._syncHead = function () {
+    var self = this, s = this.s;
+    var all = this.r.head.querySelector('[data-role=all]');
+    if (all) {
+      var list = this.o.selectAll === 'view' ? this.view : this.pageRows;
+      var ids = list.map(function (r, i) { return self.idOf(r, i); });
+      var on = ids.filter(function (id) { return s.sel.has(id); }).length;
+      all.checked = ids.length > 0 && on === ids.length;
+      all.indeterminate = on > 0 && on < ids.length;
+    }
+    var del = this.r.tools.querySelector('[data-act=remove]');
+    if (del) del.disabled = s.sel.size === 0;
+    var one = s.sel.size === 1;
+    ['edit', 'view'].forEach(function (a) {
+      var b = self.r.tools.querySelector('[data-act=' + a + ']');
+      if (b) b.disabled = !one;
+    });
+    (this.o.actions || []).forEach(function (a) {   /* approve/reject/dll */
+      var b = self.r.tools.querySelector('[data-act=' + a.id + ']');
+      if (b) b.disabled = a.need === 'one' ? s.sel.size !== 1 : s.sel.size === 0;
+    });
+  };
+
+  P._pager = function () {
+    var s = this.s, o = this.o, self = this, pages = Math.max(1, Math.ceil(this.view.length / s.size));
+    var b = function (l, p, dis) {
+      return '<button data-page="' + p + '"' + (dis ? ' disabled' : '') +
+        ' class="h-6 min-w-6 rounded-md border border-slate-300 bg-white px-1.5 text-xs text-slate-600 shadow-xs outline-none enabled:hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-40">' + l + '</button>';
+    };
+    this.r.pager.innerHTML =
+      '<div class="flex items-center gap-0.5">' +
+        b('«', 1, s.page === 1) + b('‹', s.page - 1, s.page === 1) +
+        '<span class="px-1 text-xs tabular-nums text-slate-600">' + s.page + ' / ' + pages + '</span>' +
+        b('›', s.page + 1, s.page === pages) + b('»', pages, s.page === pages) +
+      '</div>' +
+      '<label class="flex items-center gap-1 text-xs text-slate-600">Baris' +
+        '<select data-role="size" class="h-6 rounded border border-slate-300 bg-white px-1 text-xs outline-none">' +
+          o.pageSizes.map(function (n) { return '<option' + (n === s.size ? ' selected' : '') + '>' + n + '</option>'; }).join('') +
+        '</select></label>' +
+      '<span class="ml-auto text-xs text-slate-500">filter+sort <b class="tabular-nums text-slate-700">' + this.ms + '</b> ms · ' +
+        (this._l - this._f) + ' baris di DOM</span>';
+  };
+
+  P._info = function () {
+    var s = this.s;
+    var fbtn = this.r.tools.querySelector('[data-act=ffilter] [data-fc]');
+    if (fbtn) {
+      var n = 0;
+      Object.keys(s.filter).forEach(function (k) { if ((s.filter[k].q || '').trim()) n++; });
+      (s.rules || []).forEach(function (r) { if (String(r.q).trim() !== '' || r.op === 'nn' || r.op === 'nl') n++; });
+      fbtn.textContent = n || '';
+      fbtn.classList.toggle('hidden', !n);
+    }
+    var from = this.view.length ? (s.page - 1) * s.size + 1 : 0;
+    this.r.info.textContent = from + '–' + Math.min(s.page * s.size, this.view.length) + ' dari ' + this.view.length +
+      (this.view.length !== this.data.length ? ' / ' + this.data.length : '') + (s.sel.size ? ' · pilih ' + s.sel.size : '');
+  };
+
+  /* ----------------------------------------------------------- interaksi */
+  P.sortBy = function (name, add) {
+    var s = this.s, i = -1;
+    for (var k = 0; k < s.sort.length; k++) if (s.sort[k].n === name) i = k;
+    if (!add) s.sort = i < 0 ? [{ n: name, d: 1 }] : [{ n: name, d: -s.sort[i].d }];
+    else if (i < 0) s.sort.push({ n: name, d: 1 });
+    else if (s.sort[i].d === 1) s.sort[i].d = -1;
+    else s.sort.splice(i, 1);
+    this._skey = '';
+    this.render();
+  };
+
+  P._resizeStart = function (e, i) {
+    var self = this, c = this.vis()[i], x0 = e.clientX, w0 = c.width;
+    e.preventDefault(); e.stopPropagation();
+    var move = function (ev) {
+      /* +1 = border-r 1px (box-sizing: border-box dari preflight) */
+      c.width = Math.max(40, Math.round(w0 + ev.clientX - x0) + 1);
+      self._offsets(); self._cols(); self._head(); self._paint(true);
+    };
+    var up = function () {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', up);
+      self.render();
+    };
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerup', up);
+  };
+
+  P.selected = function () {
+    var s = this.s, self = this;
+    return this.data.filter(function (r, i) { return s.sel.has(self.idOf(r, i)); });
+  };
+  P.clearSel = function () { this.s.sel.clear(); this._paint(true); this._fire(); };
+  P._fire = function () { this._syncHead(); this._info(); if (this.o.onSelect) this.o.onSelect(Array.from(this.s.sel)); };
+
+  P._wire = function () {
+    var self = this, o = this.o, s = this.s;
+
+    /* ---- toolbar (berikon + aksi kustom) ---- */
+    var T = [];
+    if (o.add) T.push(['add', 'Tambah', 'add']);
+    if (o.editForm) T.push(['edit', 'Edit', 'edit']);
+    if (o.view) T.push(['view', 'Detail', 'view']);
+    (o.actions || []).forEach(function (a) { T.push([a.id, a.label, a.icon || 'ok', a]); });
+    if (o.remove) T.push(['remove', 'Hapus', 'del']);
+    if (o.filterForm) T.push(['ffilter', 'Filter', 'filter', true]);
+    T.push(['export', 'Export', 'export']);
+    if (o.chooser) T.push(['cols', 'Kolom', 'cols']);
+    if (o.help) T.push(['help', '', 'help']);
+    this.r.tools.innerHTML = T.map(function (t) {
+      return '<button data-act="' + t[0] + '" title="' + (t[1] || t[0]) + '" class="' + BTN + (t[1] ? '' : ' px-1.5') + '">' +
+        (ICONS[t[2]] || '') + (t[1] ? '<span class="hidden sm:inline">' + esc(t[1]) + '</span>' : '') +
+        (t[3] ? '<span data-fc class="hidden rounded-full bg-indigo-600 px-1.5 text-[9px] font-semibold leading-4 text-white"></span>' : '') + '</button>';
+    }).join('') + (o.filter ? '<button data-act="clear" class="h-6 rounded px-2 text-xs text-slate-500 hover:text-indigo-600">bersihkan filter</button>' : '');
+
+    this.r.tools.onclick = function (e) {
+      var a = e.target.closest('[data-act]');
+      if (!a || a.disabled) return;
+      var act = a.dataset.act;
+
+      if (act === 'export') { self._exportMenu(a); return; }
+      if (act === 'ffilter') { self._filterForm(); return; }
+      if (act === 'help') { self._help(); return; }
+      var ca = null;
+      (o.actions || []).forEach(function (x) { if (x.id === act) ca = x; });
+      if (ca) {
+        var rs = self.selected();
+        if (ca.need === 'one' ? rs.length !== 1 : !rs.length) return;
+        ca.fn(rs, self);
+        return;
+      }
+
+      if (act === 'add') {
+        if (o.editForm) { self._form('add'); return; }
+        var blank = {};
+        self.cols.forEach(function (c) { blank[c.name] = c.type === 'num' ? 0 : ''; });
+        var row = o.onAdd ? o.onAdd(blank) : Object.assign({ id: Date.now() }, blank);
+        if (!row) return;
+        self.data.push(row);
+        s.filter = {}; s.q = ''; if (self.r.q) self.r.q.value = '';
+        Object.keys(self._in).forEach(function (k) { self._in[k].value = ''; });
+        s.page = 1e9; self._skey = '';
+        self.render();
+        var id = self.idOf(row, self.data.length - 1);
+        var tr = self.r.body.querySelector('tr[data-id="' + id + '"]');
+        if (tr && o.edit) {
+          var td = tr.querySelector('td[data-c]');
+          if (td) self._editCell(td);
+        }
+      }
+      if (act === 'edit' && s.sel.size === 1) self._form('edit');
+      if (act === 'view' && s.sel.size === 1) self._form('view');
+      if (act === 'remove') {
+        var rows = self.selected();
+        if (!rows.length) return;
+        var go = o.onRemove ? o.onRemove(rows) !== false : confirm('Hapus ' + rows.length + ' baris terpilih?');
+        if (!go) return;
+        var del = new Set(rows);
+        self.data = o.data = self.data.filter(function (r) { return !del.has(r); });
+        s.sel.clear(); self._skey = ''; self.render();
+      }
+      if (act === 'cols') self._chooser();
+      if (act === 'clear') {
+        s.filter = {}; s.rules = []; s.join = 'AND'; s.q = ''; s.page = 1;
+        if (self.r.q) self.r.q.value = '';
+        Object.keys(self._in).forEach(function (k) { self._in[k].value = ''; });
+        self.render();
+      }
+    };
+
+    /* ---- header: sort, resize, operator ---- */
+    this.r.head.onclick = function (e) {
+      if (e.target.closest('[data-rz]')) return;
+      var th = e.target.closest('[data-sort]');
+      if (th) self.sortBy(th.dataset.sort, e.shiftKey);
+    };
+    this.r.head.onpointerdown = function (e) {
+      var rz = e.target.closest('[data-rz]');
+      if (rz) self._resizeStart(e, +rz.dataset.rz);
+    };
+    this.r.head.onchange = function (e) {
+      var op = e.target.dataset && e.target.dataset.op;
+      if (!op) return;
+      var f = s.filter[op] || (s.filter[op] = { op: 'cn', q: '' });
+      f.op = e.target.value;
+      s.page = 1; self.render();
+    };
+
+    /* ---- pencarian global ---- */
+    if (this.r.q) this.r.q.onkeydown = function (e) {
+      if (e.key === 'Enter') { s.q = e.target.value.trim(); s.page = 1; self.render(); }
+      if (e.key === 'Escape') { e.target.value = ''; s.q = ''; s.page = 1; self.render(); }
+    };
+
+    /* ---- body: pilih & edit ---- */
+    this.r.body.onclick = function (e) {
+      var ck = e.target.closest('[data-ck]');
+      if (ck) {
+        if (ck.checked) s.sel.add(ck.dataset.ck); else s.sel.delete(ck.dataset.ck);
+        ck.closest('tr').classList.toggle('sel', ck.checked);
+        self._fire();
+        return;
+      }
+      var tr = e.target.closest('tr');
+      if (!tr) return;
+      if (o.select === 'single') {
+        s.sel = new Set([tr.dataset.id]);
+        self._paint(true); self._fire();
+      }
+    };
+    this.r.body.ondblclick = function (e) {
+      if (!o.edit) return;
+      var td = e.target.closest('td[data-c]');
+      if (td) self._editCell(td);
+    };
+
+    /* ---- pager ---- */
+    this.r.pager.onclick = function (e) {
+      var b = e.target.closest('[data-page]');
+      if (!b || b.disabled) return;
+      var pages = Math.max(1, Math.ceil(self.view.length / s.size));
+      s.page = Math.max(1, Math.min(+b.dataset.page, pages));
+      self._recompute(); self._paint(true); self._pager(); self._info();
+      self.r.sc.scrollTop = 0;
+    };
+    this.r.pager.onchange = function (e) {
+      if (e.target.dataset.role !== 'size') return;
+      s.size = +e.target.value; s.page = 1; self.render(); self.r.sc.scrollTop = 0;
+    };
+
+    /* ---- virtual scroll ---- */
+    var raf = 0;
+    this.r.sc.onscroll = function () {
+      if (raf) return;
+      raf = requestAnimationFrame(function () { raf = 0; self._paint(false); });
+    };
+  };
+
+  P._editCell = function (td) {
+    var self = this, col = this.col(td.dataset.c);
+    if (!col || col.editable === false) return;
+    var tr = td.closest('tr'), row = this.pageRows[+tr.dataset.i];
+    if (!row) return;
+    var old = row[col.name];
+    var inp = document.createElement('input');
+    inp.type = col.type === 'num' ? 'number' : col.type === 'date' ? 'date' : 'text';
+    inp.value = old == null ? '' : old;
+    inp.className = 'h-6 w-full rounded border border-indigo-500 px-1 text-xs outline-none';
+    td.textContent = ''; td.appendChild(inp); inp.focus(); inp.select();
+    var closed = false;
+    var done = function (save) {
+      if (closed) return; closed = true;
+      var changed = save && String(inp.value) !== String(old == null ? '' : old);
+      if (!changed) { self._cell(td, row, col); return; }  /* tutup tanpa merender ulang grid */
+      var v = col.type === 'num' ? (inp.value === '' ? null : Number(inp.value)) : inp.value;
+      row[col.name] = v;
+      if (self.o.onEdit) self.o.onEdit(row, col.name, v, old);
+      self._rev++;
+      self.render();
+    };
+    inp.onkeydown = function (e) {
+      e.stopPropagation();
+      if (e.key === 'Enter') done(true);
+      else if (e.key === 'Escape') done(false);
+      else if (e.key === 'Tab') { e.preventDefault(); done(true); }
+    };
+    inp.onblur = function () { done(true); };
+  };
+
+  /* tulis ulang isi satu sel (dipakai saat editor ditutup tanpa perubahan) */
+  P._cell = function (td, row, col) {
+    td.innerHTML = col.render ? col.render(row[col.name], row) : esc(fmt(row[col.name], col));
+  };
+
+  P._chooser = function () {
+    var self = this;
+    var d = document.createElement('div');
+    d.className = 'fixed inset-0 z-50 flex items-start justify-center bg-slate-900/30 p-10 backdrop-blur-[2px]';
+    d.innerHTML = '<div class="max-h-[70vh] w-56 overflow-auto rounded-lg border border-slate-300 bg-white p-3 shadow-xl">' +
+      '<div class="mb-2 text-xs font-semibold text-slate-700">Tampilkan kolom</div>' +
+      this.cols.map(function (c, i) {
+        return '<label class="flex items-center gap-2 py-0.5 text-xs text-slate-600">' +
+          '<input type="checkbox" data-i="' + i + '"' + (c.hidden ? '' : ' checked') + ' class="size-3.5 accent-indigo-600">' + esc(c.label) + '</label>';
+      }).join('') + '</div>';
+    d.onclick = function (e) {
+      if (e.target === d) { d.remove(); return; }
+      if (e.target.dataset.i != null) {
+        self.cols[+e.target.dataset.i].hidden = !e.target.checked;
+        self._offsets(); self.render();
+      }
+    };
+    document.body.appendChild(d);
+  };
+
+  /* ------------------------------------------------- formulir CRUD (modal) */
+  P._form = function (mode) {
+    var self = this, o = this.o, s = this.s;
+    var isNew = mode === 'add', readonly = mode === 'view';
+    var row = null;
+    if (isNew) {
+      row = {};
+      this.cols.forEach(function (c) { row[c.name] = c.bool ? false : ''; });
+    } else {
+      if (s.sel.size !== 1) return;
+      var want = Array.from(s.sel)[0];
+      for (var i = 0; i < this.data.length; i++) if (this.idOf(this.data[i], i) === want) { row = this.data[i]; break; }
+      if (!row) return;
+    }
+    var fields = this.vis().filter(function (c) { return c.form !== false && c.editable !== false; });
+    var old = {};
+    fields.forEach(function (c) { old[c.name] = row[c.name]; });
+
+    var INP = 'mt-0.5 w-full rounded border border-slate-300 bg-white px-2 py-1 text-xs outline-none focus:border-indigo-500';
+    var body = fields.map(function (c) {
+      var v = row[c.name], ctl;
+      if (readonly) {
+        ctl = '<div class="mt-0.5 rounded bg-slate-50 px-2 py-1 text-xs">' + ((c.render ? c.render(v, row) : esc(fmt(v, c))) || '—') + '</div>';
+      } else if (c.bool) {
+        ctl = '<input data-fld="' + c.name + '" type="checkbox"' + (v ? ' checked' : '') + ' class="mt-1 size-3.5 accent-indigo-600">';
+      } else if (c.options) {
+        ctl = '<select data-fld="' + c.name + '" class="' + INP + '">' +
+          c.options.map(function (op) { return '<option' + (String(op) === String(v == null ? '' : v) ? ' selected' : '') + '>' + op + '</option>'; }).join('') +
+          '</select>';
+      } else {
+        ctl = '<input data-fld="' + c.name + '" type="' + (c.type === 'num' ? 'number' : c.type === 'date' ? 'date' : 'text') + '" value="' + esc(v == null ? '' : v) + '" class="' + INP + '">';
+      }
+      return '<div><span class="text-[11px] font-medium text-slate-600">' + esc(c.label) +
+        (c.required && !readonly ? ' <b class="text-rose-600">*</b>' : '') + '</span>' + ctl +
+        '<p data-err="' + c.name + '" class="hidden pt-0.5 text-[10px] text-rose-600"></p></div>';
+    }).join('');
+
+    var wide = o.formCols > 1;
+    var d = document.createElement('div');
+    d.className = 'fixed inset-0 z-50 flex items-start justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
+    d.innerHTML =
+      '<div class="mt-4 ' + (wide ? 'w-[36rem]' : 'w-96') + ' max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
+        '<div class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
+          '<span class="text-sm font-semibold text-slate-700">' + (isNew ? 'Tambah baris' : readonly ? 'Detail baris' : 'Edit baris') + '</span>' +
+          '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
+        '</div>' +
+        '<div class="max-h-[65vh] overflow-auto px-4 py-3 ' + (wide ? 'grid grid-cols-1 items-start gap-3 min-[520px]:grid-cols-2' : 'space-y-2') + '">' + body + '</div>' +
+        '<div class="flex justify-end gap-2 border-t border-slate-200 px-4 py-2">' +
+          (readonly
+            ? '<button data-close class="h-7 rounded border border-slate-300 bg-white px-3 text-xs hover:bg-slate-100">Tutup</button>'
+            : '<button data-close class="h-7 rounded border border-slate-300 bg-white px-3 text-xs hover:bg-slate-100">Batal</button>' +
+              '<button data-save class="h-7 rounded bg-indigo-600 px-3 text-xs font-medium text-white hover:bg-indigo-700">Simpan</button>') +
+        '</div>' +
+      '</div>';
+
+    var close = function () { d.remove(); };
+    function save() {
+      var okAll = true;
+      fields.forEach(function (c) {
+        var el = d.querySelector('[data-fld="' + c.name + '"]');
+        var errEl = d.querySelector('[data-err="' + c.name + '"]');
+        if (!el) return;
+        var val = c.bool ? (el.checked ? 1 : 0) : (c.type === 'num' && !c.bool) ? (el.value === '' ? null : el.value) : el.value.trim();
+        var msg = '';
+        if (!c.bool && c.type === 'num' && val !== null && !isFinite(Number(val))) msg = 'harus angka';
+        if (c.required && (val === null || val === '')) msg = 'wajib diisi';
+        if (msg) { okAll = false; errEl.textContent = msg; errEl.classList.remove('hidden'); return; }
+        errEl.classList.add('hidden');
+        row[c.name] = (!c.bool && c.type === 'num' && val !== null) ? Number(val) : val;
+      });
+      if (!okAll) return;
+
+      if (isNew) {
+        var fin = o.onAdd ? o.onAdd(row) : Object.assign({ id: Date.now() }, row);
+        if (!fin) { close(); return; }
+        self.data.push(fin);
+        if (o.onSave) o.onSave(fin, true);
+        s.filter = {}; s.q = ''; if (self.r.q) self.r.q.value = '';
+        Object.keys(self._in).forEach(function (k) { self._in[k].value = ''; });
+        s.page = 1e9; self._skey = '';
+        s.sel = new Set([self.idOf(fin, self.data.length - 1)]);
+      } else {
+        fields.forEach(function (c) {
+          if (o.onEdit && String(row[c.name]) !== String(old[c.name] == null ? '' : old[c.name])) o.onEdit(row, c.name, row[c.name], old[c.name]);
+        });
+        if (o.onSave) o.onSave(row, false);
+        self._rev++;
+      }
+      close();
+      self.render();
+    }
+    d.addEventListener('click', function (e) {
+      if (e.target === d || e.target.closest('[data-x]') || e.target.closest('[data-close]')) { close(); return; }
+      if (e.target.closest('[data-save]')) save();
+    });
+
+    document.body.appendChild(d);
+    var first = d.querySelector('input[type=text], input[type=number], select');
+    if (first) first.focus();
+  };
+
+  /* ------------------------------------------------- menu export CSV/XLSX/PDF */
+  P._exportMenu = function (btn) {
+    var self = this;
+    var old = this.r.tools.querySelector('[data-role=xmenu]');
+    if (old) { old.remove(); return; }
+    var m = document.createElement('div');
+    m.setAttribute('data-role', 'xmenu');
+    m.className = 'absolute top-7 z-30 w-40 rounded-lg border border-slate-300 bg-white py-1 shadow-xl';
+    m.innerHTML = [['csv', 'CSV'], ['xlsx', 'Excel (.xlsx)'], ['pdf', 'PDF (.pdf)']].map(function (x) {
+      return '<button data-x="' + x[0] + '" class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-slate-700 hover:bg-slate-100">' +
+        ICONS.export + '<span>' + x[1] + '</span></button>';
+    }).join('');
+    m.onclick = function (e) {
+      var b = e.target.closest('[data-x]');
+      if (!b) return;
+      m.remove();
+      if (b.dataset.x === 'csv') self.toCSV();
+      if (b.dataset.x === 'xlsx') self.toXLSX();
+      if (b.dataset.x === 'pdf') self.toPDF();
+    };
+    this.r.tools.appendChild(m);
+    /* posisikan di bawah tombol, tetapi jangan sampai keluar tepi toolbar */
+    var mw = 144;
+    m.style.left = Math.max(0, Math.min(btn.offsetLeft, this.r.tools.clientWidth - mw)) + 'px';
+    setTimeout(function () {
+      document.addEventListener('click', function h (e) {
+        if (!m.contains(e.target)) { m.remove(); document.removeEventListener('click', h, true); }
+      }, true);
+    }, 0);
+  };
+
+  /* ------------------------------------------------- modal bantuan */
+  P._help = function () {
+    var o = this.o;
+    var txt = o.helpText ||
+      '<ul class="list-disc space-y-1 pl-4">' +
+      '<li><b>Klik header</b> = urutkan · <b>Shift+klik</b> = urut multi-kolom · klik lagi = balik arah.</li>' +
+      '<li><b>Filter</b> per kolom lewat tombol Filter (pilih operator lalu isi nilai) atau pencarian global (Enter).</li>' +
+      '<li><b>Pilih baris</b> lewat checkbox; checkbox header memilih seluruh halaman.</li>' +
+      '<li><b>Edit/Detail</b> aktif bila tepat 1 baris terpilih · <b>Hapus/Approve/Reject</b> aktif bila ≥1 terpilih.</li>' +
+      '<li><b>Klik ganda</b> sel = edit inline · Enter/Tab simpan · Esc batal.</li>' +
+      '<li><b>Geser tepi kanan header</b> = ubah lebar kolom · tombol Kolom = tampil/sembunyikan kolom.</li>' +
+      '<li><b>Export</b> = unduh hasil ter-filter & ter-urut sebagai CSV, XLSX, atau PDF.</li>' +
+      '</ul>';
+    var d = document.createElement('div');
+    d.className = 'fixed inset-0 z-50 flex items-start justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
+    d.innerHTML =
+      '<div class="mt-8 w-[30rem] max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
+        '<div class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
+          '<span class="flex items-center gap-2 text-sm font-semibold text-slate-700">' + ICONS.help + ' Bantuan</span>' +
+          '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
+        '</div>' +
+        '<div class="px-4 py-3 text-xs leading-relaxed text-slate-600">' + txt + '</div>' +
+        '<div class="flex justify-end border-t border-slate-200 px-4 py-2">' +
+          '<button data-x class="h-7 rounded border border-slate-300 bg-white px-3 text-xs hover:bg-slate-100">Tutup</button>' +
+        '</div>' +
+      '</div>';
+    d.onclick = function (e) { if (e.target === d || e.target.closest('[data-x]')) d.remove(); };
+    document.body.appendChild(d);
+  };
+
+  /* ------------------------------------- form filter: cepat + builder kondisi */
+  P._filterForm = function () {
+    var self = this, s = this.s;
+    var qcols = this.vis().filter(function (c) { return c.filter !== false; });
+    var d = document.createElement('div');
+    d.className = 'fixed inset-0 z-50 flex items-start justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
+
+    var quick = qcols.map(function (c) {
+      var f = s.filter[c.name] || {};
+      return '<div class="grid grid-cols-1 gap-1 min-[480px]:grid-cols-[8rem_4.5rem_1fr] min-[480px]:items-center min-[480px]:gap-2">' +
+        '<span class="truncate text-[11px] font-medium text-slate-600">' + esc(c.label) + '</span>' +
+        '<select data-fop="' + c.name + '" class="h-6 rounded border border-slate-300 bg-white px-1 text-[11px] text-slate-600 outline-none">' +
+          Object.keys(OPS).filter(function (k) { return c.type === 'num' || c.type === 'date' ? NUMOPS[k] : true; })
+            .map(function (k) { return '<option value="' + k + '"' + (f.op === k ? ' selected' : '') + '>' + OPS[k] + '</option>'; }).join('') +
+        '</select>' +
+        '<input data-ff="' + c.name + '" value="' + esc(f.q || '') + '" placeholder="nilai…" class="h-6 w-full rounded border border-slate-300 px-2 text-xs outline-none focus:border-indigo-500">' +
+        '</div>';
+    }).join('');
+
+    d.innerHTML =
+      '<div class="mt-4 w-[30rem] max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
+        '<div class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
+          '<span class="flex items-center gap-2 text-sm font-semibold text-slate-700">' + ICONS.filter + ' Filter</span>' +
+          '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
+        '</div>' +
+        '<div class="max-h-[62vh] space-y-4 overflow-auto px-4 py-3">' +
+          '<div><div class="mb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Filter cepat per kolom</div>' +
+            '<div class="space-y-2">' + quick + '</div></div>' +
+          '<div><div class="mb-1 flex items-center justify-between gap-2">' +
+              '<span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Kondisi lanjutan</span>' +
+              '<label class="flex items-center gap-1 text-[11px] text-slate-500">Gabung' +
+                '<select data-rjoin class="h-5 rounded border border-slate-300 bg-white px-1 text-[11px] outline-none">' +
+                  '<option value="AND"' + (s.join === 'OR' ? '' : ' selected') + '>AND</option>' +
+                  '<option value="OR"' + (s.join === 'OR' ? ' selected' : '') + '>OR</option>' +
+                '</select></label>' +
+            '</div>' +
+            '<div data-rules class="space-y-2"></div>' +
+            '<button data-radd class="mt-2 flex h-6 items-center gap-1 rounded-md border border-dashed border-slate-400 px-2 text-xs text-slate-600 hover:bg-slate-100">' +
+              ICONS.add + '<span>Tambah kondisi</span></button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="flex justify-between border-t border-slate-200 px-4 py-2">' +
+          '<button data-reset class="h-7 rounded px-2 text-xs text-slate-500 hover:text-rose-600">Reset semua</button>' +
+          '<button data-x class="h-7 rounded border border-slate-300 bg-white px-3 text-xs hover:bg-slate-100">Tutup</button>' +
+        '</div>' +
+      '</div>';
+
+    var box = d.querySelector('[data-rules]');
+    var timer;
+    var apply = function (now) {
+      clearTimeout(timer);
+      if (now) { s.page = 1; self.render(); return; }
+      timer = setTimeout(function () { s.page = 1; self.render(); }, 260);
+    };
+    function opOptions(c, cur) {
+      return Object.keys(OPS).filter(function (k) { return c.type === 'num' || c.type === 'date' ? NUMOPS[k] : true; })
+        .map(function (k) { return '<option value="' + k + '"' + (cur === k ? ' selected' : '') + '>' + OPS[k] + '</option>'; }).join('');
+    }
+    function paintRules() {
+      if (!s.rules.length) {
+        box.innerHTML = '<p class="text-[11px] text-slate-400">Belum ada kondisi — field dapat dipilih &amp; kondisi dapat ditambah (satu field boleh lebih dari satu, mis. rentang).</p>';
+        return;
+      }
+      box.innerHTML = s.rules.map(function (r, i) {
+        var c = self.col(r.f) || self.vis()[0];
+        return '<div class="grid grid-cols-1 gap-1 min-[480px]:grid-cols-[7rem_4.5rem_1fr_1.75rem] min-[480px]:items-center min-[480px]:gap-2">' +
+          '<select data-rf data-i="' + i + '" class="h-6 rounded border border-slate-300 bg-white px-1 text-[11px] outline-none">' +
+            self.vis().map(function (cc) { return '<option value="' + cc.name + '"' + (cc.name === r.f ? ' selected' : '') + '>' + esc(cc.label) + '</option>'; }).join('') +
+          '</select>' +
+          '<select data-rop data-i="' + i + '" class="h-6 rounded border border-slate-300 bg-white px-1 text-[11px] outline-none">' + opOptions(c, r.op) + '</select>' +
+          '<input data-rq data-i="' + i + '" value="' + esc(r.q) + '" placeholder="nilai…" class="h-6 w-full rounded border border-slate-300 px-2 text-xs outline-none focus:border-indigo-500">' +
+          '<button data-rx data-i="' + i + '" title="Hapus kondisi" class="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-rose-50 hover:text-rose-600">' + ICONS.no + '</button>' +
+        '</div>';
+      }).join('');
+    }
+    paintRules();
+
+    d.addEventListener('input', function (e) {
+      var t = e.target;
+      if (t.dataset.ff) {
+        var f = s.filter[t.dataset.ff] || (s.filter[t.dataset.ff] = { op: 'cn', q: '' });
+        f.q = t.value.trim(); apply(false);
+      }
+      if (t.dataset.rq != null) { s.rules[+t.dataset.i].q = t.value; apply(false); }
+    });
+    d.addEventListener('change', function (e) {
+      var t = e.target;
+      if (t.dataset.fop) { (s.filter[t.dataset.fop] || (s.filter[t.dataset.fop] = { op: 'cn', q: '' })).op = t.value; apply(true); }
+      if (t.dataset.rjoin != null) { s.join = t.value; apply(true); }
+      if (t.dataset.rop != null) { s.rules[+t.dataset.i].op = t.value; apply(true); }
+      if (t.dataset.rf != null) {
+        var r = s.rules[+t.dataset.i];
+        r.f = t.value;
+        var c = self.col(r.f);
+        var valid = c.type === 'num' || c.type === 'date' ? NUMOPS[r.op] : true;
+        if (!valid) r.op = 'eq';
+        paintRules(); apply(true);
+      }
+    });
+    d.addEventListener('click', function (e) {
+      if (e.target === d || e.target.closest('[data-x]')) { d.remove(); return; }
+      if (e.target.closest('[data-radd]')) {
+        s.rules.push({ f: self.vis()[0].name, op: 'cn', q: '' });
+        paintRules(); apply(true);
+        var ins = box.querySelectorAll('[data-rq]');
+        if (ins.length) ins[ins.length - 1].focus();
+        return;
+      }
+      if (e.target.closest('[data-rx]')) {
+        s.rules.splice(+e.target.closest('[data-rx]').dataset.i, 1);
+        paintRules(); apply(true);
+        return;
+      }
+      if (e.target.closest('[data-reset]')) {
+        s.filter = {}; s.rules = []; s.join = 'AND'; s.page = 1;
+        d.querySelectorAll('[data-ff]').forEach(function (i) { i.value = ''; });
+        d.querySelector('[data-rjoin]').value = 'AND';
+        paintRules(); apply(true);
+      }
+    });
+    document.body.appendChild(d);
+  };
+
+  P.toCSV = function () {
+    var cols = this.vis();
+    var lines = [cols.map(function (c) { return '"' + c.label + '"'; }).join(',')];
+    this.view.forEach(function (r) {
+      lines.push(cols.map(function (c) { return '"' + String(r[c.name] == null ? '' : r[c.name]).replace(/"/g, '""') + '"'; }).join(','));
+    });
+    var url = URL.createObjectURL(new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' }));
+    var a = document.createElement('a');
+    a.href = url; a.download = 'data.csv'; a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  };
+
+  Grid.OPS = OPS;
+  global.MiniGrid = Grid;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+/* ============================================================================
+ * export.js — pengekspor XLSX & PDF asli tanpa dependency (~4 KB)
+ *  · XLSX: paket OOXML minimal dibungkus ZIP (metode store, CRC32 sendiri)
+ *  · PDF : PDF 1.4 minimal, Helvetica, multi-halaman
+ * ============================================================================ */
+(function (global) {
+  'use strict';
+  var P = global.MiniGrid.prototype;
+
+  var XESC = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+
+  /* ------------------------------------------------------------ CRC32 + ZIP */
+  var CT = (function () {
+    var t = [], c, n, k;
+    for (n = 0; n < 256; n++) { c = n; for (k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
+    return t;
+  })();
+  function crc32(b) {
+    var c = 0xFFFFFFFF, i;
+    for (i = 0; i < b.length; i++) c = CT[(c ^ b[i]) & 255] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  }
+  function zipStore(files) {
+    var enc = new TextEncoder(), body = [], cent = [], off = 0;
+    files.forEach(function (f) {
+      var name = enc.encode(f.name), data = enc.encode(f.data), crc = crc32(data);
+      var lh = new DataView(new ArrayBuffer(30));
+      lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true);
+      lh.setUint32(14, crc, true); lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true);
+      lh.setUint16(26, name.length, true);
+      body.push(new Uint8Array(lh.buffer), name, data);
+      var ch = new DataView(new ArrayBuffer(46));
+      ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true);
+      ch.setUint32(16, crc, true); ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true);
+      ch.setUint16(28, name.length, true); ch.setUint32(42, off, true);
+      cent.push([new Uint8Array(ch.buffer), name]);
+      off += 30 + name.length + data.length;
+    });
+    var cd = 0;
+    cent.forEach(function (c) { cd += c[0].length + c[1].length; });
+    var eo = new DataView(new ArrayBuffer(22));
+    eo.setUint32(0, 0x06054b50, true);
+    eo.setUint16(8, files.length, true); eo.setUint16(10, files.length, true);
+    eo.setUint32(12, cd, true); eo.setUint32(16, off, true);
+    var all = body.concat.apply(body, cent);
+    all.push(new Uint8Array(eo.buffer));
+    var total = 0; all.forEach(function (a) { total += a.length; });
+    var out = new Uint8Array(total), p = 0;
+    all.forEach(function (a) { out.set(a, p); p += a.length; });
+    return out;
+  }
+
+  function colRef(i) {
+    var s = ''; i++;
+    while (i) { var m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = (i - 1 - m) / 26; }
+    return s;
+  }
+  function dl(bytes, name, type) {
+    var b = new Blob([bytes], { type: type });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = name; a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+
+  /* ------------------------------------------------------------------ XLSX */
+  P.toXLSX = function () {
+    var cols = this.vis(), rows = this.view.slice(0, 20000);
+    var x = ['<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
+      '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>'];
+    x.push('<row r="1">' + cols.map(function (c, i) {
+      return '<c r="' + colRef(i) + '1" t="inlineStr"><is><t>' + XESC(c.label) + '</t></is></c>';
+    }).join('') + '</row>');
+    rows.forEach(function (r, ri) {
+      x.push('<row r="' + (ri + 2) + '">' + cols.map(function (c, i) {
+        var v = r[c.name], ref = colRef(i) + (ri + 2);
+        if (typeof v === 'number' && isFinite(v)) return '<c r="' + ref + '"><v>' + v + '</v></c>';
+        if (c.type === 'num' && v !== null && v !== '' && isFinite(Number(v))) return '<c r="' + ref + '"><v>' + Number(v) + '</v></c>';
+        return '<c r="' + ref + '" t="inlineStr"><is><t>' + XESC(v == null ? '' : v) + '</t></is></c>';
+      }).join('') + '</row>');
+    });
+    x.push('</sheetData></worksheet>');
+    var zip = zipStore([
+      { name: '[Content_Types].xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>' },
+      { name: '_rels/.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' },
+      { name: 'xl/workbook.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Data" sheetId="1" r:id="rId1"/></sheets></workbook>' },
+      { name: 'xl/_rels/workbook.xml.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>' },
+      { name: 'xl/worksheets/sheet1.xml', data: x.join('') }
+    ]);
+    dl(zip, 'data.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  };
+
+  /* ------------------------------------------------------------------- PDF */
+  P.toPDF = function () {
+    var cols = this.vis(), rows = this.view.slice(0, 1000);
+    var A = function (s) { return String(s == null ? '' : s).replace(/[^\x20-\x7E]/g, '?'); };  /* PDF ascii */
+    var E = function (s) { return A(s).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)'); };
+    var chars = cols.map(function (c) { return Math.max(6, Math.min(26, Math.round(c.width / 7))); });
+    var xs = [30];
+    chars.forEach(function (ch, i) { xs.push(xs[i] + ch * 4.3); });
+    var right = xs[xs.length - 1] + 10;
+    var perPage = 60, pages = [];
+    for (var i = 0; i < Math.max(1, rows.length); i += perPage) pages.push(rows.slice(i, i + perPage));
+
+    var objs = [], kids = [], n = 5;   /* 1 catalog, 2 pages, 3 F1, 4 F2 */
+    pages.forEach(function (pg) {
+      var s = 'BT /F1 11 Tf 30 812 Td (' + E('MiniGrid - ' + this.view.length + ' baris (hasil terfilter/terurut)') + ') Tj ET\n';
+      var y = 788;
+      s += '0.7 w 30 ' + y + ' m ' + right.toFixed(1) + ' ' + y + ' l S\n';
+      y -= 12;
+      s += 'BT /F2 7.5 Tf';
+      cols.forEach(function (c, ci) { s += ' 1 0 0 1 ' + xs[ci].toFixed(1) + ' ' + y + ' Tm (' + E(c.label) + ') Tj'; });
+      s += ' ET\n';
+      y -= 5;
+      s += '0.4 w 30 ' + y + ' m ' + right.toFixed(1) + ' ' + y + ' l S\n';
+      y -= 11;
+      pg.forEach(function (r) {
+        s += 'BT /F1 7.5 Tf';
+        cols.forEach(function (c, ci) {
+          var t = A(r[c.name]);
+          if (t.length > chars[ci]) t = t.slice(0, chars[ci] - 1) + '.';
+          s += ' 1 0 0 1 ' + xs[ci].toFixed(1) + ' ' + y + ' Tm (' + E(t) + ') Tj';
+        });
+        s += ' ET\n';
+        y -= 11;
+      });
+      var cid = n + 1;
+      kids.push(n + ' 0 R');
+      objs.push([n, '<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Resources<</Font<</F1 3 0 R/F2 4 0 R>>>>/Contents ' + cid + ' 0 R>>']);
+      objs.push([cid, '<</Length ' + s.length + '>>\nstream\n' + s + 'endstream']);
+      n += 2;
+    }, this);
+
+    /* rakit: semua objek ascii → panjang string == offset byte */
+    var list = [
+      [1, '<</Type/Catalog/Pages 2 0 R>>'],
+      [2, '<</Type/Pages/Kids[' + kids.join(' ') + ']/Count ' + kids.length + '>>'],
+      [3, '<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>'],
+      [4, '<</Type/Font/Subtype/Type1/BaseFont/Helvetica-Bold>>']
+    ].concat(objs.map(function (o) { return Array.isArray(o) ? o : o; }));
+    /* objs diisi sebagai string 'N 0 obj ... endobj'; ubah jadi [id, isi] dulu */
+    var out = '%PDF-1.4\n', offsets = {};
+    list.forEach(function (it) {
+      offsets[it[0]] = out.length;
+      out += it[0] + ' 0 obj\n' + it[1] + '\nendobj\n';
+    });
+    var count = list.length;
+    var xref = 'xref\n0 ' + (count + 1) + '\n0000000000 65535 f \n';
+    for (var k = 1; k <= count; k++) xref += String(offsets[k]).padStart(10, '0') + ' 00000 n \n';
+    out += xref + 'trailer\n<</Size ' + (count + 1) + '/Root 1 0 R>>\nstartxref\n' + out.length + '\n%%EOF';
+    dl(new TextEncoder().encode(out), 'data.pdf', 'application/pdf');
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+/* Data contoh deterministik (seeded) + dua demo grid */
+(function () {
+  'use strict';
+
+  /* ---- PRNG mulberry32: hasil sama setiap kali dibuka ---- */
+  var seed = 20260917;
+  function rnd() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+  var pick = function (a) { return a[Math.floor(rnd() * a.length)]; };
+  var int = function (a, b) { return a + Math.floor(rnd() * (b - a + 1)); };
+
+  var DEPAN = ['Adi','Budi','Citra','Dewi','Eko','Fitri','Gilang','Hana','Indra','Joko','Kirana','Lukman','Maya','Nadia','Omar','Putri','Qori','Rina','Sari','Teguh','Umi','Vina','Wahyu','Yuni','Zaki','Agus','Bella','Candra','Dimas','Elsa','Farhan','Gita','Hadi','Intan','Jaya','Kelik','Laras','Marno','Nita','Okta','Panji','Rani','Sigit','Tari','Ucup','Vera','Wawan','Yanto','Zulfan','Ayu'];
+  var BELAKANG = ['Saputra','Wijaya','Pratama','Nugroho','Setiawan','Hidayat','Kusuma','Ramadhan','Anggraini','Lestari','Susanto','Maulana','Permana','Halim','Siregar','Nasution','Pangestu','Utami','Firmansyah','Handoko'];
+  var DEP = ['Produksi','Keuangan','IT','Pemasaran','SDM','Logistik','QC','Riset','Legal','Umum'];
+  var JAB = ['Staf','Senior Staf','Supervisor','Analis','Manajer','Kepala Seksi','Direktur','Koordinator'];
+  var KOTA = ['Depok','Jakarta','Bogor','Bekasi','Tangerang','Bandung','Semarang','Surabaya','Medan','Makassar','Yogyakarta','Denpasar'];
+  var STAT = ['Aktif', 'Cuti', 'Probation', 'Resign'];
+
+  function iso(d) { return d.toISOString().slice(0, 10); }
+  function rows(n) {
+    var out = [], d;
+    for (var i = 1; i <= n; i++) {
+      d = new Date(2015 + int(0, 10), int(0, 11), int(1, 28));
+      out.push({
+        id: i,
+        nama: pick(DEPAN) + ' ' + pick(BELAKANG),
+        nik: 'ID-' + String(100000 + i),
+        dep: pick(DEP),
+        jabatan: pick(JAB),
+        kota: pick(KOTA),
+        masuk: iso(d),
+        gaji: int(45, 320) * 100000,
+        skor: Math.round(rnd() * 1000) / 10,
+        stat: pick(STAT),
+        aktif: rnd() > 0.18
+      });
+    }
+    return out;
+  }
+
+  var badge = {
+    'Aktif': 'bg-emerald-100 text-emerald-700',
+    'Cuti': 'bg-amber-100 text-amber-700',
+    'Probation': 'bg-sky-100 text-sky-700',
+    'Resign': 'bg-rose-100 text-rose-700'
+  };
+  var cols = [
+    { name: 'id', label: 'ID', width: 64, type: 'num', align: 'right', form: false },
+    { name: 'nama', label: 'Nama Karyawan', width: 170, required: true },
+    { name: 'nik', label: 'NIK', width: 96 },
+    { name: 'dep', label: 'Departemen', width: 110 },
+    { name: 'jabatan', label: 'Jabatan', width: 120 },
+    { name: 'kota', label: 'Kota', width: 100 },
+    { name: 'masuk', label: 'Tgl Masuk', width: 104, type: 'date' },
+    { name: 'gaji', label: 'Gaji / Bulan', width: 128, type: 'num', format: 'money', align: 'right' },
+    { name: 'skor', label: 'Skor', width: 70, type: 'num', align: 'right' },
+    {
+      name: 'stat', label: 'Status', width: 100, options: STAT,
+      render: function (v) {
+        return '<span class="rounded-full px-1.5 py-0.5 text-[10px] font-medium ' + (badge[v] || 'bg-slate-100 text-slate-600') + '">' + v + '</span>';
+      }
+    },
+    {
+      name: 'aktif', label: 'Aktif', width: 60, type: 'num', align: 'center', bool: true,
+      render: function (v) { return v ? '<span class="text-emerald-600">●</span>' : '<span class="text-slate-300">○</span>'; }
+    }
+  ];
+
+  /* ---- Demo 1: skala besar ---- */
+  var big = rows(50000);
+  window.__g1 = MiniGrid({
+    el: '#grid1', columns: cols, data: big,
+    frozen: 2, height: 400, rowHeight: 30, pageSize: 500,
+    pageSizes: [100, 500, 1000, 5000, 50000],
+    onSelect: function (ids) { log('pilih ' + ids.length + ' baris'); }
+  });
+
+  /* ---- Demo 2: CRUD lengkap (form modal) + edit inline + persistensi ---- */
+  var KEY = 'minigrid-demo2-v1';
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { }
+  var small = Array.isArray(saved) && saved.length ? saved : rows(12);
+  var save2 = function () {
+    try { localStorage.setItem(KEY, JSON.stringify(window.__g2.data)); } catch (e) { }
+  };
+
+  window.__g2 = MiniGrid({
+    el: '#grid2', columns: cols, data: small,
+    height: 260, rowHeight: 30, pageSize: 10, frozen: 0,
+    crud: true,            /* + Tambah · Edit · Detail · Hapus via formulir */
+    edit: true,            /* plus edit inline: klik ganda sel */
+    onAdd: function (r) {
+      r.id = (window.__g2.data.length ? Math.max.apply(null, window.__g2.data.map(function (x) { return x.id; })) : 0) + 1;
+      if (!r.nama) r.nama = 'Karyawan Baru';
+      if (!r.nik) r.nik = 'ID-' + (100000 + r.id);
+      if (!r.dep) r.dep = 'Umum';
+      if (!r.jabatan) r.jabatan = 'Staf';
+      if (!r.kota) r.kota = 'Depok';
+      if (!r.masuk) r.masuk = new Date().toISOString().slice(0, 10);
+      if (r.gaji == null || r.gaji === '') r.gaji = 6000000;
+      if (r.skor == null || r.skor === '') r.skor = 70;
+      if (!r.stat) r.stat = 'Probation';
+      if (r.aktif == null) r.aktif = 1;
+      log('tambah baris #' + r.id);
+      return r;
+    },
+    onEdit: function (row, col, val, old) { log('edit ' + row.nama + ' → ' + col + ': ' + old + ' ⇒ ' + val); save2(); },
+    onSave: function (row, isNew) { log((isNew ? 'simpan baru' : 'simpan edit') + ' #' + row.id); save2(); },
+    onRemove: function (rws) {
+      log('hapus ' + rws.length + ' baris');
+      setTimeout(save2, 0);
+      return confirm('Hapus ' + rws.length + ' baris terpilih?');
+    }
+  });
+
+  var rs = document.getElementById('reset2');
+  if (rs) rs.onclick = function () { localStorage.removeItem(KEY); location.reload(); };
+
+  /* ---- Demo 3: alur persetujuan — Approve/Reject, Export XLSX/PDF,
+ *        form Filter terpusat, Help, formulir 2 kolom ---- */
+  var JENIS = ['Cuti', 'Sakit', 'Izin'];
+  var CAT = ['Acara keluarga', 'Istirahat', 'Urusan pribadi', 'Demam', 'Menjaga keluarga sakit', 'Kerabat berkunjung'];
+  var rows3 = [];
+  for (var i3 = 1; i3 <= 40; i3++) {
+    rows3.push({
+      id: i3,
+      karyawan: pick(DEPAN) + ' ' + pick(BELAKANG),
+      dep: pick(DEP),
+      jenis: pick(JENIS),
+      mulai: iso(new Date(2026, int(0, 11), int(1, 28))),
+      hari: int(1, 10),
+      status: pick(['Pending', 'Pending', 'Approved', 'Rejected']),
+      catatan: pick(CAT)
+    });
+  }
+  var B3 = {
+    'Pending': 'bg-amber-100 text-amber-700',
+    'Approved': 'bg-emerald-100 text-emerald-700',
+    'Rejected': 'bg-rose-100 text-rose-700'
+  };
+  var cols3 = [
+    { name: 'id', label: 'No', width: 56, type: 'num', align: 'right', form: false },
+    { name: 'karyawan', label: 'Karyawan', width: 170, required: true },
+    { name: 'dep', label: 'Departemen', width: 110 },
+    { name: 'jenis', label: 'Jenis', width: 90, options: JENIS },
+    { name: 'mulai', label: 'Tgl Mulai', width: 110, type: 'date' },
+    { name: 'hari', label: 'Hari', width: 70, type: 'num', align: 'right' },
+    {
+      name: 'status', label: 'Status', width: 100, options: ['Pending', 'Approved', 'Rejected'],
+      render: function (v) {
+        return '<span class="rounded-full px-1.5 py-0.5 text-[10px] font-medium ' + (B3[v] || 'bg-slate-100 text-slate-600') + '">' + v + '</span>';
+      }
+    },
+    { name: 'catatan', label: 'Catatan', width: 200 }
+  ];
+
+  window.__g3 = MiniGrid({
+    el: '#grid3', columns: cols3, data: rows3,
+    height: 320, rowHeight: 30, pageSize: 10,
+    crud: true, edit: true,
+    filter: false,        /* tanpa baris filter di bawah header… */
+    filterForm: true,     /* …dituangkan jadi satu form lewat tombol Filter */
+    help: true, formCols: 2,
+    actions: [
+      {
+        id: 'approve', label: 'Approve', icon: 'ok', need: 'some',
+        fn: function (rows, g) {
+          rows.forEach(function (r) { r.status = 'Approved'; });
+          g.render(); log('approve ' + rows.length + ' pengajuan');
+        }
+      },
+      {
+        id: 'reject', label: 'Reject', icon: 'no', need: 'some',
+        fn: function (rows, g) {
+          rows.forEach(function (r) { r.status = 'Rejected'; });
+          g.render(); log('reject ' + rows.length + ' pengajuan');
+        }
+      }
+    ],
+    onAdd: function (r) {
+      r.id = (window.__g3.data.length ? Math.max.apply(null, window.__g3.data.map(function (x) { return x.id; })) : 0) + 1;
+      if (!r.status) r.status = 'Pending';
+      log('pengajuan baru #' + r.id);
+      return r;
+    },
+    onSave: function (row, isNew) { log((isNew ? 'simpan baru' : 'simpan edit') + ' #' + row.id); },
+    onEdit: function (row, col, val, old) { log('edit #' + row.id + ' ' + col + ': ' + old + ' ⇒ ' + val); },
+    onRemove: function (rws) { log('hapus ' + rws.length + ' baris'); return confirm('Hapus ' + rws.length + ' baris terpilih?'); }
+  });
+
+  /* ---- pemilih tema (remap variabel warna Tailwind v4) ---- */
+  var THEMES = [
+    ['light', 'Terang', '#f8fafc', '#4f46e5'],
+    ['dark', 'Gelap', '#0b1220', '#818cf8'],
+    ['ocean', 'Samudra', '#f2f8fc', '#0e7490'],
+    ['forest', 'Hutan', '#f3f8f4', '#047857'],
+    ['sunset', 'Senja', '#fdf6f3', '#be123c'],
+    ['mono', 'Monokrom', '#fafafa', '#18181b']
+  ];
+  (function initThemes() {
+    var box = document.getElementById('themes');
+    if (!box) return;
+    var cur = null;
+    try { cur = localStorage.getItem('minigrid-theme'); } catch (e) { }
+    var set = function (id) {
+      if (id === 'light') delete document.documentElement.dataset.theme;
+      else document.documentElement.dataset.theme = id;
+      try { localStorage.setItem('minigrid-theme', id); } catch (e) { }
+      box.querySelectorAll('button').forEach(function (b) {
+        var on = b.dataset.t === id;
+        b.classList.toggle('ring-2', on);
+        b.classList.toggle('ring-indigo-500', on);
+      });
+    };
+    box.innerHTML = THEMES.map(function (t) {
+      return '<button data-t="' + t[0] + '" title="Tema ' + t[1] + '" class="flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">' +
+        '<span class="flex overflow-hidden rounded-full border border-slate-300">' +
+          '<i style="background:' + t[2] + '" class="h-3 w-3"></i><i style="background:' + t[3] + '" class="h-3 w-3"></i>' +
+        '</span><span class="hidden md:inline">' + t[1] + '</span></button>';
+    }).join('');
+    box.onclick = function (e) { var b = e.target.closest('[data-t]'); if (b) set(b.dataset.t); };
+    set(THEMES.some(function (t) { return t[0] === cur; }) ? cur : 'light');
+  })();
+
+  function log(t) {
+    var el = document.getElementById('log');
+    if (el) el.textContent = t + '  (' + new Date().toLocaleTimeString('id-ID') + ')';
+  }
+})();
+
+</script>
+</body>
+</html>

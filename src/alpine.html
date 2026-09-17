@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MiniGrid — varian Alpine.js</title>
+<link rel="stylesheet" href="./dist/tailwind.css">
+<link rel="stylesheet" href="./src/app.css">
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased">
+
+<div class="mx-auto max-w-6xl space-y-4 p-4">
+  <header>
+    <h1 class="text-xl font-bold tracking-tight">MiniGrid <span class="rounded bg-sky-100 px-1.5 py-0.5 text-xs font-medium text-sky-700">varian Alpine.js</span></h1>
+    <p class="text-sm text-slate-500">Fitur sama (sort, filter, pager, pilih) dengan gaya deklaratif — butuh runtime Alpine 45 KB. <a class="text-indigo-600 underline" href="./index.html">← varian vanilla (rekomendasi)</a></p>
+    <div class="mt-2 flex flex-wrap items-center gap-2">
+      <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tema</span>
+      <div id="themes" class="flex flex-wrap items-center gap-1.5"></div>
+    </div>
+  </header>
+
+  <div x-data="gridDemo()" class="overflow-hidden rounded-lg border border-slate-300 bg-white shadow-sm">
+    <div class="flex flex-wrap items-center gap-2 border-b border-slate-200 bg-slate-50 px-2 py-1.5">
+      <button @click="selAll()" class="h-6 rounded border border-slate-300 bg-white px-2 text-xs hover:bg-slate-100" x-text="'Pilih semua (' + page.length + ')'"></button>
+      <button @click="hapus()" :disabled="!jumlahSel()" class="h-6 rounded border border-slate-300 bg-white px-2 text-xs hover:bg-slate-100 disabled:opacity-40" x-text="'Hapus (' + jumlahSel() + ')'"></button>
+      <span class="ml-auto text-xs tabular-nums text-slate-500" x-text="info()"></span>
+    </div>
+
+    <div class="overflow-auto bg-white" style="height:420px">
+      <table class="w-full border-collapse text-xs" style="table-layout:fixed">
+        <colgroup><template x-for="c in cols" :key="c.k"><col :style="'width:' + c.w + 'px'"></template></colgroup>
+        <thead class="mg-head sticky top-0 z-10">
+          <tr>
+            <template x-for="c in cols" :key="c.k">
+              <th class="cursor-pointer border-b border-r border-slate-300 bg-slate-100 px-2 py-1.5 text-left font-semibold text-slate-600 select-none hover:bg-slate-200" @click="urut(c.k)">
+                <span x-text="c.l"></span>
+                <span class="text-[9px]" x-text="panah(c.k)"></span>
+              </th>
+            </template>
+          </tr>
+          <tr>
+            <template x-for="c in cols" :key="'f'+c.k">
+              <th class="bg-white p-1"><input x-model.debounce.300ms="f[c.k]" placeholder="…" class="h-5 w-full rounded border border-slate-200 px-1 text-[11px] outline-none focus:border-indigo-500"></th>
+            </template>
+          </tr>
+        </thead>
+        <tbody class="mg-body">
+          <template x-for="(r, i) in page" :key="r.id">
+            <tr class="cursor-default hover:bg-indigo-100/70" :class="{ 'sel': sel[r.id], 'alt': i % 2 }">
+              <template x-for="c in cols" :key="c.k">
+                <td class="truncate border-b border-r border-slate-200 px-2 py-1" :class="{ 'text-right tabular-nums': c.t === 'num' }" x-text="r[c.k]"></td>
+              </template>
+            </tr>
+          </template>
+          <tr x-show="!page.length"><td :colspan="cols.length" class="px-2 py-6 text-center text-slate-400">tidak ada baris yang cocok</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex items-center gap-2 border-t border-slate-200 bg-slate-50 px-2 py-1.5">
+      <button @click="pg = 1" :disabled="pg <= 1" class="h-6 min-w-6 rounded border border-slate-300 bg-white px-1.5 text-xs disabled:opacity-40">«</button>
+      <button @click="pg--" :disabled="pg <= 1" class="h-6 min-w-6 rounded border border-slate-300 bg-white px-1.5 text-xs disabled:opacity-40">‹</button>
+      <span class="text-xs tabular-nums text-slate-600" x-text="pg + ' / ' + totalPages()"></span>
+      <button @click="pg++" :disabled="pg >= totalPages()" class="h-6 min-w-6 rounded border border-slate-300 bg-white px-1.5 text-xs disabled:opacity-40">›</button>
+      <button @click="pg = totalPages()" :disabled="pg >= totalPages()" class="h-6 min-w-6 rounded border border-slate-300 bg-white px-1.5 text-xs disabled:opacity-40">»</button>
+      <select x-model.number="size" @change="pg = 1" class="h-6 rounded border border-slate-300 bg-white px-1 text-xs">
+        <option>10</option><option>25</option><option>50</option><option>100</option>
+      </select>
+    </div>
+  </div>
+
+  <p class="text-xs text-slate-500">500 baris · Alpine 3 + Tailwind v4 · seluruh logika ±60 baris deklaratif, tetapi membawa runtime 45 KB dan tanpa virtual scroll / kolom beku.</p>
+</div>
+
+<script>
+function gridDemo() {
+  var DEP = ['Produksi','Keuangan','IT','Pemasaran','SDM','Logistik'];
+  var KOTA = ['Depok','Jakarta','Bogor','Bekasi','Bandung','Surabaya'];
+  var seed = 7;
+  var rnd = function () { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
+  var data = [];
+  for (var i = 1; i <= 500; i++) data.push({
+    id: i,
+    nama: 'K' + i + ' ' + ['Saputra','Wijaya','Pratama','Lestari','Hidayat'][i % 5],
+    dep: DEP[Math.floor(rnd() * DEP.length)],
+    kota: KOTA[Math.floor(rnd() * KOTA.length)],
+    gaji: (45 + Math.floor(rnd() * 200)) * 100000
+  });
+  return {
+    cols: [
+      { k: 'id', l: 'ID', w: 70, t: 'num' },
+      { k: 'nama', l: 'Nama', w: 200 },
+      { k: 'dep', l: 'Departemen', w: 140 },
+      { k: 'kota', l: 'Kota', w: 120 },
+      { k: 'gaji', l: 'Gaji', w: 140, t: 'num' }
+    ],
+    data: data, f: {}, sel: {}, sortK: '', dir: 1, pg: 1, size: 25,
+    urut(k) { this.dir = this.sortK === k ? -this.dir : 1; this.sortK = k; },
+    panah(k) { return this.sortK === k ? (this.dir > 0 ? ' ▲' : ' ▼') : ' ↕'; },
+    jumlahSel() { return Object.values(this.sel).filter(Boolean).length; },
+    filtered() {
+      var f = this.f, out = this.data.filter(function (r) {
+        return Object.keys(f).every(function (k) {
+          return !f[k] || String(r[k]).toLowerCase().includes(f[k].toLowerCase());
+        });
+      });
+      if (this.sortK) {
+        var k = this.sortK, d = this.dir;
+        out = out.slice().sort(function (a, b) { return (a[k] < b[k] ? -1 : a[k] > b[k] ? 1 : 0) * d; });
+      }
+      return out;
+    },
+    totalPages() { return Math.max(1, Math.ceil(this.filtered().length / this.size)); },
+    info() {
+      var n = this.filtered().length;
+      var a = n ? (this.pg - 1) * this.size + 1 : 0;
+      return a + '–' + Math.min(this.pg * this.size, n) + ' dari ' + n;
+    },
+    get page() {
+      var v = this.filtered();
+      var p = Math.min(this.pg, Math.max(1, Math.ceil(v.length / this.size)));
+      this.pg = p;
+      return v.slice((p - 1) * this.size, p * this.size);
+    },
+    selAll() {
+      var on = !this.page.every(function (r) { return this.sel[r.id]; }, this);
+      var sel = this.sel, self = this;
+      this.page.forEach(function (r) { sel[r.id] = on; });
+      this.sel = Object.assign({}, sel);
+    },
+    hapus() {
+      var sel = this.sel;
+      this.data = this.data.filter(function (r) { return !sel[r.id]; });
+      this.sel = {};
+    }
+  };
+}
+</script>
+<script>
+(function () {
+  var T = [['light','Terang','#f8fafc','#4f46e5'],['dark','Gelap','#0b1220','#818cf8'],['ocean','Samudra','#f2f8fc','#0e7490'],['forest','Hutan','#f3f8f4','#047857'],['sunset','Senja','#fdf6f3','#be123c'],['mono','Monokrom','#fafafa','#18181b']];
+  var box = document.getElementById('themes'); if (!box) return;
+  var cur = null; try { cur = localStorage.getItem('minigrid-theme'); } catch (e) {}
+  var set = function (id) {
+    if (id === 'light') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = id;
+    try { localStorage.setItem('minigrid-theme', id); } catch (e) {}
+    box.querySelectorAll('button').forEach(function (b) { var on = b.dataset.t === id; b.classList.toggle('ring-2', on); b.classList.toggle('ring-indigo-500', on); });
+  };
+  box.innerHTML = T.map(function (t) {
+    return '<button data-t="' + t[0] + '" title="Tema ' + t[1] + '" class="flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100"><span class="flex overflow-hidden rounded-full border border-slate-300"><i style="background:' + t[2] + '" class="h-3 w-3"></i><i style="background:' + t[3] + '" class="h-3 w-3"></i></span><span class="hidden md:inline">' + t[1] + '</span></button>';
+  }).join('');
+  box.onclick = function (e) { var b = e.target.closest('[data-t]'); if (b) set(b.dataset.t); };
+  set(T.some(function (t) { return t[0] === cur; }) ? cur : 'light');
+})();
+</script>
+<script src="./vendor/alpine.min.js" defer></script>
+
+</body>
+</html>

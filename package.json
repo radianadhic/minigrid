@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "playwright-core": "^1.63.0"
+  },
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./dist/tailwind.css --minify",
+    "build": "npm run build:css && node build.mjs",
+    "test": "node test/e2e.mjs && node test/alpine.mjs",
+    "serve": "node server.mjs"
+  },
+  "name": "minigrid",
+  "private": true,
+  "description": "Data grid offline ala jqGrid — Tailwind v4 + vanilla JS"
+}

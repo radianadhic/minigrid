@@ -1,0 +1,11 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 1280, height: 860 }, deviceScaleFactor: 2 });
+await p.goto('file:///home/user/grid/index.html');
+await p.waitForSelector('#grid1 tbody tr');
+await p.evaluate(() => localStorage.setItem('minigrid-theme', 'ocean'));
+await p.reload();
+await p.waitForSelector('#grid1 tbody tr');
+await p.waitForTimeout(300);
+await p.screenshot({ path: 'shots/ocean.png' });
+await b.close();
