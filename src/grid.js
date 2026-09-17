@@ -26,7 +26,7 @@
     ok: IC('<path d="M20 6 9 17l-5-5"/>'),
     no: IC('<path d="M18 6 6 18M6 6l12 12"/>')
   };
-  var BTN = 'flex h-6 items-center gap-1 rounded-md border border-slate-300 bg-white px-2 text-xs font-medium text-slate-700 shadow-xs outline-none hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-40';
+  var BTN = 'flex h-6 items-center gap-1 rounded-md border border-slate-300 bg-white px-2 text-xs font-medium text-slate-700 shadow-xs outline-none hover:border-slate-400 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-500 active:translate-y-px disabled:opacity-40 disabled:hover:border-slate-300';
 
   var esc = function (s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
@@ -69,11 +69,11 @@
   }
 
   var SHELL =
-    '<div class="overflow-hidden rounded-lg border border-slate-300 bg-white shadow-sm">' +
+    '<div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg ring-1 ring-slate-900/5">' +
       '<div class="flex flex-wrap items-center gap-x-2 gap-y-1.5 border-b border-slate-200 bg-slate-50 px-2 py-1.5">' +
         '<div class="relative flex flex-wrap items-center gap-1" data-role="tools"></div>' +
         '<div class="flex w-full min-w-0 items-center gap-2 sm:ml-auto sm:w-auto">' +
-          '<input data-role="q" type="search" placeholder="Cari semua kolom… (Enter)" class="w-full min-w-0 flex-1 rounded border border-slate-300 bg-white px-2 py-1 text-xs outline-none focus:border-indigo-500 sm:w-44 sm:flex-none">' +
+          '<input data-role="q" type="search" placeholder="Cari semua kolom… (Enter)" class="w-full min-w-0 flex-1 rounded-md border border-slate-300 bg-white px-2 py-1 text-xs shadow-xs outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 sm:w-44 sm:flex-none">' +
           '<span data-role="info" class="ml-auto whitespace-nowrap text-xs tabular-nums text-slate-500 sm:ml-0"></span>' +
         '</div>' +
       '</div>' +
@@ -470,7 +470,7 @@
       return '<button data-act="' + t[0] + '" title="' + (t[1] || t[0]) + '" class="' + BTN + (t[1] ? '' : ' px-1.5') + '">' +
         (ICONS[t[2]] || '') + (t[1] ? '<span class="hidden sm:inline">' + esc(t[1]) + '</span>' : '') +
         (t[3] ? '<span data-fc class="hidden rounded-full bg-indigo-600 px-1.5 text-[9px] font-semibold leading-4 text-white"></span>' : '') + '</button>';
-    }).join('') + (o.filter ? '<button data-act="clear" class="h-6 rounded px-2 text-xs text-slate-500 hover:text-indigo-600">bersihkan filter</button>' : '');
+    }).join('') + (o.filter ? '<button data-act="clear" class="h-6 rounded-md px-2 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-indigo-600">bersihkan filter</button>' : '');
 
     this.r.tools.onclick = function (e) {
       var a = e.target.closest('[data-act]');
@@ -635,7 +635,7 @@
     var self = this;
     var d = document.createElement('div');
     d.className = 'fixed inset-0 z-50 flex items-start justify-center bg-slate-900/30 p-10 backdrop-blur-[2px]';
-    d.innerHTML = '<div class="max-h-[70vh] w-56 overflow-auto rounded-lg border border-slate-300 bg-white p-3 shadow-xl">' +
+    d.innerHTML = '<div class="max-h-[70vh] w-56 overflow-auto rounded-xl border border-slate-200 bg-white p-3 shadow-2xl ring-1 ring-slate-900/10">' +
       '<div class="mb-2 text-xs font-semibold text-slate-700">Tampilkan kolom</div>' +
       this.cols.map(function (c, i) {
         return '<label class="flex items-center gap-2 py-0.5 text-xs text-slate-600">' +
@@ -722,17 +722,17 @@
     var d = document.createElement('div');
     d.className = 'fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
     d.innerHTML =
-      '<div class="' + (wide ? 'w-[36rem]' : 'w-96') + ' max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
-        '<div data-drag class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
+      '<div class="' + (wide ? 'w-[36rem]' : 'w-96') + ' max-w-full rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-slate-900/10">' +
+        '<div data-drag class="flex items-center justify-between rounded-t-xl border-b border-slate-200 bg-slate-50 px-4 py-2" title="Seret untuk memindahkan">' +
           '<span class="text-sm font-semibold text-slate-700">' + (isNew ? 'Tambah baris' : readonly ? 'Detail baris' : 'Edit baris') + '</span>' +
           '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
         '</div>' +
         '<div class="max-h-[65vh] overflow-auto px-4 py-3 ' + (wide ? 'grid grid-cols-1 items-start gap-3 min-[520px]:grid-cols-2' : 'space-y-2') + '">' + body + '</div>' +
-        '<div class="flex justify-end gap-2 border-t border-slate-200 px-4 py-2">' +
+        '<div class="flex justify-end gap-2 rounded-b-xl border-t border-slate-200 bg-slate-50 px-4 py-2">' +
           (readonly
-            ? '<button data-close class="h-7 rounded border border-slate-300 bg-white px-3 text-xs hover:bg-slate-100">Tutup</button>'
-            : '<button data-close class="h-7 rounded border border-slate-300 bg-white px-3 text-xs hover:bg-slate-100">Batal</button>' +
-              '<button data-save class="h-7 rounded bg-indigo-600 px-3 text-xs font-medium text-white hover:bg-indigo-700">Simpan</button>') +
+            ? '<button data-close class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">Tutup</button>'
+            : '<button data-close class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">Batal</button>' +
+              '<button data-save class="h-7 rounded-md bg-indigo-600 px-3 text-xs font-semibold text-white shadow-xs hover:bg-indigo-700 active:translate-y-px">Simpan</button>') +
         '</div>' +
       '</div>';
 
@@ -790,9 +790,9 @@
     if (old) { old.remove(); return; }
     var m = document.createElement('div');
     m.setAttribute('data-role', 'xmenu');
-    m.className = 'absolute top-7 z-30 w-40 rounded-lg border border-slate-300 bg-white py-1 shadow-xl';
+    m.className = 'absolute top-7 z-30 w-44 rounded-xl border border-slate-200 bg-white py-1 shadow-2xl ring-1 ring-slate-900/10';
     m.innerHTML = [['csv', 'CSV'], ['xlsx', 'Excel (.xlsx)'], ['pdf', 'PDF (.pdf)']].map(function (x) {
-      return '<button data-x="' + x[0] + '" class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-slate-700 hover:bg-slate-100">' +
+      return '<button data-x="' + x[0] + '" class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-slate-700 hover:bg-indigo-50 hover:text-indigo-700">' +
         ICONS.export + '<span>' + x[1] + '</span></button>';
     }).join('');
     m.onclick = function (e) {
@@ -831,14 +831,14 @@
     var d = document.createElement('div');
     d.className = 'fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
     d.innerHTML =
-      '<div class="w-[30rem] max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
-        '<div data-drag class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
+      '<div class="w-[30rem] max-w-full rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-slate-900/10">' +
+        '<div data-drag class="flex items-center justify-between rounded-t-xl border-b border-slate-200 bg-slate-50 px-4 py-2" title="Seret untuk memindahkan">' +
           '<span class="flex items-center gap-2 text-sm font-semibold text-slate-700">' + ICONS.help + ' Bantuan</span>' +
           '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
         '</div>' +
         '<div class="px-4 py-3 text-xs leading-relaxed text-slate-600">' + txt + '</div>' +
-        '<div class="flex justify-end border-t border-slate-200 px-4 py-2">' +
-          '<button data-x class="h-7 rounded border border-slate-300 bg-white px-3 text-xs hover:bg-slate-100">Tutup</button>' +
+        '<div class="flex justify-end rounded-b-xl border-t border-slate-200 bg-slate-50 px-4 py-2">' +
+          '<button data-x class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">Tutup</button>' +
         '</div>' +
       '</div>';
     d.onclick = function (e) { if (e.target === d || e.target.closest('[data-x]')) d.remove(); };
@@ -866,8 +866,8 @@
     }).join('');
 
     d.innerHTML =
-      '<div class="w-[30rem] max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
-        '<div data-drag class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
+      '<div class="w-[30rem] max-w-full rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-slate-900/10">' +
+        '<div data-drag class="flex items-center justify-between rounded-t-xl border-b border-slate-200 bg-slate-50 px-4 py-2" title="Seret untuk memindahkan">' +
           '<span class="flex items-center gap-2 text-sm font-semibold text-slate-700">' + ICONS.filter + ' Filter</span>' +
           '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
         '</div>' +
@@ -887,9 +887,9 @@
               ICONS.add + '<span>Tambah kondisi</span></button>' +
           '</div>' +
         '</div>' +
-        '<div class="flex justify-between border-t border-slate-200 px-4 py-2">' +
+        '<div class="flex justify-between rounded-b-xl border-t border-slate-200 bg-slate-50 px-4 py-2">' +
           '<button data-reset class="h-7 rounded px-2 text-xs text-slate-500 hover:text-rose-600">Reset semua</button>' +
-          '<button data-x class="h-7 rounded border border-slate-300 bg-white px-3 text-xs hover:bg-slate-100">Tutup</button>' +
+          '<button data-x class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">Tutup</button>' +
         '</div>' +
       '</div>';
 

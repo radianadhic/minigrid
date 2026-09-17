@@ -317,7 +317,7 @@ ok('xlsx: zip valid + sheet1.xml', +pyx > 1000, 'sheet=' + pyx + ' B');
 const pb = fs.readFileSync('/tmp/out.pdf').toString('latin1');
 ok('pdf: magic + xref + EOF', pb.startsWith('%PDF-') && pb.includes('startxref') && pb.trimEnd().endsWith('%%EOF'));
 ok('pdf: berisi header kolom', pb.includes('Karyawan') && pb.includes('Status'));
-ok('nama file unduhan benar', dx.suggestedFilename() === 'data.xlsx' && dp.suggestedFilename() === 'data.pdf',
+ok('nama file unduhan benar (minigrid-YYYY-MM-DD)', /^minigrid-\d{4}-\d{2}-\d{2}\.xlsx$/.test(dx.suggestedFilename()) && /^minigrid-\d{4}-\d{2}-\d{2}\.pdf$/.test(dp.suggestedFilename()),
    dx.suggestedFilename() + ', ' + dp.suggestedFilename());
 
 

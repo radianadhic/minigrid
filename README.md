@@ -41,8 +41,9 @@ native via `color-scheme`) berganti konsisten tanpa duplikasi CSS.
   untuk persistensi (demo memakai `localStorage`). Aktifkan lewat `crud: true`.
 - **Pilih kolom** (show/hide).
 - **Aksi kustom berikon** (`actions`) — demo Approve/Reject pada grid alur persetujuan.
-- **Menu Export**: CSV, **XLSX** (OOXML+ZIP ditulis sendiri, tervalidasi `zipfile`),
-  dan **PDF** (generator PDF 1.4 minimal, multi-halaman) — tanpa library.
+- **Menu Export**: CSV, **XLSX** (OOXML+ZIP ditulis sendiri: header tebal berwarna, pane beku,
+  AutoFilter, lebar kolom, format `#,##0`), dan **PDF** (lanskap otomatis bila lebar, angka rata
+  kanan, strip zebra, nomor halaman) — nama berkas ber-tanggal, tanpa library.
 - **Tombol Filter** — semua filter kolom dituangkan ke satu form modal (operator + nilai,
   kombinasi AND, Reset) yang memperbarui grid langsung; **tombol Help** dengan panduan.
 - **Form multi-kolom** (`formCols: 2`) untuk Tambah/Edit/Detail.
