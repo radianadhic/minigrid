@@ -423,6 +423,47 @@ ok('reset menghapus semua kondisi', await page.evaluate(() =>
   window.__g3.view.length === 40 && window.__g3.s.rules.length === 0));
 await page.locator('.fixed button:has-text("Tutup")').click();
 
+/* 23. modal: default di tengah layar & bisa digeser */
+const vp23 = page.viewportSize();
+const pan23 = () => page.locator('.fixed > div').first();
+await page.locator(G2 + ' [data-act=add]').click();
+const b1 = await pan23().boundingBox();
+ok('modal Tambah default di tengah layar',
+  Math.abs(b1.x + b1.width / 2 - vp23.width / 2) <= 2 && Math.abs(b1.y + b1.height / 2 - vp23.height / 2) <= 2,
+  JSON.stringify(b1));
+ok('header modal jadi handle drag (cursor grab)',
+  await page.locator('.fixed [data-drag]').evaluate(el => el.style.cursor) === 'grab');
+const hb = await page.locator('.fixed [data-drag]').boundingBox();
+await page.mouse.move(hb.x + hb.width / 2, hb.y + hb.height / 2);
+await page.mouse.down();
+await page.mouse.move(hb.x + hb.width / 2 + 150, hb.y + hb.height / 2 + 90, { steps: 6 });
+await page.mouse.up();
+const b2 = await pan23().boundingBox();
+ok('modal Tambah bergeser +150,+90 mengikuti pointer',
+  Math.abs(b2.x - (b1.x + 150)) <= 3 && Math.abs(b2.y - (b1.y + 90)) <= 3,
+  JSON.stringify({ dari: [b1.x, b1.y], ke: [b2.x, b2.y] }));
+await page.locator('.fixed button:has-text("Batal")').click();
+
+await page.locator('#grid3 [data-act=ffilter]').click();
+const f1 = await pan23().boundingBox();
+ok('modal Filter default di tengah layar',
+  Math.abs(f1.x + f1.width / 2 - vp23.width / 2) <= 2 && Math.abs(f1.y + f1.height / 2 - vp23.height / 2) <= 2);
+const fh = await page.locator('.fixed [data-drag]').boundingBox();
+await page.mouse.move(fh.x + fh.width / 2, fh.y + fh.height / 2);
+await page.mouse.down();
+await page.mouse.move(fh.x + fh.width / 2 - 180, fh.y + fh.height / 2 + 60, { steps: 6 });
+await page.mouse.up();
+const f2 = await pan23().boundingBox();
+ok('modal Filter bisa digeser (-180,+60)',
+  Math.abs(f2.x - (f1.x - 180)) <= 3 && Math.abs(f2.y - (f1.y + 60)) <= 3,
+  JSON.stringify({ dari: [f1.x, f1.y], ke: [f2.x, f2.y] }));
+await page.locator('.fixed button:has-text("Tutup")').click();
+await page.locator('#grid3 [data-act=ffilter]').click();
+const f3 = await pan23().boundingBox();
+ok('modal dibuka lagi kembali ke tengah',
+  Math.abs(f3.x + f3.width / 2 - vp23.width / 2) <= 2 && Math.abs(f3.y + f3.height / 2 - vp23.height / 2) <= 2);
+await page.locator('.fixed button:has-text("Tutup")').click();
+
 /* 17. tidak ada error konsol */
 ok('tanpa error konsol', errors.length === 0, errors.slice(0, 3).join(' ;; '));
 

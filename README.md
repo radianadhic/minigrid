@@ -33,6 +33,7 @@ native via `color-scheme`) berganti konsisten tanpa duplikasi CSS.
 - **Kolom beku (frozen)** — `sticky` di kiri, tetap saat scroll horizontal/vertikal.
 - **Pilih baris** — checkbox per baris, pilih semua (halaman atau seluruh hasil, `selectAll`).
 - **Resize kolom** — geser tepi kanan header.
+- **Modal dapat digeser** — Tambah/Detail/Edit/Filter/Bantuan terbuka di tengah layar; seret bilah judulnya untuk memindahkan (mouse & sentuh).
 - **Edit inline** — klik ganda sel; Enter/Tab simpan, Esc batal.
 - **CRUD lengkap ala jqGrid (navGrid)** — tombol `+ Tambah · Edit · Detail · Hapus`
   dengan **formulir modal**: validasi (`required`, angka), select untuk `options`,

@@ -651,6 +651,36 @@
     document.body.appendChild(d);
   };
 
+  /* ---------------------------------------- modal dapat digeser (drag) */
+  P._drag = function (d) {
+    var h = d.querySelector('[data-drag]'), p = h && h.parentElement;
+    if (!h || !p) return;
+    h.style.cursor = 'grab'; h.style.touchAction = 'none'; h.style.userSelect = 'none';
+    h.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('button') || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      e.preventDefault();
+      var r = p.getBoundingClientRect();
+      p.style.position = 'fixed'; p.style.left = r.left + 'px'; p.style.top = r.top + 'px'; p.style.margin = '0';
+      var dx = e.clientX - r.left, dy = e.clientY - r.top;
+      h.style.cursor = 'grabbing';
+      h.setPointerCapture(e.pointerId);
+      var move = function (ev) {
+        var x = Math.max(60 - r.width, Math.min(ev.clientX - dx, window.innerWidth - 60));
+        var y = Math.max(0, Math.min(ev.clientY - dy, window.innerHeight - 44));
+        p.style.left = x + 'px'; p.style.top = y + 'px';
+      };
+      var up = function () {
+        h.style.cursor = 'grab';
+        h.removeEventListener('pointermove', move);
+        h.removeEventListener('pointerup', up);
+        h.removeEventListener('pointercancel', up);
+      };
+      h.addEventListener('pointermove', move);
+      h.addEventListener('pointerup', up);
+      h.addEventListener('pointercancel', up);
+    });
+  };
+
   /* ------------------------------------------------- formulir CRUD (modal) */
   P._form = function (mode) {
     var self = this, o = this.o, s = this.s;
@@ -690,10 +720,10 @@
 
     var wide = o.formCols > 1;
     var d = document.createElement('div');
-    d.className = 'fixed inset-0 z-50 flex items-start justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
+    d.className = 'fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
     d.innerHTML =
-      '<div class="mt-4 ' + (wide ? 'w-[36rem]' : 'w-96') + ' max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
-        '<div class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
+      '<div class="' + (wide ? 'w-[36rem]' : 'w-96') + ' max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
+        '<div data-drag class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
           '<span class="text-sm font-semibold text-slate-700">' + (isNew ? 'Tambah baris' : readonly ? 'Detail baris' : 'Edit baris') + '</span>' +
           '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
         '</div>' +
@@ -747,6 +777,7 @@
       if (e.target.closest('[data-save]')) save();
     });
 
+    self._drag(d);
     document.body.appendChild(d);
     var first = d.querySelector('input[type=text], input[type=number], select');
     if (first) first.focus();
@@ -795,12 +826,13 @@
       '<li><b>Klik ganda</b> sel = edit inline · Enter/Tab simpan · Esc batal.</li>' +
       '<li><b>Geser tepi kanan header</b> = ubah lebar kolom · tombol Kolom = tampil/sembunyikan kolom.</li>' +
       '<li><b>Export</b> = unduh hasil ter-filter & ter-urut sebagai CSV, XLSX, atau PDF.</li>' +
+      '<li><b>Geser bilah judul modal</b> = pindahkan posisi modal; setiap dibuka, modal kembali ke tengah layar.</li>' +
       '</ul>';
     var d = document.createElement('div');
-    d.className = 'fixed inset-0 z-50 flex items-start justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
+    d.className = 'fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
     d.innerHTML =
-      '<div class="mt-8 w-[30rem] max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
-        '<div class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
+      '<div class="w-[30rem] max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
+        '<div data-drag class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
           '<span class="flex items-center gap-2 text-sm font-semibold text-slate-700">' + ICONS.help + ' Bantuan</span>' +
           '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
         '</div>' +
@@ -810,6 +842,7 @@
         '</div>' +
       '</div>';
     d.onclick = function (e) { if (e.target === d || e.target.closest('[data-x]')) d.remove(); };
+    this._drag(d);
     document.body.appendChild(d);
   };
 
@@ -818,7 +851,7 @@
     var self = this, s = this.s;
     var qcols = this.vis().filter(function (c) { return c.filter !== false; });
     var d = document.createElement('div');
-    d.className = 'fixed inset-0 z-50 flex items-start justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
+    d.className = 'fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
 
     var quick = qcols.map(function (c) {
       var f = s.filter[c.name] || {};
@@ -833,8 +866,8 @@
     }).join('');
 
     d.innerHTML =
-      '<div class="mt-4 w-[30rem] max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
-        '<div class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
+      '<div class="w-[30rem] max-w-full rounded-lg border border-slate-300 bg-white shadow-xl">' +
+        '<div data-drag class="flex items-center justify-between border-b border-slate-200 px-4 py-2">' +
           '<span class="flex items-center gap-2 text-sm font-semibold text-slate-700">' + ICONS.filter + ' Filter</span>' +
           '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
         '</div>' +
@@ -933,6 +966,7 @@
         paintRules(); apply(true);
       }
     });
+    self._drag(d);
     document.body.appendChild(d);
   };
 
