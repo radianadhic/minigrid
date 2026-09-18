@@ -47,6 +47,7 @@ native via `color-scheme`) berganti konsisten tanpa duplikasi CSS.
 - **Tombol Filter** — semua filter kolom dituangkan ke satu form modal (operator + nilai,
   kombinasi AND, Reset) yang memperbarui grid langsung; **tombol Help** dengan panduan.
 - **Form multi-kolom** (`formCols: 2` atau `3`) untuk Tambah/Edit/Detail.
+- **Tombol Refresh** di semua grid (`refresh` default true) dengan `onRefresh(grid)` — bila mengembalikan Promise, overlay "Memuat…" tampil otomatis; contoh akses API (`fetch`) ada di demo 5.
 - **Aksi per baris** (`rowActions: true`) — ikon Detail/Edit/Hapus pada tiap record; berguna bila checkbox/seleksi dimatikan (`select: false`).
 - **Aturan enable tombol**: Edit/Detail = tepat 1 baris terpilih; Hapus/aksi kustom = ≥1.
 - **Tata letak responsif**: toolbar melipat (wrap) di layar sempit, label tombol menjadi

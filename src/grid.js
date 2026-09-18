@@ -21,6 +21,7 @@
     del: IC('<path d="M3 6h18M8 6V4h8v2m1 0-1 14H8L7 6"/>'),
     cols: IC('<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M9 4v16M15 4v16"/>'),
     export: IC('<path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/>'),
+    refresh: IC('<path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v4h-4"/>'),
     filter: IC('<path d="M3 5h18l-7 8v6l-4 2v-8Z"/>'),
     help: IC('<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 1-1 1.7"/><path d="M12 17h.01"/>'),
     ok: IC('<path d="M20 6 9 17l-5-5"/>'),
@@ -79,12 +80,17 @@
           '<span data-role="info" class="ml-auto whitespace-nowrap text-xs tabular-nums text-slate-500 sm:ml-0"></span>' +
         '</div>' +
       '</div>' +
+      '<div class="relative">' +
       '<div data-role="scroller" class="overflow-auto bg-white">' +
         '<table class="border-collapse text-xs" style="table-layout:fixed;width:100%">' +
           '<colgroup data-role="cg"></colgroup>' +
           '<thead data-role="head" class="mg-head sticky top-0 z-10"></thead>' +
           '<tbody data-role="body" class="mg-body relative"></tbody>' +
         '</table>' +
+      '</div>' +
+      '<div data-role="load" class="hidden absolute inset-0 z-20 flex items-center justify-center gap-2 bg-white/60 backdrop-blur-[1px]">' +
+        '<span class="size-5 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-600"></span>' +
+        '<span class="text-xs font-medium text-slate-600">Memuat…</span></div>' +
       '</div>' +
       '<div class="flex flex-wrap items-center gap-2 border-t border-slate-200 bg-slate-50 px-2 py-1.5" data-role="pager"></div>' +
     '</div>';
@@ -96,7 +102,7 @@
       pageSizes: [10, 25, 50, 100, 500], height: 420, rowHeight: 32,
       frozen: 0, select: 'multi', selectAll: 'page', filter: true, search: true, edit: false,
       resize: true, add: false, remove: false, editForm: false, view: false, crud: false,
-      chooser: true, zebra: true, filterForm: false, help: false, formCols: 1, rowActions: false, actions: [],
+      chooser: true, zebra: true, filterForm: false, help: false, formCols: 1, rowActions: false, refresh: true, actions: [],
       rowId: function (r, i) { return r.id != null ? r.id : i; },
       onEdit: null, onAdd: null, onRemove: null, onSelect: null
     }, opts);
@@ -473,6 +479,7 @@
     if (o.filterForm) T.push(['ffilter', 'Filter', 'filter', true]);
     T.push(['export', 'Export', 'export']);
     if (o.chooser) T.push(['cols', 'Kolom', 'cols']);
+    if (o.refresh) T.push(['refresh', 'Refresh', 'refresh']);
     if (o.help) T.push(['help', '', 'help']);
     this.r.tools.innerHTML = T.map(function (t) {
       return '<button data-act="' + t[0] + '" title="' + (t[1] || t[0]) + '" class="' + BTN + (t[1] ? '' : ' px-1.5') + '">' +
@@ -488,6 +495,14 @@
       if (act === 'export') { self._exportMenu(a); return; }
       if (act === 'ffilter') { self._filterForm(); return; }
       if (act === 'help') { self._help(); return; }
+      if (act === 'refresh') {
+        var rp = o.onRefresh ? o.onRefresh(self) : null;
+        if (rp && rp.then) {
+          self.setLoading(true);
+          rp.then(function () { self.setLoading(false); }, function () { self.setLoading(false); });
+        } else self.render();
+        return;
+      }
       var ca = null;
       (o.actions || []).forEach(function (x) { if (x.id === act) ca = x; });
       if (ca) {
@@ -657,6 +672,11 @@
       }
     };
     document.body.appendChild(d);
+  };
+
+  P.setLoading = function (on) {
+    var w = this.el.querySelector('[data-role=load]');
+    if (w) w.classList.toggle('hidden', !on);
   };
 
   P._doRemove = function (ids) {

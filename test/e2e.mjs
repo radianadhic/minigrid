@@ -503,6 +503,27 @@ await page.waitForTimeout(200);
 ok('ikon Hapus menghapus record tsb', await page.evaluate(() => window.__g4.data.length) === n4);
 await page.screenshot({ path: path.join(__dirname, '..', 'shots', 'rowactions.png') });
 
+/* 25. tombol refresh di semua contoh + data dari API */
+for (const gs of ['#grid1', '#grid2', '#grid3', '#grid4', '#grid5'])
+  ok('tombol refresh ada di ' + gs, await page.locator(gs + ' [data-act=refresh]').count() === 1);
+await page.evaluate(() => { window.__g3.data[0].status = 'DIUBAH'; window.__g3.render(); });
+await page.locator('#grid3 [data-act=refresh]').click();
+await page.waitForTimeout(150);
+ok('refresh grid3 memuat ulang data awal', await page.evaluate(() =>
+  JSON.stringify(window.__g3.data) === JSON.stringify(window.__g3init)));
+await page.evaluate(() => { window.__g4.data[0].catatan = 'DIUBAH'; window.__g4.render(); });
+await page.locator('#grid4 [data-act=refresh]').click();
+await page.waitForTimeout(150);
+ok('refresh grid4 memuat ulang data awal', await page.evaluate(() =>
+  JSON.stringify(window.__g4.data) === JSON.stringify(window.__g4init)));
+ok('grid5 termuat lewat simulasi API (file://)', await page.locator('#grid5 tbody tr[data-id]').count() > 0 &&
+  (await page.locator('#api5').innerText()).includes('simulasi'),
+  await page.locator('#api5').innerText());
+await page.locator('#grid5 [data-act=refresh]').click();
+await page.waitForTimeout(800);
+ok('refresh grid5 memuat ulang + overlay sembunyi', await page.locator('#grid5 tbody tr[data-id]').count() > 0 &&
+  await page.evaluate(() => document.querySelector('#grid5 [data-role=load]').classList.contains('hidden')));
+
 /* 17. tidak ada error konsol */
 ok('tanpa error konsol', errors.length === 0, errors.slice(0, 3).join(' ;; '));
 

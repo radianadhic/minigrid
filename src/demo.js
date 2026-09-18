@@ -76,7 +76,15 @@
     el: '#grid1', columns: cols, data: big,
     frozen: 2, height: 400, rowHeight: 30, pageSize: 500,
     pageSizes: [100, 500, 1000, 5000, 50000],
-    onSelect: function (ids) { log('pilih ' + ids.length + ' baris'); }
+    onSelect: function (ids) { log('pilih ' + ids.length + ' baris'); },
+    onRefresh: function (g) {
+      return new Promise(function (res) {
+        setTimeout(function () {
+          g.data = g.o.data = rows(50000);
+          g.s.page = 1; g.s.sel.clear(); g._skey = ''; g.render(); res();
+        }, 150);
+      });
+    }
   });
 
   /* ---- Demo 2: CRUD lengkap (form modal) + edit inline + persistensi ---- */
@@ -114,6 +122,12 @@
       log('hapus ' + rws.length + ' baris');
       setTimeout(save2, 0);
       return confirm('Hapus ' + rws.length + ' baris terpilih?');
+    },
+    onRefresh: function (g) {
+      var sv = null;
+      try { sv = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { }
+      g.data = g.o.data = Array.isArray(sv) && sv.length ? sv : rows(12);
+      g.s.page = 1; g.s.sel.clear(); g._skey = ''; g.render();
     }
   });
 
@@ -137,6 +151,8 @@
       catatan: pick(CAT)
     });
   }
+  var rows3init = JSON.parse(JSON.stringify(rows3));
+  window.__g3init = rows3init;
   var B3 = {
     'Pending': 'bg-amber-100 text-amber-700',
     'Approved': 'bg-emerald-100 text-emerald-700',
@@ -189,7 +205,11 @@
     },
     onSave: function (row, isNew) { log((isNew ? 'simpan baru' : 'simpan edit') + ' #' + row.id); },
     onEdit: function (row, col, val, old) { log('edit #' + row.id + ' ' + col + ': ' + old + ' ⇒ ' + val); },
-    onRemove: function (rws) { log('hapus ' + rws.length + ' baris'); return confirm('Hapus ' + rws.length + ' baris terpilih?'); }
+    onRemove: function (rws) { log('hapus ' + rws.length + ' baris'); return confirm('Hapus ' + rws.length + ' baris terpilih?'); },
+    onRefresh: function (g) {
+      g.data = g.o.data = JSON.parse(JSON.stringify(rows3init));
+      g.s.page = 1; g.s.sel.clear(); g._skey = ''; g.render();
+    }
   });
 
   /* ---- grid 4: aksi per baris (tanpa checkbox) · form 3 kolom ---- */
@@ -214,6 +234,8 @@
     { id: 13, proyek: 'Rebranding',       pemilik: 'Eka S.',     dep: 'Pemasaran',  pri: 'Rendah', tenggat: '2027-01-30', bobot: 20, status: 'Tertunda', catatan: 'Brief ulang dari direksi' },
     { id: 14, proyek: 'Stock Opname',     pemilik: 'Dedi K.',    dep: 'Logistik',   pri: 'Tinggi', tenggat: '2026-09-30', bobot: 100, status: 'Selesai',  catatan: 'Selisih 0,4%' }
   ];
+  var rows4init = JSON.parse(JSON.stringify(rows4));
+  window.__g4init = rows4init;
   var cols4 = [
     { name: 'id', label: 'No', width: 56, type: 'num', align: 'right', form: false },
     { name: 'proyek', label: 'Proyek', width: 150, required: true },
@@ -236,8 +258,55 @@
       r.id = (window.__g4.data.length ? Math.max.apply(null, window.__g4.data.map(function (x) { return x.id; })) : 0) + 1;
       if (!r.status) r.status = 'Berjalan';
       return r;
+    },
+    onRefresh: function (g) {
+      g.data = g.o.data = JSON.parse(JSON.stringify(rows4init));
+      g.s.page = 1; g.s.sel.clear(); g._skey = ''; g.render();
     }
   });
+
+  /* ---- Demo 5: data dari API · refresh · status muat ---- */
+  var cols5 = [
+    { name: 'id', label: 'ID', width: 64, type: 'num', align: 'right' },
+    { name: 'nama', label: 'Nama', width: 170 },
+    { name: 'dep', label: 'Departemen', width: 110 },
+    { name: 'jabatan', label: 'Jabatan', width: 120 },
+    { name: 'kota', label: 'Kota', width: 100 },
+    { name: 'gaji', label: 'Gaji / Bulan', width: 120, type: 'num', format: 'money', align: 'right' },
+    { name: 'masuk', label: 'Tgl Masuk', width: 104, type: 'date' },
+    { name: 'stat', label: 'Status', width: 100, render: function (v) { return '<span class="rounded-full px-1.5 py-0.5 text-[10px] font-medium ' + (badge[v] || 'bg-slate-100 text-slate-600') + '">' + v + '</span>'; } }
+  ];
+  function muatAPI(g) {
+    g.setLoading(true);
+    var selesai = function (list, src) {
+      g.data = g.o.data = list;
+      g.s.page = 1; g.s.sel.clear(); g._skey = ''; g.render();
+      g.setLoading(false);
+      var el = document.getElementById('api5');
+      if (el) el.textContent = src + ' · ' + list.length + ' baris · ' + new Date().toLocaleTimeString('id-ID');
+    };
+    if (location.protocol === 'file:') {   /* tanpa server: simulasi API berlatensi */
+      return new Promise(function (res) {
+        setTimeout(function () { selesai(rows(500), 'sumber: simulasi API (latensi 450 ms — jalankan server.mjs untuk API asli)'); res(); }, 450);
+      });
+    }
+    return fetch('api/karyawan').then(function (r) {
+      if (!r.ok) throw 0;
+      return r.json();
+    }).then(function (j) { selesai(j, 'sumber: API server — GET api/karyawan'); })
+      .catch(function () {
+        return new Promise(function (res) {
+          setTimeout(function () { selesai(rows(500), 'sumber: simulasi API (fetch gagal)'); res(); }, 450);
+        });
+      });
+  }
+  window.__g5 = MiniGrid({
+    el: '#grid5', columns: cols5, data: [],
+    height: 320, rowHeight: 30, pageSize: 10, frozen: 1,
+    filter: false, filterForm: true, formCols: 2,
+    onRefresh: muatAPI
+  });
+  muatAPI(window.__g5);
 
   /* ---- pemilih tema (remap variabel warna Tailwind v4) ---- */
   var THEMES = [
