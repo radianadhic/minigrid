@@ -192,6 +192,53 @@
     onRemove: function (rws) { log('hapus ' + rws.length + ' baris'); return confirm('Hapus ' + rws.length + ' baris terpilih?'); }
   });
 
+  /* ---- grid 4: aksi per baris (tanpa checkbox) · form 3 kolom ---- */
+  var B4 = {
+    'Tinggi': 'bg-rose-100 text-rose-700', 'Sedang': 'bg-amber-100 text-amber-700', 'Rendah': 'bg-slate-100 text-slate-600',
+    'Berjalan': 'bg-sky-100 text-sky-700', 'Selesai': 'bg-emerald-100 text-emerald-700', 'Tertunda': 'bg-amber-100 text-amber-700'
+  };
+  var pill4 = function (v) { return '<span class="rounded-full px-1.5 py-0.5 text-[10px] font-medium ' + (B4[v] || 'bg-slate-100 text-slate-600') + '">' + v + '</span>'; };
+  var rows4 = [
+    { id: 1,  proyek: 'Portal HR',        pemilik: 'Andini P.',   dep: 'SDM',        pri: 'Tinggi', tenggat: '2026-10-12', bobot: 40, status: 'Berjalan', catatan: 'Fase integrasi payroll' },
+    { id: 2,  proyek: 'Datamart Sales',   pemilik: 'Bimo A.',     dep: 'Pemasaran',  pri: 'Sedang', tenggat: '2026-11-03', bobot: 25, status: 'Berjalan', catatan: 'Menunggu sumber data' },
+    { id: 3,  proyek: 'Audit Akses',      pemilik: 'Citra M.',    dep: 'IT',         pri: 'Tinggi', tenggat: '2026-09-28', bobot: 70, status: 'Berjalan', catatan: 'Review izin trimestral' },
+    { id: 4,  proyek: 'Renovasi Gudang',  pemilik: 'Dedi K.',     dep: 'Logistik',   pri: 'Rendah', tenggat: '2027-01-15', bobot: 10, status: 'Tertunda', catatan: 'Menunggu anggaran cair' },
+    { id: 5,  proyek: 'Kampanye Q4',      pemilik: 'Eka S.',      dep: 'Pemasaran',  pri: 'Sedang', tenggat: '2026-12-01', bobot: 55, status: 'Berjalan', catatan: 'Materi kreatif direview' },
+    { id: 6,  proyek: 'Migrasi ERP',      pemilik: 'Fajar N.',    dep: 'Keuangan',   pri: 'Tinggi', tenggat: '2027-02-20', bobot: 30, status: 'Berjalan', catatan: 'Modul GL selesai' },
+    { id: 7,  proyek: 'SOP Keselamatan',  pemilik: 'Gita R.',     dep: 'Umum',       pri: 'Sedang', tenggat: '2026-10-30', bobot: 90, status: 'Berjalan', catatan: 'Finalisasi tanda tangan' },
+    { id: 8,  proyek: 'Rekrutmen Massal', pemilik: 'Andini P.',   dep: 'SDM',        pri: 'Tinggi', tenggat: '2026-09-25', bobot: 60, status: 'Berjalan', catatan: '87 pelamar masuk' },
+    { id: 9,  proyek: 'Optimasi Rute',    pemilik: 'Dedi K.',     dep: 'Logistik',   pri: 'Sedang', tenggat: '2026-12-18', bobot: 15, status: 'Tertunda', catatan: 'Perlu data GPS armada' },
+    { id: 10, proyek: 'Dashboard KPI',    pemilik: 'Bimo A.',     dep: 'IT',         pri: 'Rendah', tenggat: '2027-03-05', bobot: 45, status: 'Berjalan', catatan: 'Prototipe disetujui' },
+    { id: 11, proyek: 'Pelatihan Safety', pemilik: 'Gita R.',     dep: 'SDM',        pri: 'Sedang', tenggat: '2026-11-20', bobot: 100, status: 'Selesai',  catatan: '3 angkatan lulus' },
+    { id: 12, proyek: 'Renegosiasi Vendor', pemilik: 'Fajar N.',  dep: 'Keuangan',   pri: 'Sedang', tenggat: '2026-10-08', bobot: 80, status: 'Berjalan', catatan: 'Hemat 12% terproyeksi' },
+    { id: 13, proyek: 'Rebranding',       pemilik: 'Eka S.',     dep: 'Pemasaran',  pri: 'Rendah', tenggat: '2027-01-30', bobot: 20, status: 'Tertunda', catatan: 'Brief ulang dari direksi' },
+    { id: 14, proyek: 'Stock Opname',     pemilik: 'Dedi K.',    dep: 'Logistik',   pri: 'Tinggi', tenggat: '2026-09-30', bobot: 100, status: 'Selesai',  catatan: 'Selisih 0,4%' }
+  ];
+  var cols4 = [
+    { name: 'id', label: 'No', width: 56, type: 'num', align: 'right', form: false },
+    { name: 'proyek', label: 'Proyek', width: 150, required: true },
+    { name: 'pemilik', label: 'Pemilik', width: 120, required: true },
+    { name: 'dep', label: 'Departemen', width: 110 },
+    { name: 'pri', label: 'Prioritas', width: 95, options: ['Rendah', 'Sedang', 'Tinggi'], render: pill4 },
+    { name: 'tenggat', label: 'Tenggat', width: 105, type: 'date' },
+    { name: 'bobot', label: 'Bobot %', width: 80, type: 'num', align: 'right' },
+    { name: 'status', label: 'Status', width: 100, options: ['Berjalan', 'Selesai', 'Tertunda'], render: pill4 },
+    { name: 'catatan', label: 'Catatan', width: 190 }
+  ];
+  window.__g4 = MiniGrid({
+    el: '#grid4', columns: cols4, data: rows4,
+    height: 340, rowHeight: 30, pageSize: 8,
+    select: false,          /* tanpa checkbox — aksi berbasis record, bukan seleksi */
+    rowActions: true,       /* ikon Detail/Edit/Hapus pada tiap baris */
+    add: true, formCols: 3,
+    filter: false, filterForm: true, help: true,
+    onAdd: function (r) {
+      r.id = (window.__g4.data.length ? Math.max.apply(null, window.__g4.data.map(function (x) { return x.id; })) : 0) + 1;
+      if (!r.status) r.status = 'Berjalan';
+      return r;
+    }
+  });
+
   /* ---- pemilih tema (remap variabel warna Tailwind v4) ---- */
   var THEMES = [
     ['light', 'Terang', '#f8fafc', '#4f46e5'],

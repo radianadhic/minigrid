@@ -26,6 +26,8 @@
     ok: IC('<path d="M20 6 9 17l-5-5"/>'),
     no: IC('<path d="M18 6 6 18M6 6l12 12"/>')
   };
+  var RAB = 'flex h-6 w-6 items-center justify-center rounded-md text-slate-500 outline-none hover:bg-indigo-50 hover:text-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-500';
+  var RAD = 'flex h-6 w-6 items-center justify-center rounded-md text-slate-500 outline-none hover:bg-rose-50 hover:text-rose-600 focus-visible:ring-2 focus-visible:ring-rose-500';
   var BTN = 'flex h-6 items-center gap-1 rounded-md border border-slate-300 bg-white px-2 text-xs font-medium text-slate-700 shadow-xs outline-none hover:border-slate-400 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-500 active:translate-y-px disabled:opacity-40 disabled:hover:border-slate-300';
 
   var esc = function (s) {
@@ -94,7 +96,7 @@
       pageSizes: [10, 25, 50, 100, 500], height: 420, rowHeight: 32,
       frozen: 0, select: 'multi', selectAll: 'page', filter: true, search: true, edit: false,
       resize: true, add: false, remove: false, editForm: false, view: false, crud: false,
-      chooser: true, zebra: true, filterForm: false, help: false, formCols: 1, actions: [],
+      chooser: true, zebra: true, filterForm: false, help: false, formCols: 1, rowActions: false, actions: [],
       rowId: function (r, i) { return r.id != null ? r.id : i; },
       onEdit: null, onAdd: null, onRemove: null, onSelect: null
     }, opts);
@@ -220,6 +222,7 @@
   P._cols = function () {
     var w = this.o.select === 'multi' ? '<col style="width:36px">' : '';
     this.vis().forEach(function (c) { w += '<col style="width:' + c.width + 'px">'; });
+    if (this.o.rowActions) w += '<col style="width:92px">';
     this.r.cg.innerHTML = w;
   };
 
@@ -260,6 +263,7 @@
              : '') +
            '</th>';
     });
+    if (this.o.rowActions) h += '<th class="bg-slate-100 p-0 align-top"><div class="border-b border-slate-300 px-2 py-1.5 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-600">Aksi</div></th>';
     h += '</tr>';
     if (this.r.head.innerHTML !== h) this.r.head.innerHTML = h;
     this._inputs();
@@ -323,7 +327,7 @@
     /* virtual scroll dengan baris spacer (bukan position:absolute) agar lebar
      * kolom dari <colgroup> tetap berlaku untuk semua baris. */
     var frag = document.createDocumentFragment();
-    var span = cols.length + (o.select === 'multi' ? 1 : 0);
+    var span = cols.length + (o.select === 'multi' ? 1 : 0) + (o.rowActions ? 1 : 0);
     if (first > 0) frag.appendChild(spacer(first * rh, span));
     for (var i = first; i < last; i++) {
       var row = this.pageRows[i], id = this.idOf(row, i);
@@ -343,6 +347,10 @@
              (frz ? ' style="position:sticky;left:' + col._left + 'px;z-index:1"' : '') + '>' +
              (col.render ? col.render(row[col.name], row) : esc(fmt(row[col.name], col))) + '</td>';
       }
+      if (o.rowActions) h += '<td class="border-b border-r border-slate-200 px-1 align-middle"><div class="flex items-center justify-center gap-0.5">' +
+        '<button data-ra="view" title="Detail" class="' + RAB + '">' + ICONS.view + '</button>' +
+        '<button data-ra="edit" title="Edit" class="' + RAB + '">' + ICONS.edit + '</button>' +
+        '<button data-ra="del" title="Hapus" class="' + RAD + '">' + ICONS.del + '</button></div></td>';
       tr.innerHTML = h;
       frag.appendChild(tr);
     }
@@ -509,15 +517,7 @@
       }
       if (act === 'edit' && s.sel.size === 1) self._form('edit');
       if (act === 'view' && s.sel.size === 1) self._form('view');
-      if (act === 'remove') {
-        var rows = self.selected();
-        if (!rows.length) return;
-        var go = o.onRemove ? o.onRemove(rows) !== false : confirm('Hapus ' + rows.length + ' baris terpilih?');
-        if (!go) return;
-        var del = new Set(rows);
-        self.data = o.data = self.data.filter(function (r) { return !del.has(r); });
-        s.sel.clear(); self._skey = ''; self.render();
-      }
+      if (act === 'remove') self._doRemove(Array.from(s.sel));
       if (act === 'cols') self._chooser();
       if (act === 'clear') {
         s.filter = {}; s.rules = []; s.join = 'AND'; s.q = ''; s.page = 1;
@@ -558,6 +558,14 @@
         if (ck.checked) s.sel.add(ck.dataset.ck); else s.sel.delete(ck.dataset.ck);
         ck.closest('tr').classList.toggle('sel', ck.checked);
         self._fire();
+        return;
+      }
+      var ra = e.target.closest('[data-ra]');
+      if (ra) {
+        var rid = ra.closest('tr').dataset.id;
+        if (ra.dataset.ra === 'view') self._form('view', rid);
+        if (ra.dataset.ra === 'edit') self._form('edit', rid);
+        if (ra.dataset.ra === 'del') self._doRemove([rid]);
         return;
       }
       var tr = e.target.closest('tr');
@@ -651,6 +659,18 @@
     document.body.appendChild(d);
   };
 
+  P._doRemove = function (ids) {
+    var o = this.o, s = this.s, rows = [], i;
+    for (i = 0; i < this.data.length; i++) if (ids.indexOf(this.idOf(this.data[i], i)) > -1) rows.push(this.data[i]);
+    if (!rows.length) return;
+    var go = o.onRemove ? o.onRemove(rows) !== false : confirm('Hapus ' + rows.length + ' baris?');
+    if (!go) return;
+    var del = new Set(rows);
+    this.data = o.data = this.data.filter(function (r) { return !del.has(r); });
+    ids.forEach(function (x) { s.sel.delete(x); });
+    this._skey = ''; this.render();
+  };
+
   /* ---------------------------------------- modal dapat digeser (drag) */
   P._drag = function (d) {
     var h = d.querySelector('[data-drag]'), p = h && h.parentElement;
@@ -682,7 +702,7 @@
   };
 
   /* ------------------------------------------------- formulir CRUD (modal) */
-  P._form = function (mode) {
+  P._form = function (mode, id) {
     var self = this, o = this.o, s = this.s;
     var isNew = mode === 'add', readonly = mode === 'view';
     var row = null;
@@ -690,8 +710,8 @@
       row = {};
       this.cols.forEach(function (c) { row[c.name] = c.bool ? false : ''; });
     } else {
-      if (s.sel.size !== 1) return;
-      var want = Array.from(s.sel)[0];
+      var want = id != null ? id : (s.sel.size === 1 ? Array.from(s.sel)[0] : null);
+      if (want == null) return;
       for (var i = 0; i < this.data.length; i++) if (this.idOf(this.data[i], i) === want) { row = this.data[i]; break; }
       if (!row) return;
     }
@@ -719,15 +739,18 @@
     }).join('');
 
     var wide = o.formCols > 1;
+    var wcls = o.formCols >= 3 ? 'w-[54rem]' : wide ? 'w-[36rem]' : 'w-96';
+    var bcls = o.formCols >= 3 ? 'grid grid-cols-1 items-start gap-3 min-[520px]:grid-cols-2 min-[900px]:grid-cols-3'
+             : wide ? 'grid grid-cols-1 items-start gap-3 min-[520px]:grid-cols-2' : 'space-y-2';
     var d = document.createElement('div');
     d.className = 'fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
     d.innerHTML =
-      '<div class="' + (wide ? 'w-[36rem]' : 'w-96') + ' max-w-full rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-slate-900/10">' +
+      '<div class="' + wcls + ' max-w-full rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-slate-900/10">' +
         '<div data-drag class="flex items-center justify-between rounded-t-xl border-b border-slate-200 bg-slate-50 px-4 py-2" title="Seret untuk memindahkan">' +
           '<span class="text-sm font-semibold text-slate-700">' + (isNew ? 'Tambah baris' : readonly ? 'Detail baris' : 'Edit baris') + '</span>' +
           '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
         '</div>' +
-        '<div class="max-h-[65vh] overflow-auto px-4 py-3 ' + (wide ? 'grid grid-cols-1 items-start gap-3 min-[520px]:grid-cols-2' : 'space-y-2') + '">' + body + '</div>' +
+        '<div class="max-h-[65vh] overflow-auto px-4 py-3 ' + bcls + '">' + body + '</div>' +
         '<div class="flex justify-end gap-2 rounded-b-xl border-t border-slate-200 bg-slate-50 px-4 py-2">' +
           (readonly
             ? '<button data-close class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">Tutup</button>'

@@ -209,7 +209,6 @@ ok('hapus sisa baris', await page.evaluate(() => window.__g2.data.length) === 0,
 ok('tombol Hapus nonaktif saat tak ada pilihan', await page.locator(G2 + ' [data-act=remove]').isDisabled());
 
 /* 18. reset data contoh mengembalikan 12 baris (persistensi dihapus) */
-page.once('dialog', d => d.accept());
 await page.locator('#reset2').click();
 await page.waitForSelector('#grid2 tbody tr');
 ok('reset data contoh → 12 baris', await page.evaluate(() => window.__g2.data.length) === 12);
@@ -463,6 +462,32 @@ const f3 = await pan23().boundingBox();
 ok('modal dibuka lagi kembali ke tengah',
   Math.abs(f3.x + f3.width / 2 - vp23.width / 2) <= 2 && Math.abs(f3.y + f3.height / 2 - vp23.height / 2) <= 2);
 await page.locator('.fixed button:has-text("Tutup")').click();
+
+/* 24. grid4: aksi per baris (tanpa checkbox) + form 3 kolom */
+ok('grid4 tanpa checkbox', await page.locator('#grid4 [data-ck]').count() === 0 &&
+  await page.locator('#grid4 [data-role=all]').count() === 0);
+ok('grid4 punya kolom Aksi + 3 ikon per baris', await page.locator('#grid4 thead th', { hasText: 'Aksi' }).count() === 1 &&
+  await page.locator('#grid4 tbody [data-ra]').count() === 3 * await page.locator('#grid4 tbody tr[data-id]').count());
+const n4 = await page.evaluate(() => window.__g4.data.length);
+await page.locator('#grid4 tbody tr[data-id]').nth(1).locator('[data-ra=edit]').click();
+ok('ikon Edit membuka modal baris tsb', await page.locator('.fixed >> text=Edit baris').count() === 1 &&
+  await page.locator('.fixed [data-fld=proyek]').inputValue() === await page.evaluate(() => window.__g4.data[1].proyek));
+ok('form Tambah/Edit tersusun 3 kolom', await page.evaluate(() => {
+  const el = document.querySelector('.fixed > div').children[1];
+  return getComputedStyle(el).gridTemplateColumns.split(' ').length;
+}) === 3);
+await page.locator('.fixed [data-fld=catatan]').fill('e2e rowActions');
+await page.locator('.fixed [data-save]').click();
+ok('simpan edit per baris mengubah record', await page.evaluate(() => window.__g4.data[1].catatan) === 'e2e rowActions');
+await page.locator('#grid4 tbody tr[data-id]').nth(2).locator('[data-ra=view]').click();
+ok('ikon Detail = modal readonly', await page.locator('.fixed >> text=Detail baris').count() === 1 &&
+  await page.locator('.fixed [data-fld]').count() === 0);
+await page.locator('.fixed [data-close]').click();
+page.once('dialog', d => d.accept());
+await page.locator('#grid4 tbody tr[data-id]').first().locator('[data-ra=del]').click();
+await page.waitForTimeout(200);
+ok('ikon Hapus menghapus record tsb', await page.evaluate(() => window.__g4.data.length) === n4 - 1);
+await page.screenshot({ path: path.join(__dirname, '..', 'shots', 'rowactions.png') });
 
 /* 17. tidak ada error konsol */
 ok('tanpa error konsol', errors.length === 0, errors.slice(0, 3).join(' ;; '));
