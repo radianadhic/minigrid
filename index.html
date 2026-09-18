@@ -238,7 +238,7 @@ button, input, select, a {
       <dl class="space-y-1 text-xs break-words [&_code]:break-all">
         <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">columns[]</dt><dd class="text-slate-600">name, label, width, type (str|num|date), format, align, render(), sortable, filter, editable, hidden, search</dd></div>
         <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">data</dt><dd class="text-slate-600">array objek — client-side. Ganti <code>grid.data</code> lalu <code>grid.render()</code>.</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">select</dt><dd class="text-slate-600">'multi' (checkbox) | 'single' | false · <code>selectAll</code>: 'page' (default, ala jqGrid) | 'view'</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">select</dt><dd class="text-slate-600">'multi' (checkbox) | 'single' | false · <code>selectAll</code>: 'page' (default, ala jqGrid) | 'view' · bila false, tombol berbasis seleksi (Edit/Detail/Hapus) disembunyikan</dd></div>
         <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">filter/search</dt><dd class="text-slate-600">baris filter beroperator (= ≠ ∋ ^ $ &gt; ≥ &lt; ≤ ada kosong) + pencarian global · tombol <b>Filter</b> = filter cepat + <b>builder kondisi lanjutan</b>: field dipilih, kondisi dapat ditambah (satu field boleh lebih dari satu, mis. <code>no &gt; 10</code> dan <code>no &le; 20</code>), digabung AND/OR, badge jumlah kondisi aktif</dd></div>
         <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">frozen</dt><dd class="text-slate-600">jumlah kolom beku di kiri (sticky)</dd></div>
         <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">crud</dt><dd class="text-slate-600">pintasan untuk tombol <b>+ Tambah · Edit · Detail · Hapus</b> berbasis formulir modal (navGrid ala jqGrid); atau satuan: <code>add / editForm / view / remove</code>, <code>edit</code> = edit inline via klik ganda</dd></div>
@@ -753,10 +753,10 @@ node build.mjs        # inline CSS + JS ke dalam index.html → hasil akhir 1 fi
     /* ---- toolbar (berikon + aksi kustom) ---- */
     var T = [];
     if (o.add) T.push(['add', 'Tambah', 'add']);
-    if (o.editForm) T.push(['edit', 'Edit', 'edit']);
-    if (o.view) T.push(['view', 'Detail', 'view']);
+    if (o.editForm && o.select) T.push(['edit', 'Edit', 'edit']);
+    if (o.view && o.select) T.push(['view', 'Detail', 'view']);
     (o.actions || []).forEach(function (a) { T.push([a.id, a.label, a.icon || 'ok', a]); });
-    if (o.remove) T.push(['remove', 'Hapus', 'del']);
+    if (o.remove && o.select) T.push(['remove', 'Hapus', 'del']);
     if (o.filterForm) T.push(['ffilter', 'Filter', 'filter', true]);
     T.push(['export', 'Export', 'export']);
     if (o.chooser) T.push(['cols', 'Kolom', 'cols']);
@@ -1741,7 +1741,7 @@ node build.mjs        # inline CSS + JS ke dalam index.html → hasil akhir 1 fi
     height: 340, rowHeight: 30, pageSize: 8,
     select: false,          /* tanpa checkbox — aksi berbasis record, bukan seleksi */
     rowActions: true,       /* ikon Detail/Edit/Hapus pada tiap baris */
-    add: true, formCols: 3,
+    add: true, editForm: true, formCols: 3,
     filter: false, filterForm: true, help: true,
     onAdd: function (r) {
       r.id = (window.__g4.data.length ? Math.max.apply(null, window.__g4.data.map(function (x) { return x.id; })) : 0) + 1;

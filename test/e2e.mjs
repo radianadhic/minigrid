@@ -469,6 +469,20 @@ ok('grid4 tanpa checkbox', await page.locator('#grid4 [data-ck]').count() === 0 
 ok('grid4 punya kolom Aksi + 3 ikon per baris', await page.locator('#grid4 thead th', { hasText: 'Aksi' }).count() === 1 &&
   await page.locator('#grid4 tbody [data-ra]').count() === 3 * await page.locator('#grid4 tbody tr[data-id]').count());
 const n4 = await page.evaluate(() => window.__g4.data.length);
+await page.locator('#grid4 [data-act=add]').click();
+ok('tombol Tambah membuka form 3 kolom', await page.locator('.fixed >> text=Tambah baris').count() === 1 &&
+  await page.evaluate(() => {
+    const el = document.querySelector('.fixed > div').children[1];
+    return getComputedStyle(el).gridTemplateColumns.split(' ').length;
+  }) === 3);
+await page.locator('.fixed [data-fld=proyek]').fill('Proyek e2e');
+await page.locator('.fixed [data-fld=pemilik]').fill('Tester');
+await page.locator('.fixed [data-save]').click();
+ok('simpan Tambah → data +1', await page.evaluate(() => window.__g4.data.length) === n4 + 1 &&
+  await page.evaluate(() => window.__g4.data[window.__g4.data.length - 1].proyek) === 'Proyek e2e');
+ok('toolbar tanpa tombol Edit/Detail mati saat select:false', await page.locator('#grid4 [data-act=edit]').count() === 0 &&
+  await page.locator('#grid4 [data-act=view]').count() === 0);
+await page.locator('#grid4 [data-page="1"]').first().click();
 await page.locator('#grid4 tbody tr[data-id]').nth(1).locator('[data-ra=edit]').click();
 ok('ikon Edit membuka modal baris tsb', await page.locator('.fixed >> text=Edit baris').count() === 1 &&
   await page.locator('.fixed [data-fld=proyek]').inputValue() === await page.evaluate(() => window.__g4.data[1].proyek));
@@ -486,7 +500,7 @@ await page.locator('.fixed [data-close]').click();
 page.once('dialog', d => d.accept());
 await page.locator('#grid4 tbody tr[data-id]').first().locator('[data-ra=del]').click();
 await page.waitForTimeout(200);
-ok('ikon Hapus menghapus record tsb', await page.evaluate(() => window.__g4.data.length) === n4 - 1);
+ok('ikon Hapus menghapus record tsb', await page.evaluate(() => window.__g4.data.length) === n4);
 await page.screenshot({ path: path.join(__dirname, '..', 'shots', 'rowactions.png') });
 
 /* 17. tidak ada error konsol */

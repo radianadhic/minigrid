@@ -466,10 +466,10 @@
     /* ---- toolbar (berikon + aksi kustom) ---- */
     var T = [];
     if (o.add) T.push(['add', 'Tambah', 'add']);
-    if (o.editForm) T.push(['edit', 'Edit', 'edit']);
-    if (o.view) T.push(['view', 'Detail', 'view']);
+    if (o.editForm && o.select) T.push(['edit', 'Edit', 'edit']);
+    if (o.view && o.select) T.push(['view', 'Detail', 'view']);
     (o.actions || []).forEach(function (a) { T.push([a.id, a.label, a.icon || 'ok', a]); });
-    if (o.remove) T.push(['remove', 'Hapus', 'del']);
+    if (o.remove && o.select) T.push(['remove', 'Hapus', 'del']);
     if (o.filterForm) T.push(['ffilter', 'Filter', 'filter', true]);
     T.push(['export', 'Export', 'export']);
     if (o.chooser) T.push(['cols', 'Kolom', 'cols']);

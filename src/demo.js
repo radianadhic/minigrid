@@ -230,7 +230,7 @@
     height: 340, rowHeight: 30, pageSize: 8,
     select: false,          /* tanpa checkbox — aksi berbasis record, bukan seleksi */
     rowActions: true,       /* ikon Detail/Edit/Hapus pada tiap baris */
-    add: true, formCols: 3,
+    add: true, editForm: true, formCols: 3,
     filter: false, filterForm: true, help: true,
     onAdd: function (r) {
       r.id = (window.__g4.data.length ? Math.max.apply(null, window.__g4.data.map(function (x) { return x.id; })) : 0) + 1;
