@@ -544,6 +544,7 @@ await page.screenshot({ path: path.join(__dirname, '..', 'shots', 'detail.png'),
 
 /* 27. mode server-side (grid6) */
 await page.waitForSelector('#grid6 tbody tr[data-id]');
+ok('status grid6 menyebut sumber simulasi', (await page.locator('#api6').innerText()).includes('simulasi'));
 ok('grid6 hanya menerima satu halaman dr server', await page.locator('#grid6 tbody tr[data-id]').count() === 10 &&
   (await page.locator('#grid6 [data-role=info]').innerText()).includes('dari 10000'),
   await page.locator('#grid6 [data-role=info]').innerText());

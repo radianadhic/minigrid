@@ -304,13 +304,17 @@
         setTimeout(function () { selesai(rows(500), 'sumber: simulasi API (latensi 450 ms — jalankan server.mjs untuk API asli)'); res(); }, 450);
       });
     }
-    return fetch('api/karyawan').then(function (r) {
+    var ctl = 'AbortController' in window ? new AbortController() : null;
+    var to = setTimeout(function () { if (ctl) ctl.abort(); }, 1500);   /* server mati/proxy menggantung */
+    return fetch('api/karyawan', ctl ? { signal: ctl.signal } : undefined).then(function (r) {
+      clearTimeout(to);
       if (!r.ok) throw 0;
       return r.json();
     }).then(function (j) { selesai(j, 'sumber: API server — GET api/karyawan'); })
       .catch(function () {
+        clearTimeout(to);
         return new Promise(function (res) {
-          setTimeout(function () { selesai(rows(500), 'sumber: simulasi API (fetch gagal)'); res(); }, 450);
+          setTimeout(function () { selesai(rows(500), 'sumber: simulasi API (server tidak terjangkau)'); res(); }, 450);
         });
       });
   }
@@ -354,12 +358,27 @@
     height: 320, rowHeight: 30, pageSize: 10,
     filter: false, filterForm: true, formCols: 2,
     server: function (p) {
-      if (location.protocol === 'file:')   /* tanpa server: simulasi server-side lokal */
-        return new Promise(function (res) { setTimeout(function () { res(prosesHalaman(SIM10, p)); }, 300); });
+      var src6 = function (t) {
+        var el = document.getElementById('api6');
+        if (el) el.textContent = 'sumber: ' + t + ' · ' + new Date().toLocaleTimeString('id-ID');
+      };
+      var sim = function () {   /* tanpa server / tak terjangkau: simulasi server-side lokal */
+        return new Promise(function (res) {
+          setTimeout(function () { src6('simulasi server-side lokal (latensi 300 ms)'); res(prosesHalaman(SIM10, p)); }, 300);
+        });
+      };
+      if (location.protocol === 'file:') return sim();
       var qs = new URLSearchParams();
       ['page', 'size', 'q', 'join'].forEach(function (k) { qs.set(k, p[k]); });
       qs.set('sort', JSON.stringify(p.sort)); qs.set('filters', JSON.stringify(p.filters)); qs.set('rules', JSON.stringify(p.rules));
-      return fetch('api/halaman?' + qs).then(function (r) { return r.json(); });
+      var ctl = 'AbortController' in window ? new AbortController() : null;
+      var to = setTimeout(function () { if (ctl) ctl.abort(); }, 1500);
+      return fetch('api/halaman?' + qs, ctl ? { signal: ctl.signal } : undefined).then(function (r) {
+        clearTimeout(to);
+        if (!r.ok) throw 0;
+        return r.json();
+      }).then(function (j) { src6('server — GET api/halaman (' + j.total + ' baris)'); return j; })
+        .catch(function () { clearTimeout(to); return sim(); });
     },
     onRefresh: function (g) { g.render(); }
   });
