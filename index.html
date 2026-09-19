@@ -257,6 +257,26 @@ td.kb { box-shadow: inset 0 0 0 2px var(--color-indigo-600) !important; }
   crud: true,          // tombol + Tambah/Edit/Detail/Hapus (form modal)
   onSave: (row, isNew) => save(row),  // persist: localStorage/API
 });</code></pre>
+<pre class="mt-3 overflow-auto rounded bg-slate-900 p-3 text-[11px] leading-relaxed text-slate-100"><code>/* ---- petunjuk pakai dengan API ---- */
+// 1) muat semua baris sekali (spt demo 5)
+const g = MiniGrid({ el:'#grid', columns: cols, data: [] });
+g.setLoading(true);                       // overlay "Memuat…"
+fetch('api/karyawan').then(r =&gt; r.json())
+  .then(rows =&gt; { g.data = rows; g.render(); })
+  .finally(() =&gt; g.setLoading(false));
+
+// 2) server-side: paging/sort/filter diproses server (spt demo 6)
+MiniGrid({
+  el:'#grid', columns: cols, data: [],
+  server: p =&gt; fetch('api/halaman?' + new URLSearchParams({
+    page: p.page, size: p.size, q: p.q,
+    sort: JSON.stringify(p.sort),         // [[kolom, 1|-1], …]
+    filters: JSON.stringify(p.filters),   // { kolom: {op, q} }
+    rules: JSON.stringify(p.rules),       // builder kondisi AND/OR
+    join: p.join,
+  })).then(r =&gt; r.json()),  // wajib balas { rows, total }
+  onRefresh: g =&gt; g.render(),             // tombol Refresh = muat ulang
+});</code></pre>
     </div>
     <div class="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
       <h2 class="mb-2 text-sm font-semibold">Opsi</h2>
