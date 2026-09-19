@@ -11,5 +11,5 @@
   },
   "name": "minigrid",
   "private": true,
-  "description": "Data grid offline ala jqGrid — Tailwind v4 + vanilla JS"
+  "description": "Data grid offline ala javascript grid — Tailwind v4 + vanilla JS"
 }

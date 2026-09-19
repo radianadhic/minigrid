@@ -1,5 +1,5 @@
 /* ============================================================================
- * minigrid.js — data grid ala jqGrid · vanilla JS · 0 dependency
+ * minigrid.js — data grid ala javascript grid · vanilla JS · 0 dependency
  * sort multi-kolom · filter per kolom beroperator · pencarian global · pager
  * virtual scroll · kolom beku · pilih baris · resize kolom · edit inline
  * tambah/hapus · pilih kolom · ekspor CSV
@@ -408,7 +408,7 @@
     var self = this, s = this.s;
     var all = this.r.head.querySelector('[data-role=all]');
     if (all) all.onchange = function () {
-      /* 'page' = baris di halaman aktif saja (ala jqGrid), 'view' = semua hasil filter */
+      /* 'page' = baris di halaman aktif saja (ala javascript grid), 'view' = semua hasil filter */
       var list = self.o.selectAll === 'view' ? self.view : self.pageRows;
       if (all.checked) list.forEach(function (r, i) { s.sel.add(self.idOf(r, i)); });
       else list.forEach(function (r, i) { s.sel.delete(self.idOf(r, i)); });

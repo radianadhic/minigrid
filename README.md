@@ -1,8 +1,8 @@
-# MiniGrid — data grid offline ala jqGrid
+# MiniGrid — data grid offline ala javascript grid
 
 Grid data lengkap dalam **satu file HTML** yang berjalan 100% offline (bisa dibuka lewat
 `file://`, USB, atau intranet tanpa server). Styling **Tailwind CSS v4** (hasil build
-di-inline), logika **vanilla JS tanpa runtime** — lebih ringan daripada jqGrid (tanpa
+di-inline), logika **vanilla JS tanpa runtime** — lebih ringan daripada javascript grid (tanpa
 jQuery) maupun Svelte/Alpine untuk kasus "satu file".
 
 ## Varian
@@ -23,7 +23,7 @@ native via `color-scheme`) berganti konsisten tanpa duplikasi CSS.
 ## Fitur (varian utama)
 
 - **Sort multi-kolom** — klik header; `Shift`+klik menambah kunci urut (badge angka).
-- **Filter per kolom beroperator** — `= ≠ ∋ ^ $ > ≥ < ≤ ada kosong` (jqGrid-style search row).
+- **Filter per kolom beroperator** — `= ≠ ∋ ^ $ > ≥ < ≤ ada kosong` (javascript grid-style search row).
 - **Builder kondisi lanjutan** (tombol Filter) — field dipilih dari dropdown, kondisi dapat
   **ditambah** bebas (satu field boleh beberapa, mis. `no > 10` DAN `no <= 20`),
   digabung **AND/OR**, dilengkapi badge jumlah kondisi aktif.
@@ -35,7 +35,7 @@ native via `color-scheme`) berganti konsisten tanpa duplikasi CSS.
 - **Resize kolom** — geser tepi kanan header.
 - **Modal dapat digeser** — Tambah/Detail/Edit/Filter/Bantuan terbuka di tengah layar; seret bilah judulnya untuk memindahkan (mouse & sentuh).
 - **Edit inline** — klik ganda sel; Enter/Tab simpan, Esc batal.
-- **CRUD lengkap ala jqGrid (navGrid)** — tombol `+ Tambah · Edit · Detail · Hapus`
+- **CRUD lengkap ala javascript grid (navGrid)** — tombol `+ Tambah · Edit · Detail · Hapus`
   dengan **formulir modal**: validasi (`required`, angka), select untuk `options`,
   checkbox untuk `bool`, mode baca-saja untuk Detail; callback `onSave(row,isNew)`
   untuk persistensi (demo memakai `localStorage`). Aktifkan lewat `crud: true`.

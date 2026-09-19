@@ -609,7 +609,7 @@ await page.reload();
 await page.waitForSelector('#grid1 tbody tr[data-id]');
 await page.waitForTimeout(500);
 ok('EN: pilihan bahasa persisten setelah reload', await page.locator('#grid2 [data-act=add] span').innerText() === 'Add' &&
-  (await page.locator('[data-i18n=s2t]').innerText()) === 'Full jqGrid-style CRUD');
+  (await page.locator('[data-i18n=s2t]').innerText()) === 'Full javascript grid-style CRUD');
 await page.locator('#langs [data-l=id]').click();
 await page.waitForTimeout(300);
 ok('ID: kembali ke bahasa Indonesia', await page.locator('#grid2 [data-act=add] span').innerText() === 'Tambah' &&

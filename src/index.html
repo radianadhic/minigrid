@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MiniGrid — data grid offline ala jqGrid</title>
+<title>MiniGrid — data grid offline ala javascript grid</title>
 <!-- saat development pakai 2 file CSS; build.mjs meng-inline semuanya jadi 1 file offline -->
 <link rel="stylesheet" href="./dist/tailwind.css">
 <link rel="stylesheet" href="./src/app.css">
@@ -15,7 +15,7 @@
   <header class="flex flex-wrap items-end justify-between gap-3">
     <div>
       <h1 class="text-2xl font-extrabold tracking-tight">Mini<span class="text-indigo-600">Grid</span></h1>
-      <p data-i18n="sub" class="text-sm text-slate-500">Data grid ala jqGrid — Tailwind CSS v4 + vanilla JS, satu file HTML, jalan tanpa internet.</p>
+      <p data-i18n="sub" class="text-sm text-slate-500">Data grid ala javascript grid — Tailwind CSS v4 + vanilla JS, satu file HTML, jalan tanpa internet.</p>
     </div>
     <div class="flex flex-wrap gap-1.5 text-[11px]">
       <span class="rounded-full bg-emerald-100 px-2 py-0.5 font-medium text-emerald-700">0 runtime</span>
@@ -47,7 +47,7 @@
   <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
     <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
       <div>
-        <h2 data-i18n="s2t" class="text-sm font-semibold">CRUD lengkap ala jqGrid</h2>
+        <h2 data-i18n="s2t" class="text-sm font-semibold">CRUD lengkap ala javascript grid</h2>
         <p data-i18n="s2d" class="text-xs text-slate-500"><b>+ Tambah / Edit / Detail / Hapus</b> lewat formulir modal (dengan validasi, terbuka di tengah layar & bisa digeser dari bilah judul) · klik ganda sel = edit inline · data tersimpan di <code>localStorage</code></p>
       </div>
       <button id="reset2" data-i18n="reset2" class="h-6 rounded border border-slate-300 bg-white px-2 text-xs text-slate-600 hover:bg-slate-100">reset data contoh</button>
@@ -137,10 +137,10 @@ MiniGrid({
       <dl class="space-y-1 text-xs break-words [&_code]:break-all">
         <div data-i18n="o_cols" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">columns[]</dt><dd class="text-slate-600">name, label, width, type (str|num|date), format, align, render(), sortable, filter, editable, hidden, search</dd></div>
         <div data-i18n="o_data" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">data</dt><dd class="text-slate-600">array objek — client-side. Ganti <code>grid.data</code> lalu <code>grid.render()</code>.</dd></div>
-        <div data-i18n="o_select" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">select</dt><dd class="text-slate-600">'multi' (checkbox) | 'single' | false · <code>selectAll</code>: 'page' (default, ala jqGrid) | 'view' · bila false, tombol berbasis seleksi (Edit/Detail/Hapus) disembunyikan</dd></div>
+        <div data-i18n="o_select" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">select</dt><dd class="text-slate-600">'multi' (checkbox) | 'single' | false · <code>selectAll</code>: 'page' (default, ala javascript grid) | 'view' · bila false, tombol berbasis seleksi (Edit/Detail/Hapus) disembunyikan</dd></div>
         <div data-i18n="o_filter" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">filter/search</dt><dd class="text-slate-600">baris filter beroperator (= ≠ ∋ ^ $ &gt; ≥ &lt; ≤ ada kosong) + pencarian global · tombol <b>Filter</b> = filter cepat + <b>builder kondisi lanjutan</b>: field dipilih, kondisi dapat ditambah (satu field boleh lebih dari satu, mis. <code>no &gt; 10</code> dan <code>no &le; 20</code>), digabung AND/OR, badge jumlah kondisi aktif</dd></div>
         <div data-i18n="o_frozen" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">frozen</dt><dd class="text-slate-600">jumlah kolom beku di kiri (sticky)</dd></div>
-        <div data-i18n="o_crud" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">crud</dt><dd class="text-slate-600">pintasan untuk tombol <b>+ Tambah · Edit · Detail · Hapus</b> berbasis formulir modal (navGrid ala jqGrid); atau satuan: <code>add / editForm / view / remove</code>, <code>edit</code> = edit inline via klik ganda</dd></div>
+        <div data-i18n="o_crud" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">crud</dt><dd class="text-slate-600">pintasan untuk tombol <b>+ Tambah · Edit · Detail · Hapus</b> berbasis formulir modal (navGrid ala javascript grid); atau satuan: <code>add / editForm / view / remove</code>, <code>edit</code> = edit inline via klik ganda</dd></div>
         <div data-i18n="o_actions" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">actions</dt><dd class="text-slate-600">tombol kustom berikon: <code>{id,label,icon,need:'one'|'some',fn(rows,grid)}</code> — mis. Approve/Reject</dd></div>
         <div data-i18n="o_ff" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">filterForm/help</dt><dd class="text-slate-600">tombol <b>Filter</b> = semua filter kolom dalam satu form · tombol <b>Help</b> = modal panduan (teks bisa diganti via <code>helpText</code>)</dd></div>
         <div data-i18n="o_server" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">server</dt><dd class="text-slate-600">fn(params)→Promise{rows,total} = mode server-side: sort/filter/paging di server, grid hanya merender satu halaman</dd></div>
@@ -172,7 +172,7 @@ MiniGrid({
         <tr><td data-i18n="cmpA3" class="py-1.5 pr-2">Svelte (compiled)</td><td class="pr-2">±2–4 KB</td><td class="pr-2">±70 KB</td><td>butuh langkah compile (vite/svelte-kit); pilih bila aplikasinya sudah berbasis Svelte</td></tr>
       </tbody>
     </table>
-    <p data-i18n="cmpR" class="mt-2 text-xs text-slate-500">Rekomendasi: <b>vanilla JS + Tailwind v4</b> untuk satu file offline ala jqGrid — tidak ada runtime, tidak ada langkah build di sisi pengguna, dan seluruh logika grid ±31 KB. Alpine hanya unggul pada kenyamanan penulisan markup.</p>
+    <p data-i18n="cmpR" class="mt-2 text-xs text-slate-500">Rekomendasi: <b>vanilla JS + Tailwind v4</b> untuk satu file offline ala javascript grid — tidak ada runtime, tidak ada langkah build di sisi pengguna, dan seluruh logika grid ±31 KB. Alpine hanya unggul pada kenyamanan penulisan markup.</p>
   </section>
 
   <section class="rounded-xl border border-slate-300 bg-white p-4 text-xs text-slate-600 shadow-sm">
