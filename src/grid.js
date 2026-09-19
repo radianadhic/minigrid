@@ -102,14 +102,15 @@
       pageSizes: [10, 25, 50, 100, 500], height: 420, rowHeight: 32,
       frozen: 0, select: 'multi', selectAll: 'page', filter: true, search: true, edit: false,
       resize: true, add: false, remove: false, editForm: false, view: false, crud: false,
-      chooser: true, zebra: true, filterForm: false, help: false, formCols: 1, rowActions: false, refresh: true, actions: [],
+      chooser: true, zebra: true, filterForm: false, help: false, formCols: 1, rowActions: false, refresh: true, detail: null, actions: [],
       rowId: function (r, i) { return r.id != null ? r.id : i; },
       onEdit: null, onAdd: null, onRemove: null, onSelect: null
     }, opts);
     if (o.crud) o.add = o.editForm = o.view = o.remove = true;   /* pintasan CRUD lengkap */
 
     this.data = o.data;
-    this.s = { page: o.page, size: o.pageSize, sort: [], filter: {}, rules: [], join: 'AND', q: '', sel: new Set() };
+    this.s = { page: o.page, size: o.pageSize, sort: [], filter: {}, rules: [], join: 'AND', q: '', sel: new Set(), exp: new Set() };
+    this._expIdx = []; this._expIdxDirty = true; this._expv = 0;
     this._in = {}; this._rev = 0; this.ms = 0;
     this.view = []; this.pageRows = [];
     this._f = -1; this._l = -1; this._pv = '';
@@ -135,7 +136,7 @@
   P.col = function (n) { for (var i = 0; i < this.cols.length; i++) if (this.cols[i].name === n) return this.cols[i]; return null; };
   P.vis = function () { return this.cols.filter(function (c) { return !c.hidden; }); };
   P._offsets = function () {
-    var left = this.o.select === 'multi' ? 36 : 0;
+    var left = (this.o.detail ? 28 : 0) + (this.o.select === 'multi' ? 36 : 0);
     this.cols.forEach(function (c) { c._left = left; if (!c.hidden) left += c.width; });
   };
   P.idOf = function (r, i) { return String(this.o.rowId(r, i)); };
@@ -194,6 +195,7 @@
     if (s.page > pages) s.page = pages;
     if (s.page < 1) s.page = 1;
     this.pageRows = out.slice((s.page - 1) * s.size, s.page * s.size);
+    this._expIdxDirty = true;
   };
 
   /* nilai ter- coerce dihitung sekali per (baris × kolom urut) lalu di-cache */
@@ -226,7 +228,7 @@
 
   /* ------------------------------------------------------------ struktur */
   P._cols = function () {
-    var w = this.o.select === 'multi' ? '<col style="width:36px">' : '';
+    var w = (this.o.detail ? '<col style="width:28px">' : '') + (this.o.select === 'multi' ? '<col style="width:36px">' : '');
     this.vis().forEach(function (c) { w += '<col style="width:' + c.width + 'px">'; });
     if (this.o.rowActions) w += '<col style="width:92px">';
     this.r.cg.innerHTML = w;
@@ -235,8 +237,9 @@
   P._head = function () {
     var self = this, s = this.s, multi = this.o.select === 'multi';
     var h = '<tr>';
+    if (this.o.detail) h += '<th class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 align-middle" style="position:sticky;left:0;z-index:3"></th>';
     if (multi) {
-      h += '<th class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 text-center align-middle" style="position:sticky;left:0;z-index:3">' +
+      h += '<th class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 text-center align-middle" style="position:sticky;left:' + (this.o.detail ? 28 : 0) + 'px;z-index:3">' +
            '<input type="checkbox" data-role="all" class="size-3.5 accent-indigo-600"></th>';
     }
     this.vis().forEach(function (c, i) {
@@ -324,25 +327,54 @@
   P._paint = function (force) {
     var s = this.s, o = this.o, cols = this.vis(), self = this;
     var rh = o.rowHeight, top = this.r.sc.scrollTop, n = this.pageRows.length;
-    var first = Math.max(0, Math.floor(top / rh) - 5);
-    var last = Math.min(n, Math.ceil((top + o.height) / rh) + 5);
-    var pv = [s.page, s.size, n, this._rev, s.sort.length, cols.length].join('|');
+    var DH = 180, hasExp = !!o.detail;
+    if (hasExp && this._expIdxDirty) {
+      this._expIdx = [];
+      for (var e0 = 0; e0 < n; e0++) if (s.exp.has(this.idOf(this.pageRows[e0], e0))) this._expIdx.push(e0);
+      this._expIdxDirty = false;
+    }
+    var exN = hasExp ? this._expIdx.length : 0;
+    function before(i) {
+      var c = 0;
+      for (var q = 0; q < self._expIdx.length; q++) { if (self._expIdx[q] < i) c++; else break; }
+      return c;
+    }
+    function topAt(i) { return i * rh + before(i) * DH; }
+    var first, last;
+    if (!exN) {
+      first = Math.max(0, Math.floor(top / rh) - 5);
+      last = Math.min(n, Math.ceil((top + o.height) / rh) + 5);
+    } else {
+      var find = function (y) {
+        var lo = 0, hi = n;
+        while (lo < hi) { var mid = (lo + hi) >> 1; if (topAt(mid) <= y) lo = mid + 1; else hi = mid; }
+        return lo;
+      };
+      first = Math.max(0, find(top) - 6);
+      last = Math.min(n, find(top + o.height) + 6);
+    }
+    var pv = [s.page, s.size, n, this._rev, s.sort.length, cols.length, this._expv].join('|');
     if (!force && first === this._f && last === this._l && pv === this._pv) return;
     this._f = first; this._l = last; this._pv = pv;
 
     /* virtual scroll dengan baris spacer (bukan position:absolute) agar lebar
      * kolom dari <colgroup> tetap berlaku untuk semua baris. */
     var frag = document.createDocumentFragment();
-    var span = cols.length + (o.select === 'multi' ? 1 : 0) + (o.rowActions ? 1 : 0);
-    if (first > 0) frag.appendChild(spacer(first * rh, span));
+    var span = cols.length + (o.select === 'multi' ? 1 : 0) + (o.rowActions ? 1 : 0) + (hasExp ? 1 : 0);
+    if (first > 0) frag.appendChild(spacer(topAt(first), span));
     for (var i = first; i < last; i++) {
       var row = this.pageRows[i], id = this.idOf(row, i);
       var tr = document.createElement('tr');
       tr.dataset.id = id; tr.dataset.i = i;
       tr.style.height = rh + 'px';
       tr.className = (o.zebra && i % 2 ? 'alt ' : '') + (s.sel.has(id) ? 'sel ' : '');
-      var h = o.select === 'multi'
+      var h = hasExp
         ? '<td class="frz0 border-b border-r border-slate-200 p-0 text-center align-middle" style="position:sticky;left:0;z-index:1">' +
+          '<button data-exp="' + esc(id) + '" title="Bentang/tutup detail" class="mx-auto flex size-5 items-center justify-center rounded text-slate-400 outline-none hover:bg-indigo-50 hover:text-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-500' + (s.exp.has(id) ? ' !text-indigo-600' : '') + '">' +
+          '<svg viewBox="0 0 24 24" class="size-3 transition-transform' + (s.exp.has(id) ? ' rotate-90' : '') + '" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></button></td>'
+        : '';
+      h += o.select === 'multi'
+        ? '<td class="frz0 border-b border-r border-slate-200 p-0 text-center align-middle" style="position:sticky;left:' + (hasExp ? 28 : 0) + 'px;z-index:1">' +
           '<input type="checkbox" data-ck="' + esc(id) + '"' + (s.sel.has(id) ? ' checked' : '') + ' class="size-3.5 accent-indigo-600"></td>'
         : '';
       for (var c = 0; c < cols.length; c++) {
@@ -359,8 +391,15 @@
         '<button data-ra="del" title="Hapus" class="' + RAD + '">' + ICONS.del + '</button></div></td>';
       tr.innerHTML = h;
       frag.appendChild(tr);
+      if (hasExp && s.exp.has(id)) {
+        var dt = document.createElement('tr');
+        dt.className = 'mg-detail';
+        dt.innerHTML = '<td colspan="' + span + '" style="height:' + DH + 'px" class="border-b border-slate-200 p-0">' +
+          '<div class="h-full overflow-auto bg-slate-50 px-3 py-2">' + (o.detail(row) || '') + '</div></td>';
+        frag.appendChild(dt);
+      }
     }
-    if (last < n) frag.appendChild(spacer((n - last) * rh, span));
+    if (last < n) frag.appendChild(spacer(n * rh + exN * DH - topAt(last), span));
     this.r.body.replaceChildren(frag);
     this._syncHead();
 
@@ -573,6 +612,13 @@
         if (ck.checked) s.sel.add(ck.dataset.ck); else s.sel.delete(ck.dataset.ck);
         ck.closest('tr').classList.toggle('sel', ck.checked);
         self._fire();
+        return;
+      }
+      var exb = e.target.closest('[data-exp]');
+      if (exb) {
+        var eid = exb.dataset.exp;
+        if (s.exp.has(eid)) s.exp.delete(eid); else s.exp.add(eid);
+        self._expv++; self._expIdxDirty = true; self._paint(true);
         return;
       }
       var ra = e.target.closest('[data-ra]');
@@ -870,6 +916,7 @@
       '<li><b>Geser tepi kanan header</b> = ubah lebar kolom · tombol Kolom = tampil/sembunyikan kolom.</li>' +
       '<li><b>Export</b> = unduh hasil ter-filter & ter-urut sebagai CSV, XLSX, atau PDF.</li>' +
       '<li><b>Geser bilah judul modal</b> = pindahkan posisi modal; setiap dibuka, modal kembali ke tengah layar.</li>' +
+      '<li><b>Chevron kiri baris</b> = bentang/tutup detail baris (master-detail).</li>' +
       '</ul>';
     var d = document.createElement('div');
     d.className = 'fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';

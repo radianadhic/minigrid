@@ -76,6 +76,20 @@
     el: '#grid1', columns: cols, data: big,
     frozen: 2, height: 400, rowHeight: 30, pageSize: 500,
     pageSizes: [100, 500, 1000, 5000, 50000],
+    detail: function (r) {   /* master-detail: riwayat per baris */
+      var EV = ['Penyesuaian gaji berkala', 'Perpanjangan kontrak', 'Mutasi antardepartemen', 'Sertifikasi internal', 'Cuti tahunan diambil', 'Review kinerja semester'];
+      var BY = ['HRIS', 'Manajer', 'SDM'];
+      var p2 = function (x) { return String(x).padStart(2, '0'); };
+      var out = '<table class="w-full text-[11px] text-slate-600"><thead><tr>' +
+        ['Tanggal', 'Peristiwa', 'Oleh'].map(function (t) {
+          return '<th class="px-2 py-0.5 text-left text-[10px] font-semibold uppercase tracking-wider text-slate-500">' + t + '</th>';
+        }).join('') + '</tr></thead><tbody>';
+      for (var k = 0; k < 4; k++) {
+        out += '<tr class="border-t border-slate-200"><td class="px-2 py-1">' + (2016 + ((r.id + k * 3) % 9)) + '-' + p2(1 + (r.id + k) % 12) + '-' + p2(1 + (r.id * 7 + k) % 27) +
+          '</td><td class="px-2 py-1">' + EV[(r.id + k) % EV.length] + '</td><td class="px-2 py-1">' + BY[(r.id + k) % 3] + '</td></tr>';
+      }
+      return out + '</tbody></table>';
+    },
     onSelect: function (ids) { log('pilih ' + ids.length + ' baris'); },
     onRefresh: function (g) {
       return new Promise(function (res) {

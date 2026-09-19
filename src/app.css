@@ -25,3 +25,6 @@ button, input, select, a {
 [data-role=scroller]::-webkit-scrollbar { width: 10px; height: 10px; }
 [data-role=scroller]::-webkit-scrollbar-thumb { background: var(--color-slate-300); border-radius: 8px; border: 2px solid var(--color-white); }
 [data-role=scroller]::-webkit-scrollbar-track { background: transparent; }
+
+/* baris detail (master-detail) */
+.mg-detail > td { background: var(--color-slate-50); box-shadow: inset 3px 0 0 0 var(--color-indigo-500); }

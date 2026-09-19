@@ -524,6 +524,24 @@ await page.waitForTimeout(800);
 ok('refresh grid5 memuat ulang + overlay sembunyi', await page.locator('#grid5 tbody tr[data-id]').count() > 0 &&
   await page.evaluate(() => document.querySelector('#grid5 [data-role=load]').classList.contains('hidden')));
 
+/* 26. master-detail di grid1 */
+ok('kolom ekspander ada di grid1', await page.locator('#grid1 [data-exp]').count() > 0);
+const sh0 = await page.evaluate(() => document.querySelector('#grid1 [data-role=scroller]').scrollHeight);
+await page.locator('#grid1 [data-exp]').first().click();
+ok('baris detail terbuka dgn colspan penuh', await page.locator('#grid1 tr.mg-detail').count() === 1 &&
+  await page.evaluate(() => document.querySelector('#grid1 tr.mg-detail td').colSpan) ===
+  await page.evaluate(() => window.__g1.vis().length + 2));
+const sh1 = await page.evaluate(() => document.querySelector('#grid1 [data-role=scroller]').scrollHeight);
+ok('tinggi virtual bertambah tepat 180px', Math.abs((sh1 - sh0) - 180) <= 2, sh0 + '→' + sh1);
+await page.evaluate(() => { document.querySelector('#grid1 [data-role=scroller]').scrollTop = 800000; });
+await page.waitForTimeout(200);
+await page.evaluate(() => { document.querySelector('#grid1 [data-role=scroller]').scrollTop = 0; });
+await page.waitForTimeout(200);
+ok('detail bertahan setelah scroll jauh', await page.locator('#grid1 tr.mg-detail').count() === 1);
+await page.locator('#grid1 [data-exp]').first().click();
+ok('detail menutup', await page.locator('#grid1 tr.mg-detail').count() === 0);
+await page.screenshot({ path: path.join(__dirname, '..', 'shots', 'detail.png'), clip: { x: 60, y: 100, width: 1220, height: 620 } });
+
 /* 17. tidak ada error konsol */
 ok('tanpa error konsol', errors.length === 0, errors.slice(0, 3).join(' ;; '));
 
