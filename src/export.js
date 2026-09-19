@@ -156,7 +156,7 @@
 
     var objs = [], kids = [], n = 5;
     pages.forEach(function (pg, pi) {
-      var s = 'BT /F2 10 Tf 30 ' + titleY + ' Td (MiniGrid - ' + this.view.length + ' baris (terfilter/terurut)) Tj ET\n';
+      var s = 'BT /F2 10 Tf 30 ' + titleY + ' Td (' + E('MiniGrid - ' + this.tr('pdfSub', this.view.length)) + ') Tj ET\n';
       s += 'BT /F1 8 Tf ' + (right - tanggal.length * 4.4).toFixed(1) + ' ' + (titleY + 1) + ' Td (' + tanggal + ') Tj ET\n';
       s += '0.7 w 30 ' + lineY + ' m ' + right.toFixed(1) + ' ' + lineY + ' l S\n';
       var y = headY;
@@ -181,7 +181,7 @@
         s += ' ET\n';
         y -= 11;
       });
-      var pl = 'Halaman ' + (pi + 1) + '/' + pages.length;
+      var pl = this.tr('page', pi + 1, pages.length);
       s += '0.7 w 30 40 m ' + right.toFixed(1) + ' 40 l S\n';
       s += 'BT /F1 7.5 Tf 30 30 Td (MiniGrid - ' + E(tanggal) + ') Tj ET\n';
       s += 'BT /F1 7.5 Tf ' + (right - pl.length * 4.2).toFixed(1) + ' 30 Td (' + pl + ') Tj ET\n';

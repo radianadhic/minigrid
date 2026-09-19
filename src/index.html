@@ -15,7 +15,7 @@
   <header class="flex flex-wrap items-end justify-between gap-3">
     <div>
       <h1 class="text-2xl font-extrabold tracking-tight">Mini<span class="text-indigo-600">Grid</span></h1>
-      <p class="text-sm text-slate-500">Data grid ala jqGrid — Tailwind CSS v4 + vanilla JS, satu file HTML, jalan tanpa internet.</p>
+      <p data-i18n="sub" class="text-sm text-slate-500">Data grid ala jqGrid — Tailwind CSS v4 + vanilla JS, satu file HTML, jalan tanpa internet.</p>
     </div>
     <div class="flex flex-wrap gap-1.5 text-[11px]">
       <span class="rounded-full bg-emerald-100 px-2 py-0.5 font-medium text-emerald-700">0 runtime</span>
@@ -28,14 +28,18 @@
   </header>
 
   <div class="flex flex-wrap items-center gap-2">
-    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tema</span>
+    <span data-i18n="theme" class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tema</span>
     <div id="themes" class="flex flex-wrap items-center gap-1.5"></div>
+    <div id="langs" class="ml-auto flex items-center gap-1">
+      <button data-l="id" class="h-6 rounded-md border border-slate-300 bg-white px-2 text-xs font-semibold text-slate-600 shadow-xs">ID</button>
+      <button data-l="en" class="h-6 rounded-md border border-slate-300 bg-white px-2 text-xs font-semibold text-slate-600 shadow-xs">EN</button>
+    </div>
   </div>
 
   <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
     <div class="mb-2 flex items-baseline justify-between">
-      <h2 class="text-sm font-semibold">50.000 baris · kolom beku · multi-sort · filter per kolom</h2>
-      <span class="text-xs text-slate-400">klik header = urutkan · <kbd class="rounded border border-slate-300 px-1">Shift</kbd>+klik = multi-sort · geser tepi header = ubah lebar</span>
+      <h2 data-i18n="s1t" class="text-sm font-semibold">50.000 baris · kolom beku · multi-sort · filter per kolom</h2>
+      <span data-i18n="s1d" class="text-xs text-slate-400">klik header = urutkan · <kbd class="rounded border border-slate-300 px-1">Shift</kbd>+klik = multi-sort · geser tepi header = ubah lebar</span>
     </div>
     <div id="grid1"></div>
   </section>
@@ -43,10 +47,10 @@
   <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
     <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
       <div>
-        <h2 class="text-sm font-semibold">CRUD lengkap ala jqGrid</h2>
-        <p class="text-xs text-slate-500"><b>+ Tambah / Edit / Detail / Hapus</b> lewat formulir modal (dengan validasi, terbuka di tengah layar & bisa digeser dari bilah judul) · klik ganda sel = edit inline · data tersimpan di <code>localStorage</code></p>
+        <h2 data-i18n="s2t" class="text-sm font-semibold">CRUD lengkap ala jqGrid</h2>
+        <p data-i18n="s2d" class="text-xs text-slate-500"><b>+ Tambah / Edit / Detail / Hapus</b> lewat formulir modal (dengan validasi, terbuka di tengah layar & bisa digeser dari bilah judul) · klik ganda sel = edit inline · data tersimpan di <code>localStorage</code></p>
       </div>
-      <button id="reset2" class="h-6 rounded border border-slate-300 bg-white px-2 text-xs text-slate-600 hover:bg-slate-100">reset data contoh</button>
+      <button id="reset2" data-i18n="reset2" class="h-6 rounded border border-slate-300 bg-white px-2 text-xs text-slate-600 hover:bg-slate-100">reset data contoh</button>
     </div>
     <div id="grid2"></div>
     <p class="mt-2 text-xs text-slate-500">Log event: <span id="log" class="font-mono text-indigo-600">—</span></p>
@@ -54,24 +58,24 @@
 
   <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
     <div class="mb-2">
-      <h2 class="text-sm font-semibold">Alur persetujuan: Approve/Reject · Export XLSX/PDF · form Filter · Help · form 2 kolom</h2>
-      <p class="text-xs text-slate-500">Edit &amp; Detail aktif hanya saat <b>tepat 1</b> baris terpilih · Approve/Reject/Hapus aktif saat <b>≥1</b> terpilih · tanpa baris filter di bawah header (semua filter dituangkan ke tombol <b>Filter</b>)</p>
+      <h2 data-i18n="s3t" class="text-sm font-semibold">Alur persetujuan: Approve/Reject · Export XLSX/PDF · form Filter · Help · form 2 kolom</h2>
+      <p data-i18n="s3d" class="text-xs text-slate-500">Edit &amp; Detail aktif hanya saat <b>tepat 1</b> baris terpilih · Approve/Reject/Hapus aktif saat <b>≥1</b> terpilih · tanpa baris filter di bawah header (semua filter dituangkan ke tombol <b>Filter</b>)</p>
     </div>
     <div id="grid3"></div>
   </section>
 
   <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
     <div class="mb-2">
-      <h2 class="text-sm font-semibold">Aksi per baris · tanpa checkbox · form 3 kolom</h2>
-      <p class="text-xs text-slate-500"><b>Detail/Edit/Hapus</b> lewat ikon pada kolom <b>Aksi</b> — berbasis record, bukan baris terpilih · formulir Tambah/Edit tersusun <b>3 kolom</b></p>
+      <h2 data-i18n="s4t" class="text-sm font-semibold">Aksi per baris · tanpa checkbox · form 3 kolom</h2>
+      <p data-i18n="s4d" class="text-xs text-slate-500"><b>Detail/Edit/Hapus</b> lewat ikon pada kolom <b>Aksi</b> — berbasis record, bukan baris terpilih · formulir Tambah/Edit tersusun <b>3 kolom</b></p>
     </div>
     <div id="grid4"></div>
   </section>
 
   <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
     <div class="mb-2">
-      <h2 class="text-sm font-semibold">Data dari API · refresh · status muat</h2>
-      <p class="text-xs text-slate-500">Baris dimuat lewat <code>fetch('api/karyawan')</code> ke <code>server.mjs</code> · lewat <code>file://</code> otomatis fallback ke simulasi API berlatensi · overlay <b>Memuat…</b> tampil selama permintaan · tombol <b>Refresh</b> memuat ulang</p>
+      <h2 data-i18n="s5t" class="text-sm font-semibold">Data dari API · refresh · status muat</h2>
+      <p data-i18n="s5d" class="text-xs text-slate-500">Baris dimuat lewat <code>fetch('api/karyawan')</code> ke <code>server.mjs</code> · lewat <code>file://</code> otomatis fallback ke simulasi API berlatensi · overlay <b>Memuat…</b> tampil selama permintaan · tombol <b>Refresh</b> memuat ulang</p>
       <p id="api5" class="mt-1 text-[11px] font-medium text-indigo-600">memuat…</p>
     </div>
     <div id="grid5"></div>
@@ -79,8 +83,8 @@
 
   <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
     <div class="mb-2">
-      <h2 class="text-sm font-semibold">Mode server-side · 10.000 baris di server</h2>
-      <p class="text-xs text-slate-500">Pagination, sort, filter, dan pencarian diproses di <code>GET api/halaman</code> (server.mjs) — grid hanya menerima satu halaman · lewat <code>file://</code> fallback ke simulasi server-side lokal · navigasi keyboard: <kbd class="rounded border border-slate-300 px-1">Tab</kbd> ke tabel, panah pindah sel, <kbd class="rounded border border-slate-300 px-1">Spasi</kbd> pilih, <kbd class="rounded border border-slate-300 px-1">Enter</kbd> edit</p>
+      <h2 data-i18n="s6t" class="text-sm font-semibold">Mode server-side · 10.000 baris di server</h2>
+      <p data-i18n="s6d" class="text-xs text-slate-500">Pagination, sort, filter, dan pencarian diproses di <code>GET api/halaman</code> (server.mjs) — grid hanya menerima satu halaman · lewat <code>file://</code> fallback ke simulasi server-side lokal · navigasi keyboard: <kbd class="rounded border border-slate-300 px-1">Tab</kbd> ke tabel, panah pindah sel, <kbd class="rounded border border-slate-300 px-1">Spasi</kbd> pilih, <kbd class="rounded border border-slate-300 px-1">Enter</kbd> edit</p>
       <p id="api6" class="mt-1 text-[11px] font-medium text-indigo-600"></p>
     </div>
     <div id="grid6"></div>
@@ -88,7 +92,7 @@
 
   <section class="grid gap-4 md:grid-cols-2">
     <div class="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
-      <h2 class="mb-2 text-sm font-semibold">Pakai</h2>
+      <h2 data-i18n="dPakai" class="mb-2 text-sm font-semibold">Pakai</h2>
 <pre class="overflow-auto rounded bg-slate-900 p-3 text-[11px] leading-relaxed text-slate-100"><code>MiniGrid({
   el: '#grid',
   columns: [
@@ -129,57 +133,57 @@ MiniGrid({
 });</code></pre>
     </div>
     <div class="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
-      <h2 class="mb-2 text-sm font-semibold">Opsi</h2>
+      <h2 data-i18n="dOpsi" class="mb-2 text-sm font-semibold">Opsi</h2>
       <dl class="space-y-1 text-xs break-words [&_code]:break-all">
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">columns[]</dt><dd class="text-slate-600">name, label, width, type (str|num|date), format, align, render(), sortable, filter, editable, hidden, search</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">data</dt><dd class="text-slate-600">array objek — client-side. Ganti <code>grid.data</code> lalu <code>grid.render()</code>.</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">select</dt><dd class="text-slate-600">'multi' (checkbox) | 'single' | false · <code>selectAll</code>: 'page' (default, ala jqGrid) | 'view' · bila false, tombol berbasis seleksi (Edit/Detail/Hapus) disembunyikan</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">filter/search</dt><dd class="text-slate-600">baris filter beroperator (= ≠ ∋ ^ $ &gt; ≥ &lt; ≤ ada kosong) + pencarian global · tombol <b>Filter</b> = filter cepat + <b>builder kondisi lanjutan</b>: field dipilih, kondisi dapat ditambah (satu field boleh lebih dari satu, mis. <code>no &gt; 10</code> dan <code>no &le; 20</code>), digabung AND/OR, badge jumlah kondisi aktif</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">frozen</dt><dd class="text-slate-600">jumlah kolom beku di kiri (sticky)</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">crud</dt><dd class="text-slate-600">pintasan untuk tombol <b>+ Tambah · Edit · Detail · Hapus</b> berbasis formulir modal (navGrid ala jqGrid); atau satuan: <code>add / editForm / view / remove</code>, <code>edit</code> = edit inline via klik ganda</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">actions</dt><dd class="text-slate-600">tombol kustom berikon: <code>{id,label,icon,need:'one'|'some',fn(rows,grid)}</code> — mis. Approve/Reject</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">filterForm/help</dt><dd class="text-slate-600">tombol <b>Filter</b> = semua filter kolom dalam satu form · tombol <b>Help</b> = modal panduan (teks bisa diganti via <code>helpText</code>)</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">server</dt><dd class="text-slate-600">fn(params)→Promise{rows,total} = mode server-side: sort/filter/paging di server, grid hanya merender satu halaman</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">detail</dt><dd class="text-slate-600">fungsi(row) penghasil HTML → master-detail: chevron di tepi kiri membentang baris detail (virtual scroll tetap akurat)</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">refresh</dt><dd class="text-slate-600">true (default) = tombol Refresh di toolbar; <code>onRefresh(grid)</code> diisi untuk memuat ulang data — bila mengembalikan Promise, overlay "Memuat…" tampil otomatis</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">rowActions</dt><dd class="text-slate-600">true = ikon Detail/Edit/Hapus per baris (tanpa perlu checkbox/seleksi)</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">formCols</dt><dd class="text-slate-600">jumlah kolom layout formulir Tambah/Edit (1, 2, atau 3)</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">tema</dt><dd class="text-slate-600">pemilih tema di kepala halaman (Terang, Gelap, Samudra, Hutan, Senja, Monokrom), tersimpan di <code>localStorage</code>; implementasi = remap variabel warna Tailwind v4 via <code>[data-theme]</code></dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">Export</dt><dd class="text-slate-600">menu CSV / XLSX / PDF — writer asli tanpa library, mengikuti hasil ter-filter &amp; ter-urut</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">kolom: form</dt><dd class="text-slate-600"><code>options:[…]</code> jadi select · <code>required</code> validasi wajib · <code>bool</code> jadi checkbox · <code>form:false</code> sembunyikan dari formulir · <code>editable:false</code> blok edit</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">tinggi</dt><dd class="text-slate-600">height, rowHeight, pageSize, pageSizes, zebra, resize, chooser, rowId()</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">metode</dt><dd class="text-slate-600">render() · refresh() · sortBy(n, tambah) · selected() · clearSel() · toCSV()</dd></div>
-        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">callback</dt><dd class="text-slate-600">onSave(row,isNew) · onEdit(row,col,val,old) · onAdd(blank) · onRemove(rows) · onSelect(ids) — tempat menyimpan ke localStorage/API</dd></div>
+        <div data-i18n="o_cols" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">columns[]</dt><dd class="text-slate-600">name, label, width, type (str|num|date), format, align, render(), sortable, filter, editable, hidden, search</dd></div>
+        <div data-i18n="o_data" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">data</dt><dd class="text-slate-600">array objek — client-side. Ganti <code>grid.data</code> lalu <code>grid.render()</code>.</dd></div>
+        <div data-i18n="o_select" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">select</dt><dd class="text-slate-600">'multi' (checkbox) | 'single' | false · <code>selectAll</code>: 'page' (default, ala jqGrid) | 'view' · bila false, tombol berbasis seleksi (Edit/Detail/Hapus) disembunyikan</dd></div>
+        <div data-i18n="o_filter" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">filter/search</dt><dd class="text-slate-600">baris filter beroperator (= ≠ ∋ ^ $ &gt; ≥ &lt; ≤ ada kosong) + pencarian global · tombol <b>Filter</b> = filter cepat + <b>builder kondisi lanjutan</b>: field dipilih, kondisi dapat ditambah (satu field boleh lebih dari satu, mis. <code>no &gt; 10</code> dan <code>no &le; 20</code>), digabung AND/OR, badge jumlah kondisi aktif</dd></div>
+        <div data-i18n="o_frozen" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">frozen</dt><dd class="text-slate-600">jumlah kolom beku di kiri (sticky)</dd></div>
+        <div data-i18n="o_crud" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">crud</dt><dd class="text-slate-600">pintasan untuk tombol <b>+ Tambah · Edit · Detail · Hapus</b> berbasis formulir modal (navGrid ala jqGrid); atau satuan: <code>add / editForm / view / remove</code>, <code>edit</code> = edit inline via klik ganda</dd></div>
+        <div data-i18n="o_actions" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">actions</dt><dd class="text-slate-600">tombol kustom berikon: <code>{id,label,icon,need:'one'|'some',fn(rows,grid)}</code> — mis. Approve/Reject</dd></div>
+        <div data-i18n="o_ff" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">filterForm/help</dt><dd class="text-slate-600">tombol <b>Filter</b> = semua filter kolom dalam satu form · tombol <b>Help</b> = modal panduan (teks bisa diganti via <code>helpText</code>)</dd></div>
+        <div data-i18n="o_server" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">server</dt><dd class="text-slate-600">fn(params)→Promise{rows,total} = mode server-side: sort/filter/paging di server, grid hanya merender satu halaman</dd></div>
+        <div data-i18n="o_detail" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">detail</dt><dd class="text-slate-600">fungsi(row) penghasil HTML → master-detail: chevron di tepi kiri membentang baris detail (virtual scroll tetap akurat)</dd></div>
+        <div data-i18n="o_refresh" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">refresh</dt><dd class="text-slate-600">true (default) = tombol Refresh di toolbar; <code>onRefresh(grid)</code> diisi untuk memuat ulang data — bila mengembalikan Promise, overlay "Memuat…" tampil otomatis</dd></div>
+        <div data-i18n="o_ra" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">rowActions</dt><dd class="text-slate-600">true = ikon Detail/Edit/Hapus per baris (tanpa perlu checkbox/seleksi)</dd></div>
+        <div data-i18n="o_fc" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">formCols</dt><dd class="text-slate-600">jumlah kolom layout formulir Tambah/Edit (1, 2, atau 3)</dd></div>
+        <div data-i18n="o_tema" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">tema</dt><dd class="text-slate-600">pemilih tema di kepala halaman (Terang, Gelap, Samudra, Hutan, Senja, Monokrom), tersimpan di <code>localStorage</code>; implementasi = remap variabel warna Tailwind v4 via <code>[data-theme]</code></dd></div>
+        <div data-i18n="o_export" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">Export</dt><dd class="text-slate-600">menu CSV / XLSX / PDF — writer asli tanpa library, mengikuti hasil ter-filter &amp; ter-urut</dd></div>
+        <div data-i18n="o_kf" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">kolom: form</dt><dd class="text-slate-600"><code>options:[…]</code> jadi select · <code>required</code> validasi wajib · <code>bool</code> jadi checkbox · <code>form:false</code> sembunyikan dari formulir · <code>editable:false</code> blok edit</dd></div>
+        <div data-i18n="o_tinggi" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">tinggi</dt><dd class="text-slate-600">height, rowHeight, pageSize, pageSizes, zebra, resize, chooser, rowId()</dd></div>
+        <div data-i18n="o_metode" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">metode</dt><dd class="text-slate-600">render() · refresh() · sortBy(n, tambah) · selected() · clearSel() · toCSV()</dd></div>
+        <div data-i18n="o_cb" class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">callback</dt><dd class="text-slate-600">onSave(row,isNew) · onEdit(row,col,val,old) · onAdd(blank) · onRemove(rows) · onSelect(ids) — tempat menyimpan ke localStorage/API</dd></div>
       </dl>
-      <h3 class="mt-3 mb-1 text-xs font-semibold text-slate-700">Operator filter per tipe kolom</h3>
-      <p class="text-xs text-slate-500">Teks: = ≠ ∋(mengandung) ^(awalan) $(akhiran). Angka &amp; tanggal: = ≠ &gt; ≥ &lt; ≤. Semua kolom: <i>ada</i> / <i>kosong</i>. Nilai tanggal ditulis <code>2024-01-31</code> atau <code>2024</code>.</p>
+      <h3 data-i18n="dOp" class="mt-3 mb-1 text-xs font-semibold text-slate-700">Operator filter per tipe kolom</h3>
+      <p data-i18n="dOpD" class="text-xs text-slate-500">Teks: = ≠ ∋(mengandung) ^(awalan) $(akhiran). Angka &amp; tanggal: = ≠ &gt; ≥ &lt; ≤. Semua kolom: <i>ada</i> / <i>kosong</i>. Nilai tanggal ditulis <code>2024-01-31</code> atau <code>2024</code>.</p>
     </div>
   </section>
 
   <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
-    <h2 class="mb-2 text-sm font-semibold">Perbandingan stack (semuanya offline, Tailwind v4 di-inline)</h2>
+    <h2 data-i18n="cmpT" class="mb-2 text-sm font-semibold">Perbandingan stack (semuanya offline, Tailwind v4 di-inline)</h2>
     <table class="w-full text-xs">
       <thead><tr class="border-b border-slate-200 text-left text-slate-500">
-        <th class="py-1 pr-2 font-medium">Stack</th><th class="py-1 pr-2 font-medium">Runtime tambahan</th><th class="py-1 pr-2 font-medium">Ukuran total halaman</th><th class="py-1 font-medium">Catatan</th>
+        <th data-i18n="cmpH1" class="py-1 pr-2 font-medium">Stack</th><th data-i18n="cmpH2" class="py-1 pr-2 font-medium">Runtime tambahan</th><th data-i18n="cmpH3" class="py-1 pr-2 font-medium">Ukuran total halaman</th><th data-i18n="cmpH4" class="py-1 font-medium">Catatan</th>
       </tr></thead>
       <tbody class="text-slate-600">
-        <tr class="border-b border-slate-100"><td class="py-1.5 pr-2 font-semibold text-emerald-700">Tailwind v4 + vanilla JS (halaman ini)</td><td class="pr-2">0 KB</td><td class="pr-2">±54 KB</td><td>paling ringan; fitur grid lengkap (virtual scroll, kolom beku); tanpa toolchain runtime</td></tr>
-        <tr class="border-b border-slate-100"><td class="py-1.5 pr-2">Tailwind v4 + <a class="text-indigo-600 underline" href="./alpine.html">Alpine.js 3</a></td><td class="pr-2">45 KB</td><td class="pr-2">±78 KB</td><td>kode deklaratif lebih ringkas; cocok bila tim sudah terbiasa; tanpa virtual scroll</td></tr>
-        <tr><td class="py-1.5 pr-2">Svelte (compiled)</td><td class="pr-2">±2–4 KB</td><td class="pr-2">±70 KB</td><td>butuh langkah compile (vite/svelte-kit); pilih bila aplikasinya sudah berbasis Svelte</td></tr>
+        <tr class="border-b border-slate-100"><td data-i18n="cmpA1" class="py-1.5 pr-2 font-semibold text-emerald-700">Tailwind v4 + vanilla JS (halaman ini)</td><td class="pr-2">0 KB</td><td class="pr-2">±54 KB</td><td>paling ringan; fitur grid lengkap (virtual scroll, kolom beku); tanpa toolchain runtime</td></tr>
+        <tr class="border-b border-slate-100"><td data-i18n="cmpA2" class="py-1.5 pr-2">Tailwind v4 + <a class="text-indigo-600 underline" href="./alpine.html">Alpine.js 3</a></td><td class="pr-2">45 KB</td><td class="pr-2">±78 KB</td><td>kode deklaratif lebih ringkas; cocok bila tim sudah terbiasa; tanpa virtual scroll</td></tr>
+        <tr><td data-i18n="cmpA3" class="py-1.5 pr-2">Svelte (compiled)</td><td class="pr-2">±2–4 KB</td><td class="pr-2">±70 KB</td><td>butuh langkah compile (vite/svelte-kit); pilih bila aplikasinya sudah berbasis Svelte</td></tr>
       </tbody>
     </table>
-    <p class="mt-2 text-xs text-slate-500">Rekomendasi: <b>vanilla JS + Tailwind v4</b> untuk satu file offline ala jqGrid — tidak ada runtime, tidak ada langkah build di sisi pengguna, dan seluruh logika grid ±31 KB. Alpine hanya unggul pada kenyamanan penulisan markup.</p>
+    <p data-i18n="cmpR" class="mt-2 text-xs text-slate-500">Rekomendasi: <b>vanilla JS + Tailwind v4</b> untuk satu file offline ala jqGrid — tidak ada runtime, tidak ada langkah build di sisi pengguna, dan seluruh logika grid ±31 KB. Alpine hanya unggul pada kenyamanan penulisan markup.</p>
   </section>
 
   <section class="rounded-xl border border-slate-300 bg-white p-4 text-xs text-slate-600 shadow-sm">
-    <h2 class="mb-1 text-sm font-semibold text-slate-800">Build ulang CSS (butuh internet sekali)</h2>
+    <h2 data-i18n="bT" class="mb-1 text-sm font-semibold text-slate-800">Build ulang CSS (butuh internet sekali)</h2>
 <pre class="overflow-auto rounded bg-slate-900 p-3 text-[11px] leading-relaxed text-slate-100"><code>npm i -D @tailwindcss/cli
 npx tailwindcss -i ./src/input.css -o ./dist/tailwind.css --minify
 node build.mjs        # inline CSS + JS ke dalam index.html → hasil akhir 1 file</code></pre>
-    <p class="mt-2">Hasil <code>index.html</code> bisa dibuka dengan <code>file://</code> atau ditaruh di USB/intranet tanpa server dan tanpa koneksi.</p>
+    <p data-i18n="bD" class="mt-2">Hasil <code>index.html</code> bisa dibuka dengan <code>file://</code> atau ditaruh di USB/intranet tanpa server dan tanpa koneksi.</p>
   </section>
 
-  <footer class="pb-4 text-center text-xs text-slate-400">MiniGrid · ~9 KB JS + ~15 KB CSS · tanpa jQuery, tanpa framework</footer>
+  <footer data-i18n="foot" class="pb-4 text-center text-xs text-slate-400">MiniGrid · ~9 KB JS + ~15 KB CSS · tanpa jQuery, tanpa framework</footer>
 </div>
 
 <script src="./src/grid.js"></script>

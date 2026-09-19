@@ -417,6 +417,89 @@
     set(THEMES.some(function (t) { return t[0] === cur; }) ? cur : 'light');
   })();
 
+
+  /* ---- dua bahasa: ID / EN (tersimpan di localStorage) ---- */
+  var PAGE = {
+    sub: { id: `Data grid ala jqGrid — Tailwind CSS v4 + vanilla JS, satu file HTML, jalan tanpa internet.`, en: `A jqGrid-style data grid — Tailwind CSS v4 + vanilla JS, single HTML file, runs offline.` },
+    theme: { id: `Tema`, en: `Theme` },
+    s1t: { id: `50.000 baris · kolom beku · multi-sort · filter per kolom`, en: `50,000 rows · frozen columns · multi-sort · per-column filters` },
+    s1d: { id: `klik header = urutkan · <kbd class="rounded border border-slate-300 px-1">Shift</kbd>+klik = multi-sort · geser tepi header = ubah lebar`, en: `click a header = sort · <kbd class="rounded border border-slate-300 px-1">Shift</kbd>+click = multi-sort · drag the header edge = resize` },
+    s2t: { id: `CRUD lengkap ala jqGrid`, en: `Full jqGrid-style CRUD` },
+    s2d: { id: `<b>+ Tambah / Edit / Detail / Hapus</b> lewat formulir modal (dengan validasi, terbuka di tengah layar & bisa digeser dari bilah judul) · klik ganda sel = edit inline · data tersimpan di <code>localStorage</code>`, en: `<b>+ Add / Edit / View / Delete</b> via modal forms (validated, centered, draggable by the title bar) · double-click a cell = inline edit · data persisted in <code>localStorage</code>` },
+    reset2: { id: `reset data contoh`, en: `reset sample data` },
+    s3t: { id: `Alur persetujuan: Approve/Reject · Export XLSX/PDF · form Filter · Help · form 2 kolom`, en: `Approval flow: Approve/Reject · XLSX/PDF export · Filter form · Help · 2-column form` },
+    s3d: { id: `Edit & Detail aktif hanya saat <b>tepat 1</b> baris terpilih · Approve/Reject/Hapus aktif saat <b>≥1</b> terpilih · tanpa baris filter di bawah header (semua filter dituangkan ke tombol <b>Filter</b>)`, en: `Edit & View enable only with <b>exactly 1</b> row selected · Approve/Reject/Delete with <b>≥1</b> · no filter row under the header (all filters live behind the <b>Filter</b> button)` },
+    s4t: { id: `Aksi per baris · tanpa checkbox · form 3 kolom`, en: `Per-row actions · no checkbox · 3-column form` },
+    s4d: { id: `<b>Detail/Edit/Hapus</b> lewat ikon pada kolom <b>Aksi</b> — berbasis record, bukan baris terpilih · formulir Tambah/Edit tersusun <b>3 kolom</b>`, en: `<b>View/Edit/Delete</b> via icons in the <b>Actions</b> column — record-based, not selection-based · Add/Edit form laid out in <b>3 columns</b>` },
+    s5t: { id: `Data dari API · refresh · status muat`, en: `Data from an API · refresh · load status` },
+    s5d: { id: `Baris dimuat lewat <code>fetch('api/karyawan')</code> ke <code>server.mjs</code> · lewat <code>file://</code> otomatis fallback ke simulasi API berlatensi · overlay <b>Memuat…</b> tampil selama permintaan · tombol <b>Refresh</b> memuat ulang`, en: `Rows load via <code>fetch('api/karyawan')</code> against <code>server.mjs</code> · on <code>file://</code> it falls back to a latency-simulated API · a <b>Loading…</b> overlay shows during requests · <b>Refresh</b> reloads` },
+    s6t: { id: `Mode server-side · 10.000 baris di server`, en: `Server-side mode · 10,000 rows on the server` },
+    s6d: { id: `Pagination, sort, filter, dan pencarian diproses di <code>GET api/halaman</code> (server.mjs) — grid hanya menerima satu halaman · lewat <code>file://</code> fallback ke simulasi server-side lokal · navigasi keyboard: <kbd class="rounded border border-slate-300 px-1">Tab</kbd> ke tabel, panah pindah sel, <kbd class="rounded border border-slate-300 px-1">Spasi</kbd> pilih, <kbd class="rounded border border-slate-300 px-1">Enter</kbd> edit`, en: `Paging, sorting, filtering and search run in <code>GET api/halaman</code> (server.mjs) — the grid only receives one page · on <code>file://</code> it falls back to a local server-side simulation · keyboard: <kbd class="rounded border border-slate-300 px-1">Tab</kbd> into the table, arrows to move, <kbd class="rounded border border-slate-300 px-1">Space</kbd> to select, <kbd class="rounded border border-slate-300 px-1">Enter</kbd> to edit` },
+    dPakai: { id: `Pakai`, en: `Usage` },
+    dOpsi: { id: `Opsi`, en: `Options` },
+    o_cols: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">columns[]</dt><dd class="text-slate-600"><code>name, label, width, type (str|num|date), format, align, render(), sortable, filter, editable, hidden, search</code></dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">columns[]</dt><dd class="text-slate-600"><code>name, label, width, type (str|num|date), format, align, render(), sortable, filter, editable, hidden, search</code></dd>` },
+    o_data: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">data</dt><dd class="text-slate-600">array objek polos — mode klien. Ganti <code>grid.data</code> lalu <code>grid.render()</code>.</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">data</dt><dd class="text-slate-600">plain array of objects — client mode. Replace <code>grid.data</code> then <code>grid.render()</code>.</dd>` },
+    o_select: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">select</dt><dd class="text-slate-600"><code>'multi'</code> (kotak centang) | <code>'single'</code> | <code>false</code> · <code>selectAll</code>: <code>'page'</code> (bawaan, ala jqGrid) | <code>'view'</code> · saat <code>false</code> tombol berbasis pilihan (Edit/Detail/Hapus) disembunyikan</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">select</dt><dd class="text-slate-600"><code>'multi'</code> (checkboxes) | <code>'single'</code> | <code>false</code> · <code>selectAll</code>: <code>'page'</code> (default, jqGrid-style) | <code>'view'</code> · when <code>false</code>, selection-based buttons (Edit/View/Delete) are hidden</dd>` },
+    o_filter: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">filter/search</dt><dd class="text-slate-600">baris filter per kolom ber-operator (= ≠ ∋ ^ $ &gt; ≥ &lt; ≤ ada kosong) + pencarian global · tombol <b>Filter</b> = saring cepat + <b>penyusun kondisi lanjutan</b>: pilih bidang, tambah kondisi (satu bidang boleh lebih dari satu, mis. <code>no &gt; 10</code> dan <code>no ≤ 20</code>), digabung AND/OR · badge = jumlah kondisi aktif</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">filter/search</dt><dd class="text-slate-600">operator filter row per column (= ≠ ∋ ^ $ &gt; ≥ &lt; ≤ present empty) + global search · <b>Filter</b> button = quick filters + <b>advanced condition builder</b>: pick a field, add conditions (a field may appear twice, e.g. <code>no &gt; 10</code> and <code>no ≤ 20</code>), joined with AND/OR · badge = active condition count</dd>` },
+    o_frozen: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">frozen</dt><dd class="text-slate-600">jumlah kolom kiri yang dibekukan (sticky)</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">frozen</dt><dd class="text-slate-600">number of frozen (sticky) columns on the left</dd>` },
+    o_crud: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">crud</dt><dd class="text-slate-600">jalan pintas tombol <b>+ Tambah · Edit · Detail · Hapus</b> via form modal (ala jqGrid navGrid); atau satu-satu: <code>add / editForm / view / remove</code>, <code>edit</code> = edit inline lewat klik ganda</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">crud</dt><dd class="text-slate-600">shortcut for <b>+ Add · Edit · View · Delete</b> buttons via modal forms (jqGrid navGrid-style); or individually: <code>add / editForm / view / remove</code>, <code>edit</code> = inline edit via double-click</dd>` },
+    o_actions: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">actions</dt><dd class="text-slate-600">tombol ikon tambahan: <code>{id, label, icon, need: 'one'|'some', fn(rows, grid)}</code> — mis. Approve/Reject</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">actions</dt><dd class="text-slate-600">extra icon buttons: <code>{id, label, icon, need: 'one'|'some', fn(rows, grid)}</code> — e.g. Approve/Reject</dd>` },
+    o_ff: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">filterForm/help</dt><dd class="text-slate-600">tombol <b>Filter</b> = semua filter kolom dalam satu form · tombol <b>Help</b> = modal panduan (teks bisa diganti lewat <code>helpText</code>)</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">filterForm/help</dt><dd class="text-slate-600"><b>Filter</b> button = every column filter in one form · <b>Help</b> button = guide modal (replace the text via <code>helpText</code>)</dd>` },
+    o_refresh: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">refresh</dt><dd class="text-slate-600">true (bawaan) = tombol Refresh di toolbar; isi <code>onRefresh(grid)</code> untuk memuat ulang data — bila mengembalikan Promise, overlay "Memuat…" tampil otomatis</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">refresh</dt><dd class="text-slate-600">true (default) = toolbar Refresh button; provide <code>onRefresh(grid)</code> to reload — return a Promise and the "Loading…" overlay shows automatically</dd>` },
+    o_ra: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">rowActions</dt><dd class="text-slate-600">true = ikon Detail/Edit/Hapus per baris (tanpa perlu centang/pilih)</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">rowActions</dt><dd class="text-slate-600">true = per-row View/Edit/Delete icons (no checkbox/selection needed)</dd>` },
+    o_detail: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">detail</dt><dd class="text-slate-600">fn(row) mengembalikan HTML → master-detail: chevron kiri membuka baris detail (scroll virtual tetap akurat)</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">detail</dt><dd class="text-slate-600">fn(row) returning HTML → master-detail: the left chevron expands a detail row (virtual scroll stays exact)</dd>` },
+    o_server: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">server</dt><dd class="text-slate-600">fn(params)→Promise{rows, total} = mode server-side: sort/filter/paging di server, grid hanya render satu halaman</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">server</dt><dd class="text-slate-600">fn(params)→Promise{rows, total} = server-side mode: sort/filter/paging on the server, the grid renders one page</dd>` },
+    o_fc: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">formCols</dt><dd class="text-slate-600">jumlah kolom tata letak form Tambah/Edit (1, 2, atau 3)</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">formCols</dt><dd class="text-slate-600">columns in the Add/Edit form layout (1, 2, or 3)</dd>` },
+    o_tema: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">tema</dt><dd class="text-slate-600">enam tema halaman (Terang, Gelap, Samudra, Hutan, Senja, Monokrom), tersimpan di localStorage; implementasi: remap variabel <code>--color-*</code> Tailwind v4 [data-theme]</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">theme</dt><dd class="text-slate-600">six page themes (Light, Dark, Ocean, Forest, Sunset, Mono), persisted in localStorage; implemented by remapping Tailwind v4 <code>--color-*</code> vars via [data-theme]</dd>` },
+    o_export: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">Export</dt><dd class="text-slate-600">menu CSV / XLSX / PDF — penulis tanpa dependensi, mengikuti hasil filter & urut</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">Export</dt><dd class="text-slate-600">CSV / XLSX / PDF menu — dependency-free writers, follow the filtered & sorted result</dd>` },
+    o_kf: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">kolom: form</dt><dd class="text-slate-600"><code>options: [...]</code> jadi select · <code>required</code> validasi wajib · <code>bool</code> jadi checkbox · <code>form: false</code> sembunyikan dari formulir · <code>editable: false</code> blokir edit</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">column: form</dt><dd class="text-slate-600"><code>options: [...]</code> renders a select · <code>required</code> = mandatory validation · <code>bool</code> renders a checkbox · <code>form: false</code> hides from the form · <code>editable: false</code> blocks editing</dd>` },
+    o_tinggi: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">tinggi</dt><dd class="text-slate-600"><code>height, rowHeight, pageSize, pageSizes, zebra, resize, chooser, worldO()</code></dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">misc</dt><dd class="text-slate-600"><code>height, rowHeight, pageSize, pageSizes, zebra, resize, chooser, worldO()</code></dd>` },
+    o_metode: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">metode</dt><dd class="text-slate-600"><code>render() · refresh() · sortBy(n, tambah) · selected() · clearSel() · toCSV()</code></dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">methods</dt><dd class="text-slate-600"><code>render() · refresh() · sortBy(n, add) · selected() · clearSel() · toCSV()</code></dd>` },
+    o_cb: { id: `<dt class="w-24 shrink-0 font-mono text-indigo-600">callback</dt><dd class="text-slate-600"><code>onSave(row, isNew) · onEdit(row, col, val, old) · onAdd(blank) · onRemove(rows) · onSelect(ids)</code> — tempat menyimpan ke localStorage/API</dd>`, en: `<dt class="w-24 shrink-0 font-mono text-indigo-600">callbacks</dt><dd class="text-slate-600"><code>onSave(row, isNew) · onEdit(row, col, val, old) · onAdd(blank) · onRemove(rows) · onSelect(ids)</code> — where you persist to localStorage/API</dd>` },
+    dOp: { id: `Operator filter per tipe kolom`, en: `Filter operators by column type` },
+    dOpD: { id: `Teks: = ≠ ∋(mengandung) ^(awalan) $(akhiran). Angka &amp; tanggal: = ≠ &gt; ≥ &lt; ≤. Semua kolom: <i>ada</i> / <i>kosong</i>. Nilai tanggal ditulis <code>2024-01-31</code> atau <code>2024</code>.`, en: `Text: = ≠ ∋(contains) ^(starts with) $(ends with). Numbers &amp; dates: = ≠ &gt; ≥ &lt; ≤. All columns: <i>present</i> / <i>empty</i>. Write dates as <code>2024-01-31</code> or <code>2024</code>.` },
+    cmpT: { id: `Perbandingan stack (semuanya offline, Tailwind v4 di-inline)`, en: `Stack comparison (all offline, Tailwind v4 inlined)` },
+    cmpH1: { id: `Stack`, en: `Stack` },
+    cmpH2: { id: `Runtime tambahan`, en: `Extra runtime` },
+    cmpH3: { id: `Ukuran total halaman`, en: `Total page size` },
+    cmpH4: { id: `Catatan`, en: `Notes` },
+    cmpA1: { id: `Tailwind v4 + vanilla JS (halaman ini)`, en: `Tailwind v4 + vanilla JS (this page)` },
+    cmpA2: { id: `Tailwind v4 + <a class="text-indigo-600 underline" href="./alpine.html">Alpine.js 3</a>`, en: `Tailwind v4 + <a class="text-indigo-600 underline" href="./alpine.html">Alpine.js 3</a>` },
+    cmpA3: { id: `Svelte (compiled)`, en: `Svelte (compiled)` },
+    cmpR: { id: `Rekomendasi: <b>vanilla JS + Tailwind v4</b> untuk satu file offline ala jqGrid — tidak ada runtime, tidak ada langkah build di sisi pengguna, dan seluruh logika grid ±31 KB. Alpine hanya unggul pada kenyamanan penulisan markup.`, en: `Recommendation: <b>vanilla JS + Tailwind v4</b> for a jqGrid-style offline single file — no runtime, no user-side build step, and the entire grid logic is ±31 KB. Alpine only wins on markup-writing comfort.` },
+    bT: { id: `Build ulang CSS (butuh internet sekali)`, en: `Rebuilding the CSS (needs internet once)` },
+    bD: { id: `Hasil <code>index.html</code> bisa dibuka dengan <code>file://</code> atau ditaruh di USB/intranet tanpa server dan tanpa koneksi.`, en: `The resulting <code>index.html</code> opens via <code>file://</code> or can live on a USB stick/intranet with no server and no connection.` },
+    foot: { id: `MiniGrid · ~9 KB JS + ~15 KB CSS · tanpa jQuery, tanpa framework`, en: `MiniGrid · ~9 KB JS + ~15 KB CSS · no jQuery, no framework` }
+  };
+
+  function applyLang(l) {
+    try { localStorage.setItem('minigrid-lang', l); } catch (e) {}
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      var d = PAGE[el.dataset.i18n];
+      if (d) el.innerHTML = d[l] || d.id;
+    });
+    [window.__g1, window.__g2, window.__g3, window.__g4, window.__g5, window.__g6].forEach(function (g) { if (g) g.setLang(l); });
+    var box = document.getElementById('langs');
+    if (box) box.querySelectorAll('button').forEach(function (b) {
+      var on = b.dataset.l === l;
+      b.classList.toggle('bg-indigo-600', on);
+      b.classList.toggle('text-white', on);
+      b.classList.toggle('bg-white', !on);
+    });
+  }
+
+  (function initLangs() {
+    var box = document.getElementById('langs');
+    if (!box) return;
+    box.onclick = function (e) {
+      var b = e.target.closest('[data-l]');
+      if (b) applyLang(b.dataset.l === 'en' ? 'en' : 'id');
+    };
+    var cur = 'id';
+    try { cur = localStorage.getItem('minigrid-lang') || 'id'; } catch (e) {}
+    applyLang(cur === 'en' ? 'en' : 'id');
+  })();
+
   function log(t) {
     var el = document.getElementById('log');
     if (el) el.textContent = t + '  (' + new Date().toLocaleTimeString('id-ID') + ')';

@@ -590,6 +590,31 @@ ok('Enter membuka edit inline', await page.locator('#grid2 tbody input.h-6').cou
 await page.keyboard.press('Escape');
 await page.waitForTimeout(100);
 
+/* 29. dual bahasa ID/EN — dijalankan terakhir karena tes lain memakai string Indonesia */
+await page.locator('#langs [data-l=en]').click();
+await page.waitForTimeout(300);
+ok('EN: toolbar berbahasa Inggris', await page.locator('#grid2 [data-act=add] span').innerText() === 'Add' &&
+  await page.locator('#grid1 [data-act=cols] span').innerText() === 'Columns');
+ok('EN: pager berlabel Rows', (await page.locator('#grid1 [data-role=pager]').innerText()).includes('Rows'));
+ok('EN: teks halaman berbahasa Inggris', (await page.locator('[data-i18n=s1t]').innerText()).includes('50,000 rows') &&
+  (await page.locator('[data-i18n=foot]').innerText()).includes('no jQuery'));
+await page.locator('#grid2 [data-act=add]').click();
+await page.waitForSelector('.fixed [data-save]');
+ok('EN: modal berbahasa Inggris', await page.locator('.fixed span.text-sm.font-semibold').first().innerText() === 'Add row' &&
+  await page.locator('.fixed [data-save]').innerText() === 'Save' &&
+  await page.locator('.fixed [data-close]').innerText() === 'Cancel');
+await page.locator('.fixed [data-close]').click();
+await page.waitForTimeout(150);
+await page.reload();
+await page.waitForSelector('#grid1 tbody tr[data-id]');
+await page.waitForTimeout(500);
+ok('EN: pilihan bahasa persisten setelah reload', await page.locator('#grid2 [data-act=add] span').innerText() === 'Add' &&
+  (await page.locator('[data-i18n=s2t]').innerText()) === 'Full jqGrid-style CRUD');
+await page.locator('#langs [data-l=id]').click();
+await page.waitForTimeout(300);
+ok('ID: kembali ke bahasa Indonesia', await page.locator('#grid2 [data-act=add] span').innerText() === 'Tambah' &&
+  (await page.locator('[data-i18n=s1t]').innerText()).includes('50.000'));
+
 /* 17. tidak ada error konsol */
 ok('tanpa error konsol', errors.length === 0, errors.slice(0, 3).join(' ;; '));
 

@@ -90,7 +90,7 @@
       '</div>' +
       '<div data-role="load" class="hidden absolute inset-0 z-20 flex items-center justify-center gap-2 bg-white/60 backdrop-blur-[1px]">' +
         '<span class="size-5 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-600"></span>' +
-        '<span class="text-xs font-medium text-slate-600">Memuat…</span></div>' +
+        '<span data-role="loadtxt" class="text-xs font-medium text-slate-600">Memuat…</span></div>' +
       '</div>' +
       '<div class="flex flex-wrap items-center gap-2 border-t border-slate-200 bg-slate-50 px-2 py-1.5" data-role="pager"></div>' +
     '</div>';
@@ -102,7 +102,7 @@
       pageSizes: [10, 25, 50, 100, 500], height: 420, rowHeight: 32,
       frozen: 0, select: 'multi', selectAll: 'page', filter: true, search: true, edit: false,
       resize: true, add: false, remove: false, editForm: false, view: false, crud: false,
-      chooser: true, zebra: true, filterForm: false, help: false, formCols: 1, rowActions: false, refresh: true, detail: null, server: null, actions: [],
+      chooser: true, zebra: true, filterForm: false, help: false, formCols: 1, rowActions: false, refresh: true, detail: null, server: null, lang: 'id', actions: [],
       rowId: function (r, i) { return r.id != null ? r.id : i; },
       onEdit: null, onAdd: null, onRemove: null, onSelect: null
     }, opts);
@@ -121,6 +121,8 @@
     this.el.innerHTML = SHELL;
     var $ = function (n) { return this.el.querySelector('[data-role=' + n + ']'); }.bind(this);
     this.r = { tools: $('tools'), q: $('q'), info: $('info'), sc: $('scroller'), cg: $('cg'), head: $('head'), body: $('body'), pager: $('pager'), tb: this.el.querySelector('table') };
+    var lt0 = this.el.querySelector('[data-role=loadtxt]');
+    if (lt0) lt0.textContent = (I18N[o.lang] || I18N.id).loading;
     if (!o.search) this.r.q.remove();
 
     this.cols = o.columns.map(function (c) {
@@ -132,6 +134,74 @@
     this.render();
   }
   var P = Grid.prototype;
+
+  /* ------------------------------------------------------- i18n ID/EN */
+  var I18N = {
+    id: {
+      add: 'Tambah', edit: 'Edit', view: 'Detail', remove: 'Hapus', filter: 'Filter', export: 'Export', cols: 'Kolom', refresh: 'Refresh',
+      clear: 'bersihkan filter', loading: 'Memuat…', rowsLabel: 'Baris', domRows: 'baris di DOM', filterSort: 'filter+sort', pick: 'pilih',
+      showCols: 'Tampilkan kolom', formAdd: 'Tambah baris', formEdit: 'Edit baris', formView: 'Detail baris',
+      save: 'Simpan', cancel: 'Batal', close: 'Tutup', errNum: 'harus angka', errReq: 'wajib diisi',
+      confirmDel: function (n) { return 'Hapus ' + n + ' baris?'; },
+      quick: 'Filter cepat per kolom', adv: 'Kondisi lanjutan', join: 'Gabung', addCond: 'Tambah kondisi', resetAll: 'Reset semua', valPh: 'nilai…',
+      qph: 'Cari semua kolom… (Enter)', of: 'dari', dragTip: 'Seret untuk memindahkan', rmCond: 'Hapus kondisi',
+      expander: 'Bentang/tutup detail', allLabel: 'Pilih semua',
+      ariaTable: 'Tabel data — panah untuk berpindah sel, Spasi pilih baris, Enter edit',
+      pdfSub: function (n) { return n + ' baris (terfilter/terurut)'; }, page: function (a, b) { return 'Halaman ' + a + '/' + b; },
+      helpTitle: 'Bantuan',
+      helpText: '<ul class="list-disc space-y-1 pl-4">' +
+        '<li><b>Klik header</b> = urutkan · <b>Shift+klik</b> = urut multi-kolom · klik lagi = balik arah.</li>' +
+        '<li><b>Filter</b> per kolom lewat tombol Filter (pilih operator lalu isi nilai) atau pencarian global (Enter).</li>' +
+        '<li><b>Pilih baris</b> lewat checkbox; checkbox header memilih seluruh halaman.</li>' +
+        '<li><b>Edit/Detail</b> aktif bila tepat 1 baris terpilih · <b>Hapus/Approve/Reject</b> aktif bila ≥1 terpilih.</li>' +
+        '<li><b>Klik ganda</b> sel = edit inline · Enter/Tab simpan · Esc batal.</li>' +
+        '<li><b>Geser tepi kanan header</b> = ubah lebar kolom · tombol Kolom = tampil/sembunyikan kolom.</li>' +
+        '<li><b>Export</b> = unduh hasil ter-filter & ter-urut sebagai CSV, XLSX, atau PDF.</li>' +
+        '<li><b>Geser bilah judul modal</b> = pindahkan posisi modal; setiap dibuka, modal kembali ke tengah layar.</li>' +
+        '<li><b>Chevron kiri baris</b> = bentang/tutup detail baris (master-detail).</li>' +
+        '<li><b>Keyboard</b>: Tab masuk ke tabel, panah pindah sel, Home/End &amp; Ctrl+Home/End, PageUp/Down, Spasi = pilih baris, Enter/F2 = edit.</li>' +
+        '</ul>'
+    },
+    en: {
+      add: 'Add', edit: 'Edit', view: 'View', remove: 'Delete', filter: 'Filter', export: 'Export', cols: 'Columns', refresh: 'Refresh',
+      clear: 'clear filters', loading: 'Loading…', rowsLabel: 'Rows', domRows: 'rows in DOM', filterSort: 'filter+sort', pick: 'selected',
+      showCols: 'Show columns', formAdd: 'Add row', formEdit: 'Edit row', formView: 'Row detail',
+      save: 'Save', cancel: 'Cancel', close: 'Close', errNum: 'must be a number', errReq: 'required',
+      confirmDel: function (n) { return 'Delete ' + n + ' row(s)?'; },
+      quick: 'Quick filters per column', adv: 'Advanced conditions', join: 'Join', addCond: 'Add condition', resetAll: 'Reset all', valPh: 'value…',
+      qph: 'Search all columns… (Enter)', of: 'of', dragTip: 'Drag to move', rmCond: 'Remove condition',
+      expander: 'Expand/collapse detail', allLabel: 'Select all',
+      ariaTable: 'Data table — arrow keys move the cell, Space selects a row, Enter edits',
+      pdfSub: function (n) { return n + ' rows (filtered/sorted)'; }, page: function (a, b) { return 'Page ' + a + '/' + b; },
+      helpTitle: 'Help',
+      helpText: '<ul class="list-disc space-y-1 pl-4">' +
+        '<li><b>Click a header</b> = sort · <b>Shift+click</b> = multi-column sort · click again to flip direction.</li>' +
+        '<li><b>Filter</b> per column via the Filter button (pick an operator, type a value) or global search (Enter).</li>' +
+        '<li><b>Select rows</b> with checkboxes; the header checkbox selects the whole page.</li>' +
+        '<li><b>Edit/View</b> enable with exactly 1 row selected · <b>Delete/Approve/Reject</b> with ≥1.</li>' +
+        '<li><b>Double-click</b> a cell = inline edit · Enter/Tab saves · Esc cancels.</li>' +
+        '<li><b>Drag a header’s right edge</b> = resize column · Columns button = show/hide columns.</li>' +
+        '<li><b>Export</b> = download the filtered & sorted result as CSV, XLSX, or PDF.</li>' +
+        '<li><b>Drag a modal’s title bar</b> = move it; modals reopen centered.</li>' +
+        '<li><b>Left chevron</b> = expand/collapse a row’s detail (master-detail).</li>' +
+        '<li><b>Keyboard</b>: Tab into the table, arrows move the cell, Home/End &amp; Ctrl+Home/End, PageUp/Down, Space = select row, Enter/F2 = edit.</li>' +
+        '</ul>'
+    }
+  };
+  P.tr = function (k) {
+    var a = [].slice.call(arguments, 1);
+    var d = I18N[this.o.lang] || I18N.id, v = d[k];
+    if (v == null) v = I18N.id[k];
+    return typeof v === 'function' ? v.apply(null, a) : v;
+  };
+  P.setLang = function (lang) {
+    this.o.lang = I18N[lang] ? lang : 'id';
+    var lt = this.el.querySelector('[data-role=loadtxt]');
+    if (lt) lt.textContent = this.tr('loading');
+    var q = this.el.querySelector('[data-role=q]');
+    if (q) q.placeholder = this.tr('qph');
+    this._toolbar(); this._head(); this._paint(true); this._pager(); this._info();
+  };
 
   P.col = function (n) { for (var i = 0; i < this.cols.length; i++) if (this.cols[i].name === n) return this.cols[i]; return null; };
   P.vis = function () { return this.cols.filter(function (c) { return !c.hidden; }); };
@@ -260,9 +330,9 @@
   P._head = function () {
     var self = this, s = this.s, multi = this.o.select === 'multi';
     var h = '<tr>';
-    if (this.o.detail) h += '<th role="columnheader" aria-label="Bentang detail" class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 align-middle" style="position:sticky;left:0;z-index:3"></th>';
+    if (this.o.detail) h += '<th role="columnheader" aria-label="' + this.tr('expander') + '" class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 align-middle" style="position:sticky;left:0;z-index:3"></th>';
     if (multi) {
-      h += '<th role="columnheader" aria-label="Pilih semua" class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 text-center align-middle" style="position:sticky;left:' + (this.o.detail ? 28 : 0) + 'px;z-index:3">' +
+      h += '<th role="columnheader" aria-label="' + this.tr('allLabel') + '" class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 text-center align-middle" style="position:sticky;left:' + (this.o.detail ? 28 : 0) + 'px;z-index:3">' +
            '<input type="checkbox" data-role="all" class="size-3.5 accent-indigo-600"></th>';
     }
     this.vis().forEach(function (c, i) {
@@ -402,7 +472,7 @@
       tr.className = (o.zebra && i % 2 ? 'alt ' : '') + (s.sel.has(id) ? 'sel ' : '');
       var h = hasExp
         ? '<td role="gridcell" class="frz0 border-b border-r border-slate-200 p-0 text-center align-middle" style="position:sticky;left:0;z-index:1">' +
-          '<button data-exp="' + esc(id) + '" title="Bentang/tutup detail" class="mx-auto flex size-5 items-center justify-center rounded text-slate-400 outline-none hover:bg-indigo-50 hover:text-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-500' + (s.exp.has(id) ? ' !text-indigo-600' : '') + '">' +
+          '<button data-exp="' + esc(id) + '" title="' + self.tr('expander') + '" class="mx-auto flex size-5 items-center justify-center rounded text-slate-400 outline-none hover:bg-indigo-50 hover:text-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-500' + (s.exp.has(id) ? ' !text-indigo-600' : '') + '">' +
           '<svg viewBox="0 0 24 24" class="size-3 transition-transform' + (s.exp.has(id) ? ' rotate-90' : '') + '" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></button></td>'
         : '';
       h += o.select === 'multi'
@@ -419,9 +489,9 @@
              (col.render ? col.render(row[col.name], row) : esc(fmt(row[col.name], col))) + '</td>';
       }
       if (o.rowActions) h += '<td role="gridcell" class="border-b border-r border-slate-200 px-1 align-middle"><div class="flex items-center justify-center gap-0.5">' +
-        '<button data-ra="view" title="Detail" class="' + RAB + '">' + ICONS.view + '</button>' +
-        '<button data-ra="edit" title="Edit" class="' + RAB + '">' + ICONS.edit + '</button>' +
-        '<button data-ra="del" title="Hapus" class="' + RAD + '">' + ICONS.del + '</button></div></td>';
+        '<button data-ra="view" title="' + self.tr('view') + '" class="' + RAB + '">' + ICONS.view + '</button>' +
+        '<button data-ra="edit" title="' + self.tr('edit') + '" class="' + RAB + '">' + ICONS.edit + '</button>' +
+        '<button data-ra="del" title="' + self.tr('remove') + '" class="' + RAD + '">' + ICONS.del + '</button></div></td>';
       tr.innerHTML = h;
       frag.appendChild(tr);
       if (hasExp && s.exp.has(id)) {
@@ -484,12 +554,12 @@
         '<span class="px-1 text-xs tabular-nums text-slate-600">' + s.page + ' / ' + pages + '</span>' +
         b('›', s.page + 1, s.page === pages) + b('»', pages, s.page === pages) +
       '</div>' +
-      '<label class="flex items-center gap-1 text-xs text-slate-600">Baris' +
+      '<label class="flex items-center gap-1 text-xs text-slate-600">' + self.tr('rowsLabel') +
         '<select data-role="size" class="h-6 rounded border border-slate-300 bg-white px-1 text-xs outline-none">' +
           o.pageSizes.map(function (n) { return '<option' + (n === s.size ? ' selected' : '') + '>' + n + '</option>'; }).join('') +
         '</select></label>' +
-      '<span class="ml-auto text-xs text-slate-500">filter+sort <b class="tabular-nums text-slate-700">' + this.ms + '</b> ms · ' +
-        (this._l - this._f) + ' baris di DOM</span>';
+      '<span class="ml-auto text-xs text-slate-500">' + this.tr('filterSort') + ' <b class="tabular-nums text-slate-700">' + this.ms + '</b> ms · ' +
+        (this._l - this._f) + ' ' + this.tr('domRows') + '</span>';
   };
 
   P._info = function () {
@@ -504,8 +574,8 @@
     }
     var tot = this._total();
     var from = tot ? (s.page - 1) * s.size + 1 : 0;
-    this.r.info.textContent = from + '–' + Math.min(s.page * s.size, tot) + ' dari ' + tot +
-      (!this.o.server && tot !== this.data.length ? ' / ' + this.data.length : '') + (s.sel.size ? ' · pilih ' + s.sel.size : '');
+    this.r.info.textContent = from + '–' + Math.min(s.page * s.size, tot) + ' ' + this.tr('of') + ' ' + tot +
+      (!this.o.server && tot !== this.data.length ? ' / ' + this.data.length : '') + (s.sel.size ? ' · ' + this.tr('pick') + ' ' + s.sel.size : '');
   };
 
   /* ----------------------------------------------------------- interaksi */
@@ -542,28 +612,33 @@
     return this.data.filter(function (r, i) { return s.sel.has(self.idOf(r, i)); });
   };
   P.clearSel = function () { this.s.sel.clear(); this._paint(true); this._fire(); };
+  P._toolbar = function () {
+    var o = this.o, self = this;
+    var T = [];
+    if (o.add) T.push(['add', self.tr('add'), 'add']);
+    if (o.editForm && o.select) T.push(['edit', self.tr('edit'), 'edit']);
+    if (o.view && o.select) T.push(['view', self.tr('view'), 'view']);
+    (o.actions || []).forEach(function (a) { T.push([a.id, a.label, a.icon || 'ok', a]); });
+    if (o.remove && o.select) T.push(['remove', self.tr('remove'), 'del']);
+    if (o.filterForm) T.push(['ffilter', self.tr('filter'), 'filter', true]);
+    T.push(['export', self.tr('export'), 'export']);
+    if (o.chooser) T.push(['cols', self.tr('cols'), 'cols']);
+    if (o.refresh) T.push(['refresh', self.tr('refresh'), 'refresh']);
+    if (o.help) T.push(['help', '', 'help']);
+    this.r.tools.innerHTML = T.map(function (t) {
+      return '<button data-act="' + t[0] + '" title="' + (t[1] || t[0]) + '" class="' + BTN + (t[1] ? '' : ' px-1.5') + '">' +
+        (ICONS[t[2]] || '') + (t[1] ? '<span class="hidden sm:inline">' + esc(t[1]) + '</span>' : '') +
+        (t[3] ? '<span data-fc class="hidden rounded-full bg-indigo-600 px-1.5 text-[9px] font-semibold leading-4 text-white"></span>' : '') + '</button>';
+    }).join('') + (o.filter ? '<button data-act="clear" class="h-6 rounded-md px-2 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-indigo-600">' + self.tr('clear') + '</button>' : '');
+  };
+
   P._fire = function () { this._syncHead(); this._info(); if (this.o.onSelect) this.o.onSelect(Array.from(this.s.sel)); };
 
   P._wire = function () {
     var self = this, o = this.o, s = this.s;
 
     /* ---- toolbar (berikon + aksi kustom) ---- */
-    var T = [];
-    if (o.add) T.push(['add', 'Tambah', 'add']);
-    if (o.editForm && o.select) T.push(['edit', 'Edit', 'edit']);
-    if (o.view && o.select) T.push(['view', 'Detail', 'view']);
-    (o.actions || []).forEach(function (a) { T.push([a.id, a.label, a.icon || 'ok', a]); });
-    if (o.remove && o.select) T.push(['remove', 'Hapus', 'del']);
-    if (o.filterForm) T.push(['ffilter', 'Filter', 'filter', true]);
-    T.push(['export', 'Export', 'export']);
-    if (o.chooser) T.push(['cols', 'Kolom', 'cols']);
-    if (o.refresh) T.push(['refresh', 'Refresh', 'refresh']);
-    if (o.help) T.push(['help', '', 'help']);
-    this.r.tools.innerHTML = T.map(function (t) {
-      return '<button data-act="' + t[0] + '" title="' + (t[1] || t[0]) + '" class="' + BTN + (t[1] ? '' : ' px-1.5') + '">' +
-        (ICONS[t[2]] || '') + (t[1] ? '<span class="hidden sm:inline">' + esc(t[1]) + '</span>' : '') +
-        (t[3] ? '<span data-fc class="hidden rounded-full bg-indigo-600 px-1.5 text-[9px] font-semibold leading-4 text-white"></span>' : '') + '</button>';
-    }).join('') + (o.filter ? '<button data-act="clear" class="h-6 rounded-md px-2 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-indigo-600">bersihkan filter</button>' : '');
+    this._toolbar();
 
     this.r.tools.onclick = function (e) {
       var a = e.target.closest('[data-act]');
@@ -684,7 +759,7 @@
     /* ---- a11y: scroller jadi tab-stop + navigasi keyboard ---- */
     this.r.sc.tabIndex = 0;
     this.r.sc.classList.add('outline-none');
-    this.r.sc.setAttribute('aria-label', 'Tabel data — panah untuk berpindah sel, Spasi pilih baris, Enter edit');
+    this.r.sc.setAttribute('aria-label', self.tr('ariaTable'));
     this.r.sc.addEventListener('focus', function () {
       var col = self.vis()[s.kb.c];
       var td = col && self.r.body.querySelector('tr[data-i="' + s.kb.i + '"] td[data-c="' + col.name + '"]');
@@ -795,7 +870,7 @@
     var d = document.createElement('div');
     d.className = 'fixed inset-0 z-50 flex items-start justify-center bg-slate-900/30 p-10 backdrop-blur-[2px]';
     d.innerHTML = '<div class="max-h-[70vh] w-56 overflow-auto rounded-xl border border-slate-200 bg-white p-3 shadow-2xl ring-1 ring-slate-900/10">' +
-      '<div class="mb-2 text-xs font-semibold text-slate-700">Tampilkan kolom</div>' +
+      '<div class="mb-2 text-xs font-semibold text-slate-700">' + this.tr('showCols') + '</div>' +
       this.cols.map(function (c, i) {
         return '<label class="flex items-center gap-2 py-0.5 text-xs text-slate-600">' +
           '<input type="checkbox" data-i="' + i + '"' + (c.hidden ? '' : ' checked') + ' class="size-3.5 accent-indigo-600">' + esc(c.label) + '</label>';
@@ -819,7 +894,7 @@
     var o = this.o, s = this.s, rows = [], i;
     for (i = 0; i < this.data.length; i++) if (ids.indexOf(this.idOf(this.data[i], i)) > -1) rows.push(this.data[i]);
     if (!rows.length) return;
-    var go = o.onRemove ? o.onRemove(rows) !== false : confirm('Hapus ' + rows.length + ' baris?');
+    var go = o.onRemove ? o.onRemove(rows) !== false : confirm(this.tr('confirmDel', rows.length));
     if (!go) return;
     var del = new Set(rows);
     this.data = o.data = this.data.filter(function (r) { return !del.has(r); });
@@ -902,16 +977,16 @@
     d.className = 'fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
     d.innerHTML =
       '<div class="' + wcls + ' max-w-full rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-slate-900/10">' +
-        '<div data-drag class="flex items-center justify-between rounded-t-xl border-b border-slate-200 bg-slate-50 px-4 py-2" title="Seret untuk memindahkan">' +
-          '<span class="text-sm font-semibold text-slate-700">' + (isNew ? 'Tambah baris' : readonly ? 'Detail baris' : 'Edit baris') + '</span>' +
+        '<div data-drag class="flex items-center justify-between rounded-t-xl border-b border-slate-200 bg-slate-50 px-4 py-2" title="' + self.tr('dragTip') + '">' +
+          '<span class="text-sm font-semibold text-slate-700">' + (isNew ? self.tr('formAdd') : readonly ? self.tr('formView') : self.tr('formEdit')) + '</span>' +
           '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
         '</div>' +
         '<div class="max-h-[65vh] overflow-auto px-4 py-3 ' + bcls + '">' + body + '</div>' +
         '<div class="flex justify-end gap-2 rounded-b-xl border-t border-slate-200 bg-slate-50 px-4 py-2">' +
           (readonly
-            ? '<button data-close class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">Tutup</button>'
-            : '<button data-close class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">Batal</button>' +
-              '<button data-save class="h-7 rounded-md bg-indigo-600 px-3 text-xs font-semibold text-white shadow-xs hover:bg-indigo-700 active:translate-y-px">Simpan</button>') +
+            ? '<button data-close class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">' + self.tr('close') + '</button>'
+            : '<button data-close class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">' + self.tr('cancel') + '</button>' +
+              '<button data-save class="h-7 rounded-md bg-indigo-600 px-3 text-xs font-semibold text-white shadow-xs hover:bg-indigo-700 active:translate-y-px">' + self.tr('save') + '</button>') +
         '</div>' +
       '</div>';
 
@@ -924,8 +999,8 @@
         if (!el) return;
         var val = c.bool ? (el.checked ? 1 : 0) : (c.type === 'num' && !c.bool) ? (el.value === '' ? null : el.value) : el.value.trim();
         var msg = '';
-        if (!c.bool && c.type === 'num' && val !== null && !isFinite(Number(val))) msg = 'harus angka';
-        if (c.required && (val === null || val === '')) msg = 'wajib diisi';
+        if (!c.bool && c.type === 'num' && val !== null && !isFinite(Number(val))) msg = self.tr('errNum');
+        if (c.required && (val === null || val === '')) msg = self.tr('errReq');
         if (msg) { okAll = false; errEl.textContent = msg; errEl.classList.remove('hidden'); return; }
         errEl.classList.add('hidden');
         row[c.name] = (!c.bool && c.type === 'num' && val !== null) ? Number(val) : val;
@@ -996,7 +1071,7 @@
   /* ------------------------------------------------- modal bantuan */
   P._help = function () {
     var o = this.o;
-    var txt = o.helpText ||
+    var txt = o.helpText || this.tr('helpText') ||
       '<ul class="list-disc space-y-1 pl-4">' +
       '<li><b>Klik header</b> = urutkan · <b>Shift+klik</b> = urut multi-kolom · klik lagi = balik arah.</li>' +
       '<li><b>Filter</b> per kolom lewat tombol Filter (pilih operator lalu isi nilai) atau pencarian global (Enter).</li>' +
@@ -1013,13 +1088,13 @@
     d.className = 'fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';
     d.innerHTML =
       '<div class="w-[30rem] max-w-full rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-slate-900/10">' +
-        '<div data-drag class="flex items-center justify-between rounded-t-xl border-b border-slate-200 bg-slate-50 px-4 py-2" title="Seret untuk memindahkan">' +
-          '<span class="flex items-center gap-2 text-sm font-semibold text-slate-700">' + ICONS.help + ' Bantuan</span>' +
+        '<div data-drag class="flex items-center justify-between rounded-t-xl border-b border-slate-200 bg-slate-50 px-4 py-2" title="' + this.tr('dragTip') + '">' +
+          '<span class="flex items-center gap-2 text-sm font-semibold text-slate-700">' + ICONS.help + ' ' + this.tr('helpTitle') + '</span>' +
           '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
         '</div>' +
         '<div class="px-4 py-3 text-xs leading-relaxed text-slate-600">' + txt + '</div>' +
         '<div class="flex justify-end rounded-b-xl border-t border-slate-200 bg-slate-50 px-4 py-2">' +
-          '<button data-x class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">Tutup</button>' +
+          '<button data-x class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">' + this.tr('close') + '</button>' +
         '</div>' +
       '</div>';
     d.onclick = function (e) { if (e.target === d || e.target.closest('[data-x]')) d.remove(); };
@@ -1042,22 +1117,22 @@
           Object.keys(OPS).filter(function (k) { return c.type === 'num' || c.type === 'date' ? NUMOPS[k] : true; })
             .map(function (k) { return '<option value="' + k + '"' + (f.op === k ? ' selected' : '') + '>' + OPS[k] + '</option>'; }).join('') +
         '</select>' +
-        '<input data-ff="' + c.name + '" value="' + esc(f.q || '') + '" placeholder="nilai…" class="h-6 w-full rounded border border-slate-300 px-2 text-xs outline-none focus:border-indigo-500">' +
+        '<input data-ff="' + c.name + '" value="' + esc(f.q || '') + '" placeholder="' + self.tr('valPh') + '" class="h-6 w-full rounded border border-slate-300 px-2 text-xs outline-none focus:border-indigo-500">' +
         '</div>';
     }).join('');
 
     d.innerHTML =
       '<div class="w-[30rem] max-w-full rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-slate-900/10">' +
-        '<div data-drag class="flex items-center justify-between rounded-t-xl border-b border-slate-200 bg-slate-50 px-4 py-2" title="Seret untuk memindahkan">' +
+        '<div data-drag class="flex items-center justify-between rounded-t-xl border-b border-slate-200 bg-slate-50 px-4 py-2" title="' + self.tr('dragTip') + '">' +
           '<span class="flex items-center gap-2 text-sm font-semibold text-slate-700">' + ICONS.filter + ' Filter</span>' +
           '<button data-x class="text-slate-400 hover:text-slate-600">✕</button>' +
         '</div>' +
         '<div class="max-h-[62vh] space-y-4 overflow-auto px-4 py-3">' +
-          '<div><div class="mb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Filter cepat per kolom</div>' +
+          '<div><div class="mb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">' + self.tr('quick') + '</div>' +
             '<div class="space-y-2">' + quick + '</div></div>' +
           '<div><div class="mb-1 flex items-center justify-between gap-2">' +
-              '<span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Kondisi lanjutan</span>' +
-              '<label class="flex items-center gap-1 text-[11px] text-slate-500">Gabung' +
+              '<span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">' + self.tr('adv') + '</span>' +
+              '<label class="flex items-center gap-1 text-[11px] text-slate-500">' + self.tr('join') +
                 '<select data-rjoin class="h-5 rounded border border-slate-300 bg-white px-1 text-[11px] outline-none">' +
                   '<option value="AND"' + (s.join === 'OR' ? '' : ' selected') + '>AND</option>' +
                   '<option value="OR"' + (s.join === 'OR' ? ' selected' : '') + '>OR</option>' +
@@ -1065,12 +1140,12 @@
             '</div>' +
             '<div data-rules class="space-y-2"></div>' +
             '<button data-radd class="mt-2 flex h-6 items-center gap-1 rounded-md border border-dashed border-slate-400 px-2 text-xs text-slate-600 hover:bg-slate-100">' +
-              ICONS.add + '<span>Tambah kondisi</span></button>' +
+              ICONS.add + '<span>' + self.tr('addCond') + '</span></button>' +
           '</div>' +
         '</div>' +
         '<div class="flex justify-between rounded-b-xl border-t border-slate-200 bg-slate-50 px-4 py-2">' +
-          '<button data-reset class="h-7 rounded px-2 text-xs text-slate-500 hover:text-rose-600">Reset semua</button>' +
-          '<button data-x class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">Tutup</button>' +
+          '<button data-reset class="h-7 rounded px-2 text-xs text-slate-500 hover:text-rose-600">' + self.tr('resetAll') + '</button>' +
+          '<button data-x class="h-7 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 shadow-xs hover:bg-slate-100">' + this.tr('close') + '</button>' +
         '</div>' +
       '</div>';
 
@@ -1097,8 +1172,8 @@
             self.vis().map(function (cc) { return '<option value="' + cc.name + '"' + (cc.name === r.f ? ' selected' : '') + '>' + esc(cc.label) + '</option>'; }).join('') +
           '</select>' +
           '<select data-rop data-i="' + i + '" class="h-6 rounded border border-slate-300 bg-white px-1 text-[11px] outline-none">' + opOptions(c, r.op) + '</select>' +
-          '<input data-rq data-i="' + i + '" value="' + esc(r.q) + '" placeholder="nilai…" class="h-6 w-full rounded border border-slate-300 px-2 text-xs outline-none focus:border-indigo-500">' +
-          '<button data-rx data-i="' + i + '" title="Hapus kondisi" class="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-rose-50 hover:text-rose-600">' + ICONS.no + '</button>' +
+          '<input data-rq data-i="' + i + '" value="' + esc(r.q) + '" placeholder="' + self.tr('valPh') + '" class="h-6 w-full rounded border border-slate-300 px-2 text-xs outline-none focus:border-indigo-500">' +
+          '<button data-rx data-i="' + i + '" title="' + self.tr('rmCond') + '" class="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-rose-50 hover:text-rose-600">' + ICONS.no + '</button>' +
         '</div>';
       }).join('');
     }
