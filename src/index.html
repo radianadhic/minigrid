@@ -77,6 +77,15 @@
     <div id="grid5"></div>
   </section>
 
+  <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
+    <div class="mb-2">
+      <h2 class="text-sm font-semibold">Mode server-side · 10.000 baris di server</h2>
+      <p class="text-xs text-slate-500">Pagination, sort, filter, dan pencarian diproses di <code>GET api/halaman</code> (server.mjs) — grid hanya menerima satu halaman · lewat <code>file://</code> fallback ke simulasi server-side lokal · navigasi keyboard: <kbd class="rounded border border-slate-300 px-1">Tab</kbd> ke tabel, panah pindah sel, <kbd class="rounded border border-slate-300 px-1">Spasi</kbd> pilih, <kbd class="rounded border border-slate-300 px-1">Enter</kbd> edit</p>
+      <p id="api6" class="mt-1 text-[11px] font-medium text-indigo-600"></p>
+    </div>
+    <div id="grid6"></div>
+  </section>
+
   <section class="grid gap-4 md:grid-cols-2">
     <div class="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-900/5">
       <h2 class="mb-2 text-sm font-semibold">Pakai</h2>
@@ -110,6 +119,7 @@
         <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">crud</dt><dd class="text-slate-600">pintasan untuk tombol <b>+ Tambah · Edit · Detail · Hapus</b> berbasis formulir modal (navGrid ala jqGrid); atau satuan: <code>add / editForm / view / remove</code>, <code>edit</code> = edit inline via klik ganda</dd></div>
         <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">actions</dt><dd class="text-slate-600">tombol kustom berikon: <code>{id,label,icon,need:'one'|'some',fn(rows,grid)}</code> — mis. Approve/Reject</dd></div>
         <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">filterForm/help</dt><dd class="text-slate-600">tombol <b>Filter</b> = semua filter kolom dalam satu form · tombol <b>Help</b> = modal panduan (teks bisa diganti via <code>helpText</code>)</dd></div>
+        <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">server</dt><dd class="text-slate-600">fn(params)→Promise{rows,total} = mode server-side: sort/filter/paging di server, grid hanya merender satu halaman</dd></div>
         <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">detail</dt><dd class="text-slate-600">fungsi(row) penghasil HTML → master-detail: chevron di tepi kiri membentang baris detail (virtual scroll tetap akurat)</dd></div>
         <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">refresh</dt><dd class="text-slate-600">true (default) = tombol Refresh di toolbar; <code>onRefresh(grid)</code> diisi untuk memuat ulang data — bila mengembalikan Promise, overlay "Memuat…" tampil otomatis</dd></div>
         <div class="flex gap-2"><dt class="w-24 shrink-0 font-mono text-indigo-600">rowActions</dt><dd class="text-slate-600">true = ikon Detail/Edit/Hapus per baris (tanpa perlu checkbox/seleksi)</dd></div>

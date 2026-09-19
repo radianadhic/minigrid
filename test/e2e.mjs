@@ -542,6 +542,53 @@ await page.locator('#grid1 [data-exp]').first().click();
 ok('detail menutup', await page.locator('#grid1 tr.mg-detail').count() === 0);
 await page.screenshot({ path: path.join(__dirname, '..', 'shots', 'detail.png'), clip: { x: 60, y: 100, width: 1220, height: 620 } });
 
+/* 27. mode server-side (grid6) */
+await page.waitForSelector('#grid6 tbody tr[data-id]');
+ok('grid6 hanya menerima satu halaman dr server', await page.locator('#grid6 tbody tr[data-id]').count() === 10 &&
+  (await page.locator('#grid6 [data-role=info]').innerText()).includes('dari 10000'),
+  await page.locator('#grid6 [data-role=info]').innerText());
+await page.locator('#grid6 [data-page="2"]').last().click();
+await page.waitForTimeout(600);
+ok('halaman 2 diambil dari server', await page.evaluate(() => window.__g6.view[0].id) === 11);
+await page.locator('#grid6 thead [data-sort=gaji]').click();
+await page.waitForTimeout(600);
+ok('sort gaji diproses server (naik)', await page.evaluate(() =>
+  window.__g6.view.every((r, i, a) => i === 0 || a[i - 1].gaji <= r.gaji)));
+await page.locator('#grid6 [data-role=q]').fill('depok');
+await page.locator('#grid6 [data-role=q]').press('Enter');
+await page.waitForTimeout(700);
+ok('pencarian global diproses server', await page.evaluate(() => window.__g6.s.total) < 10000 &&
+  await page.evaluate(() => window.__g6.view.every(r => Object.values(r).some(v => String(v).toLowerCase().includes('depok')))));
+await page.locator('#grid6 [data-role=q]').fill('');
+await page.locator('#grid6 [data-role=q]').press('Enter');
+await page.waitForTimeout(700);
+
+/* 28. keyboard & ARIA */
+ok('tabel role=grid + aria-rowcount 50001', await page.evaluate(() => {
+  const t = document.querySelector('#grid1 table');
+  return t.getAttribute('role') === 'grid' && t.getAttribute('aria-rowcount') === '50001';
+}));
+ok('th role=columnheader + aria-sort', await page.locator('#grid1 thead th[role=columnheader]').count() >= 8);
+await page.locator('#grid1 [data-role=scroller]').focus();
+await page.keyboard.press('ArrowDown');
+await page.keyboard.press('ArrowDown');
+await page.keyboard.press('ArrowRight');
+ok('panah memindah sel fokus (2,1) + aria-activedescendant',
+  await page.evaluate(() => window.__g1.s.kb.i === 2 && window.__g1.s.kb.c === 1) &&
+  await page.locator('#grid1 td.kb').count() === 1 &&
+  await page.evaluate(() => document.querySelector('#grid1 [data-role=scroller]').getAttribute('aria-activedescendant')) === 'kbc');
+await page.keyboard.press(' ');
+await page.waitForTimeout(150);
+ok('Spasi memilih baris fokus', await page.evaluate(() => window.__g1.s.sel.size) === 1);
+await page.keyboard.press(' ');
+await page.waitForTimeout(150);
+ok('Spasi lagi batal pilihan', await page.evaluate(() => window.__g1.s.sel.size) === 0);
+await page.locator('#grid2 [data-role=scroller]').focus();
+await page.keyboard.press('Enter');
+ok('Enter membuka edit inline', await page.locator('#grid2 tbody input.h-6').count() === 1);
+await page.keyboard.press('Escape');
+await page.waitForTimeout(100);
+
 /* 17. tidak ada error konsol */
 ok('tanpa error konsol', errors.length === 0, errors.slice(0, 3).join(' ;; '));
 

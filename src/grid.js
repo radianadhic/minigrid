@@ -82,7 +82,7 @@
       '</div>' +
       '<div class="relative">' +
       '<div data-role="scroller" class="overflow-auto bg-white">' +
-        '<table class="border-collapse text-xs" style="table-layout:fixed;width:100%">' +
+        '<table role="grid" class="border-collapse text-xs" style="table-layout:fixed;width:100%">' +
           '<colgroup data-role="cg"></colgroup>' +
           '<thead data-role="head" class="mg-head sticky top-0 z-10"></thead>' +
           '<tbody data-role="body" class="mg-body relative"></tbody>' +
@@ -102,14 +102,14 @@
       pageSizes: [10, 25, 50, 100, 500], height: 420, rowHeight: 32,
       frozen: 0, select: 'multi', selectAll: 'page', filter: true, search: true, edit: false,
       resize: true, add: false, remove: false, editForm: false, view: false, crud: false,
-      chooser: true, zebra: true, filterForm: false, help: false, formCols: 1, rowActions: false, refresh: true, detail: null, actions: [],
+      chooser: true, zebra: true, filterForm: false, help: false, formCols: 1, rowActions: false, refresh: true, detail: null, server: null, actions: [],
       rowId: function (r, i) { return r.id != null ? r.id : i; },
       onEdit: null, onAdd: null, onRemove: null, onSelect: null
     }, opts);
     if (o.crud) o.add = o.editForm = o.view = o.remove = true;   /* pintasan CRUD lengkap */
 
     this.data = o.data;
-    this.s = { page: o.page, size: o.pageSize, sort: [], filter: {}, rules: [], join: 'AND', q: '', sel: new Set(), exp: new Set() };
+    this.s = { page: o.page, size: o.pageSize, sort: [], filter: {}, rules: [], join: 'AND', q: '', sel: new Set(), exp: new Set(), kb: { i: 0, c: 0 }, total: 0 };
     this._expIdx = []; this._expIdxDirty = true; this._expv = 0;
     this._in = {}; this._rev = 0; this.ms = 0;
     this.view = []; this.pageRows = [];
@@ -120,7 +120,7 @@
     this.el = typeof o.el === 'string' ? document.querySelector(o.el) : o.el;
     this.el.innerHTML = SHELL;
     var $ = function (n) { return this.el.querySelector('[data-role=' + n + ']'); }.bind(this);
-    this.r = { tools: $('tools'), q: $('q'), info: $('info'), sc: $('scroller'), cg: $('cg'), head: $('head'), body: $('body'), pager: $('pager') };
+    this.r = { tools: $('tools'), q: $('q'), info: $('info'), sc: $('scroller'), cg: $('cg'), head: $('head'), body: $('body'), pager: $('pager'), tb: this.el.querySelector('table') };
     if (!o.search) this.r.q.remove();
 
     this.cols = o.columns.map(function (c) {
@@ -223,7 +223,30 @@
   };
 
   P.render = function () {
+    if (this.o.server) { this._head(); this._cols(); this._load(); return; }
     this._recompute(); this._head(); this._cols(); this._paint(true); this._pager(); this._info();
+  };
+
+  /* mode server-side: pagination/sort/filter diproses di seberang; grid hanya
+   * menerima satu halaman. `server(params)` wajib mengembalikan Promise
+   * { rows, total }. */
+  P._load = function () {
+    var self = this, s = this.s, o = this.o;
+    clearTimeout(this._ldt);
+    this.setLoading(true);
+    this._ldt = setTimeout(function () {
+      var rules = (s.rules || []).filter(function (r) { return String(r.q).trim() !== '' || r.op === 'nn' || r.op === 'nl'; });
+      var filters = {};
+      Object.keys(s.filter).forEach(function (k) { if ((s.filter[k].q || '').trim()) filters[k] = s.filter[k]; });
+      Promise.resolve(o.server({ page: s.page, size: s.size, q: s.q, join: s.join,
+        sort: s.sort.map(function (x) { return [x.n, x.d]; }), filters: filters, rules: rules }))
+        .then(function (res) {
+          self.view = res.rows; self.pageRows = res.rows; s.total = res.total;
+          self._rev++; self._f = -1; self._expIdxDirty = true;
+          self._paint(true); self._pager(); self._info(); self.setLoading(false);
+        })
+        .catch(function () { self.setLoading(false); });
+    }, 200);
   };
 
   /* ------------------------------------------------------------ struktur */
@@ -237,16 +260,16 @@
   P._head = function () {
     var self = this, s = this.s, multi = this.o.select === 'multi';
     var h = '<tr>';
-    if (this.o.detail) h += '<th class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 align-middle" style="position:sticky;left:0;z-index:3"></th>';
+    if (this.o.detail) h += '<th role="columnheader" aria-label="Bentang detail" class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 align-middle" style="position:sticky;left:0;z-index:3"></th>';
     if (multi) {
-      h += '<th class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 text-center align-middle" style="position:sticky;left:' + (this.o.detail ? 28 : 0) + 'px;z-index:3">' +
+      h += '<th role="columnheader" aria-label="Pilih semua" class="frz0 border-b border-r border-slate-300 bg-slate-100 p-0 text-center align-middle" style="position:sticky;left:' + (this.o.detail ? 28 : 0) + 'px;z-index:3">' +
            '<input type="checkbox" data-role="all" class="size-3.5 accent-indigo-600"></th>';
     }
     this.vis().forEach(function (c, i) {
       var sd = null;
       for (var k = 0; k < s.sort.length; k++) if (s.sort[k].n === c.name) sd = s.sort[k];
       var frz = i < self.o.frozen;
-      h += '<th class="bg-slate-100 p-0 align-top' + (frz ? ' frz' : '') + '"' +
+      h += '<th role="columnheader"' + (sd ? ' aria-sort="' + (sd.d > 0 ? 'ascending' : 'descending') + '"' : '') + ' class="bg-slate-100 p-0 align-top' + (frz ? ' frz' : '') + '"' +
            (frz ? ' style="position:sticky;left:' + c._left + 'px;z-index:2"' : '') + '>' +
            '<div class="flex items-center gap-1 border-b border-slate-300 px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-600' +
              (c.sortable ? ' cursor-pointer select-none hover:bg-slate-200' : '') + '"' +
@@ -324,22 +347,30 @@
     };
   };
 
+  P._expSync = function () {
+    var s = this.s, n = this.pageRows.length;
+    if (this.o.detail && this._expIdxDirty) {
+      this._expIdx = [];
+      for (var i = 0; i < n; i++) if (s.exp.has(this.idOf(this.pageRows[i], i))) this._expIdx.push(i);
+      this._expIdxDirty = false;
+    }
+  };
+  P._before = function (i) {
+    var c = 0;
+    for (var q = 0; q < this._expIdx.length; q++) { if (this._expIdx[q] < i) c++; else break; }
+    return c;
+  };
+  P._topAt = function (i) { this._expSync(); return i * this.o.rowHeight + this._before(i) * 180; };
+  P._total = function () { return this.o.server ? this.s.total : this.view.length; };
+
   P._paint = function (force) {
     var s = this.s, o = this.o, cols = this.vis(), self = this;
     var rh = o.rowHeight, top = this.r.sc.scrollTop, n = this.pageRows.length;
+    var kbOn = document.activeElement === this.r.sc;
     var DH = 180, hasExp = !!o.detail;
-    if (hasExp && this._expIdxDirty) {
-      this._expIdx = [];
-      for (var e0 = 0; e0 < n; e0++) if (s.exp.has(this.idOf(this.pageRows[e0], e0))) this._expIdx.push(e0);
-      this._expIdxDirty = false;
-    }
+    this._expSync();
     var exN = hasExp ? this._expIdx.length : 0;
-    function before(i) {
-      var c = 0;
-      for (var q = 0; q < self._expIdx.length; q++) { if (self._expIdx[q] < i) c++; else break; }
-      return c;
-    }
-    function topAt(i) { return i * rh + before(i) * DH; }
+    function topAt(i) { return self._topAt(i); }
     var first, last;
     if (!exN) {
       first = Math.max(0, Math.floor(top / rh) - 5);
@@ -367,25 +398,27 @@
       var tr = document.createElement('tr');
       tr.dataset.id = id; tr.dataset.i = i;
       tr.style.height = rh + 'px';
+      tr.setAttribute('role', 'row'); tr.setAttribute('aria-rowindex', i + 2);
       tr.className = (o.zebra && i % 2 ? 'alt ' : '') + (s.sel.has(id) ? 'sel ' : '');
       var h = hasExp
-        ? '<td class="frz0 border-b border-r border-slate-200 p-0 text-center align-middle" style="position:sticky;left:0;z-index:1">' +
+        ? '<td role="gridcell" class="frz0 border-b border-r border-slate-200 p-0 text-center align-middle" style="position:sticky;left:0;z-index:1">' +
           '<button data-exp="' + esc(id) + '" title="Bentang/tutup detail" class="mx-auto flex size-5 items-center justify-center rounded text-slate-400 outline-none hover:bg-indigo-50 hover:text-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-500' + (s.exp.has(id) ? ' !text-indigo-600' : '') + '">' +
           '<svg viewBox="0 0 24 24" class="size-3 transition-transform' + (s.exp.has(id) ? ' rotate-90' : '') + '" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></button></td>'
         : '';
       h += o.select === 'multi'
-        ? '<td class="frz0 border-b border-r border-slate-200 p-0 text-center align-middle" style="position:sticky;left:' + (hasExp ? 28 : 0) + 'px;z-index:1">' +
+        ? '<td role="gridcell" class="frz0 border-b border-r border-slate-200 p-0 text-center align-middle" style="position:sticky;left:' + (hasExp ? 28 : 0) + 'px;z-index:1">' +
           '<input type="checkbox" data-ck="' + esc(id) + '"' + (s.sel.has(id) ? ' checked' : '') + ' class="size-3.5 accent-indigo-600"></td>'
         : '';
       for (var c = 0; c < cols.length; c++) {
         var col = cols[c], frz = c < o.frozen;
-        h += '<td data-c="' + col.name + '" class="truncate border-b border-r border-slate-200 px-2 align-middle' +
+        h += '<td role="gridcell" data-c="' + col.name + '" class="truncate border-b border-r border-slate-200 px-2 align-middle' +
              (col.align === 'right' ? ' text-right tabular-nums' : col.align === 'center' ? ' text-center' : '') +
-             (frz ? ' frz' : '') + '"' +
+             (frz ? ' frz' : '') + (kbOn && s.kb.i === i && s.kb.c === c ? ' kb' : '') + '"' +
+             (kbOn && s.kb.i === i && s.kb.c === c ? ' id="kbc"' : '') +
              (frz ? ' style="position:sticky;left:' + col._left + 'px;z-index:1"' : '') + '>' +
              (col.render ? col.render(row[col.name], row) : esc(fmt(row[col.name], col))) + '</td>';
       }
-      if (o.rowActions) h += '<td class="border-b border-r border-slate-200 px-1 align-middle"><div class="flex items-center justify-center gap-0.5">' +
+      if (o.rowActions) h += '<td role="gridcell" class="border-b border-r border-slate-200 px-1 align-middle"><div class="flex items-center justify-center gap-0.5">' +
         '<button data-ra="view" title="Detail" class="' + RAB + '">' + ICONS.view + '</button>' +
         '<button data-ra="edit" title="Edit" class="' + RAB + '">' + ICONS.edit + '</button>' +
         '<button data-ra="del" title="Hapus" class="' + RAD + '">' + ICONS.del + '</button></div></td>';
@@ -394,6 +427,7 @@
       if (hasExp && s.exp.has(id)) {
         var dt = document.createElement('tr');
         dt.className = 'mg-detail';
+        dt.setAttribute('role', 'row');
         dt.innerHTML = '<td colspan="' + span + '" style="height:' + DH + 'px" class="border-b border-slate-200 p-0">' +
           '<div class="h-full overflow-auto bg-slate-50 px-3 py-2">' + (o.detail(row) || '') + '</div></td>';
         frag.appendChild(dt);
@@ -401,6 +435,10 @@
     }
     if (last < n) frag.appendChild(spacer(n * rh + exN * DH - topAt(last), span));
     this.r.body.replaceChildren(frag);
+    this.r.tb.setAttribute('aria-rowcount', this._total() + 1);
+    this.r.tb.setAttribute('aria-colcount', span);
+    if (kbOn && this.r.body.querySelector('#kbc')) this.r.sc.setAttribute('aria-activedescendant', 'kbc');
+    else this.r.sc.removeAttribute('aria-activedescendant');
     this._syncHead();
 
     function spacer(px, colsSpan) {
@@ -435,7 +473,7 @@
   };
 
   P._pager = function () {
-    var s = this.s, o = this.o, self = this, pages = Math.max(1, Math.ceil(this.view.length / s.size));
+    var s = this.s, o = this.o, self = this, pages = Math.max(1, Math.ceil(this._total() / s.size));
     var b = function (l, p, dis) {
       return '<button data-page="' + p + '"' + (dis ? ' disabled' : '') +
         ' class="h-6 min-w-6 rounded-md border border-slate-300 bg-white px-1.5 text-xs text-slate-600 shadow-xs outline-none enabled:hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-40">' + l + '</button>';
@@ -464,9 +502,10 @@
       fbtn.textContent = n || '';
       fbtn.classList.toggle('hidden', !n);
     }
-    var from = this.view.length ? (s.page - 1) * s.size + 1 : 0;
-    this.r.info.textContent = from + '–' + Math.min(s.page * s.size, this.view.length) + ' dari ' + this.view.length +
-      (this.view.length !== this.data.length ? ' / ' + this.data.length : '') + (s.sel.size ? ' · pilih ' + s.sel.size : '');
+    var tot = this._total();
+    var from = tot ? (s.page - 1) * s.size + 1 : 0;
+    this.r.info.textContent = from + '–' + Math.min(s.page * s.size, tot) + ' dari ' + tot +
+      (!this.o.server && tot !== this.data.length ? ' / ' + this.data.length : '') + (s.sel.size ? ' · pilih ' + s.sel.size : '');
   };
 
   /* ----------------------------------------------------------- interaksi */
@@ -642,13 +681,64 @@
       if (td) self._editCell(td);
     };
 
+    /* ---- a11y: scroller jadi tab-stop + navigasi keyboard ---- */
+    this.r.sc.tabIndex = 0;
+    this.r.sc.classList.add('outline-none');
+    this.r.sc.setAttribute('aria-label', 'Tabel data — panah untuk berpindah sel, Spasi pilih baris, Enter edit');
+    this.r.sc.addEventListener('focus', function () {
+      var col = self.vis()[s.kb.c];
+      var td = col && self.r.body.querySelector('tr[data-i="' + s.kb.i + '"] td[data-c="' + col.name + '"]');
+      if (td) { td.classList.add('kb'); td.id = 'kbc'; self.r.sc.setAttribute('aria-activedescendant', 'kbc'); }
+    });
+    this.r.sc.addEventListener('blur', function () {
+      var td = self.r.body.querySelector('#kbc');
+      if (td) { td.classList.remove('kb'); td.id = ''; }
+      self.r.sc.removeAttribute('aria-activedescendant');
+    });
+    this.r.sc.addEventListener('keydown', function (e) {
+      if (e.target !== self.r.sc) return;                 /* inline edit: fokus di input */
+      var cols = self.vis(), n = self.pageRows.length;
+      if (!n) return;
+      var kb = s.kb, vr = Math.floor(o.height / o.rowHeight), handled = true, noPaint = false;
+      switch (e.key) {
+        case 'ArrowDown': kb.i = Math.min(n - 1, kb.i + 1); break;
+        case 'ArrowUp': kb.i = Math.max(0, kb.i - 1); break;
+        case 'ArrowRight': kb.c = Math.min(cols.length - 1, kb.c + 1); break;
+        case 'ArrowLeft': kb.c = Math.max(0, kb.c - 1); break;
+        case 'PageDown': kb.i = Math.min(n - 1, kb.i + vr); break;
+        case 'PageUp': kb.i = Math.max(0, kb.i - vr); break;
+        case 'Home': kb.c = 0; if (e.ctrlKey) kb.i = 0; break;
+        case 'End': kb.c = cols.length - 1; if (e.ctrlKey) kb.i = n - 1; break;
+        case ' ':
+          if (o.select === 'multi') {
+            var idk = self.idOf(self.pageRows[kb.i], kb.i);
+            if (s.sel.has(idk)) s.sel.delete(idk); else s.sel.add(idk);
+            self._fire(); self._paint(true);
+          }
+          break;
+        case 'Enter': case 'F2':
+          if (o.edit) {
+            var tdk = self.r.body.querySelector('tr[data-i="' + kb.i + '"] td[data-c="' + cols[kb.c].name + '"]');
+            if (tdk) { self._editCell(tdk); noPaint = true; }
+          } else if (o.rowActions) { self._form('edit', self.idOf(self.pageRows[kb.i], kb.i)); noPaint = true; }
+          break;
+        default: handled = false;
+      }
+      if (!handled) return;
+      e.preventDefault();
+      var y = self._topAt(kb.i);
+      if (y < self.r.sc.scrollTop) self.r.sc.scrollTop = y;
+      else if (y + o.rowHeight > self.r.sc.scrollTop + o.height) self.r.sc.scrollTop = y + o.rowHeight - o.height;
+      if (!noPaint) self._paint(true);
+    });
+
     /* ---- pager ---- */
     this.r.pager.onclick = function (e) {
       var b = e.target.closest('[data-page]');
       if (!b || b.disabled) return;
-      var pages = Math.max(1, Math.ceil(self.view.length / s.size));
+      var pages = Math.max(1, Math.ceil(self._total() / s.size));
       s.page = Math.max(1, Math.min(+b.dataset.page, pages));
-      self._recompute(); self._paint(true); self._pager(); self._info();
+      self.render();
       self.r.sc.scrollTop = 0;
     };
     this.r.pager.onchange = function (e) {
@@ -917,6 +1007,7 @@
       '<li><b>Export</b> = unduh hasil ter-filter & ter-urut sebagai CSV, XLSX, atau PDF.</li>' +
       '<li><b>Geser bilah judul modal</b> = pindahkan posisi modal; setiap dibuka, modal kembali ke tengah layar.</li>' +
       '<li><b>Chevron kiri baris</b> = bentang/tutup detail baris (master-detail).</li>' +
+      '<li><b>Keyboard</b>: Tab masuk ke tabel, panah pindah sel, Home/End &amp; Ctrl+Home/End, PageUp/Down, Spasi = pilih baris, Enter/F2 = edit.</li>' +
       '</ul>';
     var d = document.createElement('div');
     d.className = 'fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-6 backdrop-blur-[2px]';

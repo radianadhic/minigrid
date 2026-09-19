@@ -322,6 +322,48 @@
   });
   muatAPI(window.__g5);
 
+  /* ---- Demo 6: mode server-side — pagination/sort/filter diproses server ---- */
+  var SIM10 = rows(10000);
+  function prosesHalaman(list, p) {   /* cermin logika /api/halaman (fallback file://) */
+    var lv = function (r, k) { return String(r[k] == null ? '' : r[k]).toLowerCase(); };
+    var m1 = function (r, f) {
+      var v = lv(r, f.f), t = String(f.q == null ? '' : f.q).toLowerCase();
+      switch (f.op) {
+        case 'eq': return v === t; case 'ne': return v !== t;
+        case 'bw': return v.indexOf(t) === 0; case 'ew': return v.slice(-t.length) === t;
+        case 'nn': return v !== ''; case 'nl': return v === '';
+        case 'gt': return Number(r[f.f]) > Number(f.q); case 'ge': return Number(r[f.f]) >= Number(f.q);
+        case 'lt': return Number(r[f.f]) < Number(f.q); case 'le': return Number(r[f.f]) <= Number(f.q);
+        default: return v.indexOf(t) > -1;
+      }
+    };
+    var out = list;
+    if (p.q) out = out.filter(function (r) { return Object.keys(r).some(function (k) { return lv(r, k).indexOf(p.q.toLowerCase()) > -1; }); });
+    Object.keys(p.filters).forEach(function (k) { var f = p.filters[k]; out = out.filter(function (r) { return m1(r, { f: k, op: f.op, q: f.q }); }); });
+    if (p.rules.length) out = out.filter(function (r) { var rs = p.rules.map(function (f) { return m1(r, f); }); return p.join === 'OR' ? rs.some(Boolean) : rs.every(Boolean); });
+    if (p.sort.length) {
+      out = out.slice().sort(function (a, b) {
+        for (var q2 = 0; q2 < p.sort.length; q2++) { var k = p.sort[q2][0], d = p.sort[q2][1]; if (a[k] < b[k]) return -d; if (a[k] > b[k]) return d; }
+        return 0;
+      });
+    }
+    return { total: out.length, rows: out.slice((p.page - 1) * p.size, p.page * p.size) };
+  }
+  window.__g6 = MiniGrid({
+    el: '#grid6', columns: cols5, data: [],
+    height: 320, rowHeight: 30, pageSize: 10,
+    filter: false, filterForm: true, formCols: 2,
+    server: function (p) {
+      if (location.protocol === 'file:')   /* tanpa server: simulasi server-side lokal */
+        return new Promise(function (res) { setTimeout(function () { res(prosesHalaman(SIM10, p)); }, 300); });
+      var qs = new URLSearchParams();
+      ['page', 'size', 'q', 'join'].forEach(function (k) { qs.set(k, p[k]); });
+      qs.set('sort', JSON.stringify(p.sort)); qs.set('filters', JSON.stringify(p.filters)); qs.set('rules', JSON.stringify(p.rules));
+      return fetch('api/halaman?' + qs).then(function (r) { return r.json(); });
+    },
+    onRefresh: function (g) { g.render(); }
+  });
+
   /* ---- pemilih tema (remap variabel warna Tailwind v4) ---- */
   var THEMES = [
     ['light', 'Terang', '#f8fafc', '#4f46e5'],

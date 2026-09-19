@@ -38,6 +38,10 @@ button, input, select, a {
 /* baris detail (master-detail) */
 .mg-detail > td { background: var(--color-slate-50); box-shadow: inset 3px 0 0 0 var(--color-indigo-500); }
 
+/* sel fokus keyboard + ring scroller */
+td.kb { box-shadow: inset 0 0 0 2px var(--color-indigo-600) !important; }
+[data-role=scroller]:focus-visible { box-shadow: inset 0 0 0 2px var(--color-indigo-500); }
+
 /* ============================================================================
  * themes.css — pilihan tema MiniGrid.
  * Tailwind v4 menulis utilitas warna sebagai var(--color-*), jadi setiap tema

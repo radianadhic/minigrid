@@ -47,6 +47,8 @@ native via `color-scheme`) berganti konsisten tanpa duplikasi CSS.
 - **Tombol Filter** — semua filter kolom dituangkan ke satu form modal (operator + nilai,
   kombinasi AND, Reset) yang memperbarui grid langsung; **tombol Help** dengan panduan.
 - **Form multi-kolom** (`formCols: 2` atau `3`) untuk Tambah/Edit/Detail.
+- **A11y & keyboard**: role grid/row/cell + aria-sort, navigasi panah, Spasi pilih, Enter edit, ring fokus terlihat.
+- **Mode server-side** (`server: fn`) — pagination/sort/filter di server; contoh endpoint `api/halaman` (10k baris).
 - **Master-detail** (`detail: fn(row)`) — chevron kiri membentang baris detail tanpa merusak virtual scroll.
 - **Tombol Refresh** di semua grid (`refresh` default true) dengan `onRefresh(grid)` — bila mengembalikan Promise, overlay "Memuat…" tampil otomatis; contoh akses API (`fetch`) ada di demo 5.
 - **Aksi per baris** (`rowActions: true`) — ikon Detail/Edit/Hapus pada tiap record; berguna bila checkbox/seleksi dimatikan (`select: false`).
